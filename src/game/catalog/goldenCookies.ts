@@ -24,23 +24,23 @@ export interface BuffMeta {
 export const BUFF_META: Record<BuffType, BuffMeta> = {
   frenzy: {
     type: 'frenzy',
-    name: 'Frenzy',
-    description: 'Cookie production ×7',
+    name: 'Slaughter mode',
+    description: 'Kill rate ×7',
   },
   lucky: {
     type: 'lucky',
-    name: 'Lucky',
-    description: 'A sudden windfall of cookies',
+    name: 'Headshot bonus',
+    description: 'A sudden burst of kills',
   },
   clickFrenzy: {
     type: 'clickFrenzy',
-    name: 'Click frenzy',
-    description: 'Cookie clicks ×777',
+    name: 'Rage mode',
+    description: 'Manual strikes ×777',
   },
   buildingSpecial: {
     type: 'buildingSpecial',
-    name: 'Building special',
-    description: 'One building type ×7 production',
+    name: 'Weapon overdrive',
+    description: 'One weapon type ×7 kill rate',
   },
 }
 

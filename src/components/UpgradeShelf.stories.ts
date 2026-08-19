@@ -6,8 +6,8 @@ const sampleListings: UpgradeListing[] = [
   {
     upgrade: {
       id: 'cursor-1',
-      name: 'Reinforced index finger',
-      description: 'Clicks and cursors bake twice as many cookies.',
+      name: 'Reinforced grip',
+      description: 'Manual strikes and baseball bats score twice as many kills.',
       buildingId: 'cursor',
       cost: 100,
       unlockOwned: 1,
@@ -19,8 +19,8 @@ const sampleListings: UpgradeListing[] = [
   {
     upgrade: {
       id: 'grandma-1',
-      name: 'Forwards from Grandma',
-      description: 'Doubles Grandma production of cookies.',
+      name: 'Buckshot spread',
+      description: 'Doubles Shotgun Granny kill rate.',
       buildingId: 'grandma',
       cost: 1000,
       unlockOwned: 1,
@@ -41,7 +41,7 @@ const meta = {
     (story) => ({
       components: { story },
       template:
-        '<div style="max-width: 360px; padding: 16px; background: #2b1a0e;"><story /></div>',
+        '<div style="max-width: 360px; padding: 16px; background: #1e241c;"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof UpgradeShelf>

@@ -62,11 +62,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="click-stage">
+    <div class="click-target__shadow" aria-hidden="true" />
     <button
       class="click-target"
       type="button"
       :class="{ pressed, wobble: wobbling }"
-      :aria-label="`Bake ${clickTarget.pluralName}`"
+      :aria-label="clickTarget.clickActionLabel"
       @pointerdown="pressed = true"
       @pointerup="pressed = false"
       @pointerleave="pressed = false"
@@ -94,36 +95,52 @@ onBeforeUnmount(() => {
 <style scoped>
 .click-stage {
   position: relative;
-  width: min(78vw, 340px);
-  height: min(78vw, 340px);
+  width: min(58vw, 220px);
+  height: min(86vw, 330px);
   margin: 0 auto;
   user-select: none;
 }
 
+.click-target__shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  width: 68%;
+  height: 8%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.38), transparent 72%);
+  pointer-events: none;
+}
+
 .click-target {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  transform-origin: 50% 62%;
+  transform-origin: 50% 92%;
+  transition: transform 0.08s ease-out;
 }
 
 .click-target__image {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 18px 16px rgba(92, 48, 12, 0.28));
+  object-position: center bottom;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
   pointer-events: none;
 }
 
-.click-target.pressed .click-target__image {
-  transform: scale(0.92);
+.click-target.pressed {
+  transform: scale(0.97) translateY(2px);
 }
 
-.click-target.wobble .click-target__image {
-  animation: wobble 0.38s ease;
+.click-target.wobble {
+  animation: hit-recoil 0.32s ease-out;
 }
 
 .floaty {
@@ -131,23 +148,23 @@ onBeforeUnmount(() => {
   pointer-events: none;
   font-weight: 800;
   font-size: 1.35rem;
-  color: #6b3a12;
-  text-shadow: 0 1px 0 #fff4d8;
+  color: #9ecf7a;
+  text-shadow: 0 1px 0 #1a2218;
   animation: float-up 0.8s ease-out forwards;
 }
 
-@keyframes wobble {
+@keyframes hit-recoil {
   0% {
-    transform: scale(0.92) rotate(0deg);
+    transform: scale(0.97) translateY(2px) rotate(0deg);
   }
-  35% {
-    transform: scale(1.08) rotate(-6deg);
+  30% {
+    transform: scale(1.02) translateY(-3px) rotate(-2deg);
   }
-  70% {
-    transform: scale(0.98) rotate(4deg);
+  60% {
+    transform: scale(0.99) translateY(0) rotate(1deg);
   }
   100% {
-    transform: scale(1) rotate(0deg);
+    transform: scale(1) translateY(0) rotate(0deg);
   }
 }
 

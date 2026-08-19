@@ -37,9 +37,9 @@ function formatRemaining(seconds: number): string {
 .buff-bar__item {
   padding: 0.55rem 0.7rem;
   border-radius: 0.65rem;
-  background: rgba(255, 248, 226, 0.82);
-  border: 1px solid rgba(214, 154, 58, 0.55);
-  box-shadow: 0 4px 10px rgba(92, 48, 12, 0.12);
+  background: rgba(42, 52, 40, 0.9);
+  border: 1px solid rgba(126, 207, 90, 0.45);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .buff-bar__header {
@@ -51,7 +51,7 @@ function formatRemaining(seconds: number): string {
 
 .buff-bar__name {
   font-size: 0.92rem;
-  color: #6b3a12;
+  color: #9ecf7a;
   letter-spacing: 0.03em;
 }
 
@@ -59,12 +59,12 @@ function formatRemaining(seconds: number): string {
   font-variant-numeric: tabular-nums;
   font-size: 0.82rem;
   font-weight: 700;
-  color: #9a6208;
+  color: #c62828;
 }
 
 .buff-bar__desc {
   margin-top: 0.15rem;
   font-size: 0.78rem;
-  color: #855629;
+  color: #b8d4ae;
 }
 </style>

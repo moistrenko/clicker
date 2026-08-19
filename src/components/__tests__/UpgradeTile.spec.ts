@@ -6,8 +6,8 @@ describe('UpgradeTile', () => {
   it('is enabled when affordable', () => {
     const wrapper = mount(UpgradeTile, {
       props: {
-        name: 'Reinforced index finger',
-        description: 'Clicks and cursors bake twice as many cookies.',
+        name: 'Reinforced grip',
+        description: 'Manual strikes and baseball bats score twice as many kills.',
         price: 100,
         affordable: true,
       },
@@ -19,8 +19,8 @@ describe('UpgradeTile', () => {
   it('is disabled when unaffordable', () => {
     const wrapper = mount(UpgradeTile, {
       props: {
-        name: 'Reinforced index finger',
-        description: 'Clicks and cursors bake twice as many cookies.',
+        name: 'Reinforced grip',
+        description: 'Manual strikes and baseball bats score twice as many kills.',
         price: 100,
         affordable: false,
       },

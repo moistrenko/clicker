@@ -4,10 +4,10 @@ import { clickTarget } from '@/theme/clickTarget'
 
 <template>
   <div class="game-layout">
-    <section class="panel panel--bakery">
-      <header class="bakery-title">
-        <p class="eyebrow">Bakery</p>
-        <h1>{{ clickTarget.displayName }} Clicker</h1>
+    <section class="panel panel--horde">
+      <header class="horde-title">
+        <p class="eyebrow">{{ clickTarget.zoneLabel }}</p>
+        <h1>{{ clickTarget.gameTitle }}</h1>
       </header>
       <slot name="bakery" />
     </section>
@@ -17,7 +17,7 @@ import { clickTarget } from '@/theme/clickTarget'
     </section>
 
     <aside class="panel panel--store">
-      <h2>Store</h2>
+      <h2>{{ clickTarget.storeLabel }}</h2>
       <slot name="store" />
     </aside>
   </div>
@@ -34,10 +34,10 @@ import { clickTarget } from '@/theme/clickTarget'
   padding: 1.4rem 1.2rem 2rem;
 }
 
-.panel--bakery {
+.panel--horde {
   background:
-    radial-gradient(circle at 50% 30%, rgba(255, 236, 190, 0.9), transparent 42%),
-    linear-gradient(180deg, #f6dcb0 0%, #e8b56d 55%, #d49a4a 100%);
+    radial-gradient(circle at 50% 28%, rgba(126, 207, 90, 0.18), transparent 45%),
+    linear-gradient(180deg, #4a5f48 0%, #354535 55%, #243024 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,9 +45,9 @@ import { clickTarget } from '@/theme/clickTarget'
 }
 
 .panel--center {
-  background: #f3e2c2;
-  border-left: 1px solid #d8b57a;
-  border-right: 1px solid #d8b57a;
+  background: #2a3428;
+  border-left: 1px solid #4a5a46;
+  border-right: 1px solid #4a5a46;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -55,10 +55,10 @@ import { clickTarget } from '@/theme/clickTarget'
 
 .panel--store {
   background:
-    repeating-linear-gradient(90deg, #3a2414 0 14px, #2b1a0e 14px 15px),
-    linear-gradient(180deg, #4a2e18, #24140b);
-  color: #f0d9b8;
-  box-shadow: inset 8px 0 18px rgba(0, 0, 0, 0.25);
+    repeating-linear-gradient(90deg, #1e241c 0 14px, #151a14 14px 15px),
+    linear-gradient(180deg, #2a3228, #121812);
+  color: #d8e8d0;
+  box-shadow: inset 8px 0 18px rgba(0, 0, 0, 0.35);
 }
 
 .panel--store h2 {
@@ -66,10 +66,10 @@ import { clickTarget } from '@/theme/clickTarget'
   font-size: 1.2rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #f7d7a1;
+  color: #9ecf7a;
 }
 
-.bakery-title {
+.horde-title {
   text-align: center;
 }
 
@@ -77,12 +77,12 @@ import { clickTarget } from '@/theme/clickTarget'
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-size: 0.72rem;
-  color: #8a5520;
+  color: #9ecf7a;
 }
 
-.bakery-title h1 {
+.horde-title h1 {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
-  color: #5b2f0d;
+  color: #e8f0e4;
 }
 
 @media (max-width: 900px) {
@@ -93,8 +93,8 @@ import { clickTarget } from '@/theme/clickTarget'
   .panel--center {
     border-left: 0;
     border-right: 0;
-    border-top: 1px solid #d8b57a;
-    border-bottom: 1px solid #d8b57a;
+    border-top: 1px solid #4a5a46;
+    border-bottom: 1px solid #4a5a46;
   }
 }
 </style>

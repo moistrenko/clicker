@@ -1,37 +1,154 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-hidden="true">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" role="img" aria-hidden="true">
   <defs>
-    <radialGradient id="dough" cx="38%" cy="32%" r="72%">
-      <stop offset="0%" stop-color="#f8deae" />
-      <stop offset="48%" stop-color="#e2b56a" />
-      <stop offset="100%" stop-color="#c4893d" />
+    <linearGradient id="cloth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a4038" />
+      <stop offset="100%" stop-color="#2a2420" />
+    </linearGradient>
+    <linearGradient id="clothShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3a322c" />
+      <stop offset="100%" stop-color="#1a1814" />
+    </linearGradient>
+    <radialGradient id="skin" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#9a8878" />
+      <stop offset="45%" stop-color="#6b5a48" />
+      <stop offset="100%" stop-color="#3a3028" />
     </radialGradient>
-    <radialGradient id="chip" cx="35%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#6b3a1e" />
-      <stop offset="100%" stop-color="#3a1d0c" />
+    <radialGradient id="skinDark" cx="60%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#7a6858" />
+      <stop offset="100%" stop-color="#3a3028" />
     </radialGradient>
-    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#7a4a1c" flood-opacity="0.28" />
+    <linearGradient id="bone" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8a7868" />
+      <stop offset="50%" stop-color="#b8a898" />
+      <stop offset="100%" stop-color="#7a6858" />
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-10%" width="140%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#0a0806" flood-opacity="0.45" />
     </filter>
   </defs>
-  <circle cx="128" cy="128" r="112" fill="url(#dough)" filter="url(#soft)" />
-  <circle cx="128" cy="128" r="112" fill="none" stroke="#9a5c24" stroke-width="7" />
-  <path
-    d="M42 118c18-8 22 16 40 8 14-6 8-22 24-26 12-3 18 12 32 6 16-8 10-24 28-22 14 2 12 18 26 14"
-    fill="none"
-    stroke="#f4d9a4"
-    stroke-width="5"
-    stroke-linecap="round"
-    opacity="0.55"
-  />
-  <ellipse cx="86" cy="84" rx="16" ry="13" fill="url(#chip)" transform="rotate(-18 86 84)" />
-  <ellipse cx="148" cy="70" rx="12" ry="10" fill="url(#chip)" transform="rotate(12 148 70)" />
-  <ellipse cx="186" cy="112" rx="15" ry="12" fill="url(#chip)" transform="rotate(28 186 112)" />
-  <ellipse cx="168" cy="168" rx="17" ry="13" fill="url(#chip)" transform="rotate(-8 168 168)" />
-  <ellipse cx="102" cy="156" rx="13" ry="11" fill="url(#chip)" transform="rotate(22 102 156)" />
-  <ellipse cx="64" cy="138" rx="10" ry="8" fill="url(#chip)" transform="rotate(-30 64 138)" />
-  <ellipse cx="120" cy="108" rx="9" ry="8" fill="url(#chip)" />
-  <ellipse cx="198" cy="156" rx="8" ry="7" fill="url(#chip)" transform="rotate(18 198 156)" />
-  <circle cx="92" cy="80" r="2.2" fill="#c48a5a" opacity="0.55" />
-  <circle cx="172" cy="164" r="2.4" fill="#c48a5a" opacity="0.5" />
-  <circle cx="150" cy="66" r="1.8" fill="#d7a56a" opacity="0.6" />
+
+  <g filter="url(#softShadow)">
+    <!-- ground -->
+    <ellipse cx="98" cy="292" rx="52" ry="7" fill="#0a0806" opacity="0.35" />
+
+    <!-- back leg -->
+    <path d="M88 228 L82 268 L74 292 L88 292 L94 268 Z" fill="url(#skinDark)" />
+    <path d="M82 248 C84 252 86 254 88 252" fill="none" stroke="#4a3d32" stroke-width="1.2" />
+
+    <!-- back arm -->
+    <path
+      d="M108 118 C102 138 96 158 90 178 C88 186 84 184 86 176 C92 154 98 132 104 112 Z"
+      fill="url(#skinDark)"
+    />
+    <path d="M88 176 L82 192 L78 188 L84 172 Z" fill="#5a4a3c" />
+    <path d="M82 192 L76 200 M84 194 L78 202 M86 196 L80 204" stroke="#4a3d32" stroke-width="1.8" stroke-linecap="round" />
+
+    <!-- back pant leg -->
+    <path d="M88 188 L82 228 L88 228 L94 188 Z" fill="url(#clothShadow)" />
+    <path d="M82 228 L76 248 L82 248 L88 228" fill="url(#cloth)" opacity="0.8" />
+
+    <!-- torso -->
+    <path
+      d="M96 108 C88 112 82 128 84 148 C86 168 90 188 98 188 L112 188 C118 188 122 168 124 148 C126 128 120 112 112 108 Z"
+      fill="url(#cloth)"
+    />
+
+    <!-- ribs through torn shirt -->
+    <path d="M92 128 C96 124 102 124 106 128" fill="none" stroke="url(#bone)" stroke-width="2.2" />
+    <path d="M90 138 C95 134 103 134 108 138" fill="none" stroke="url(#bone)" stroke-width="2" />
+    <path d="M89 148 C95 144 103 144 109 148" fill="none" stroke="url(#bone)" stroke-width="2" />
+    <path d="M90 158 C96 154 104 154 110 158" fill="none" stroke="url(#bone)" stroke-width="1.8" />
+    <ellipse cx="99" cy="142" rx="10" ry="18" fill="url(#skinDark)" opacity="0.55" />
+
+    <!-- shirt tears -->
+    <path d="M84 148 L80 162 L86 158 Z" fill="#1a1814" opacity="0.6" />
+    <path d="M118 152 L122 168 L116 164 Z" fill="#1a1814" opacity="0.55" />
+    <path d="M88 188 L92 204 L98 188" fill="none" stroke="#2a2420" stroke-width="2" />
+    <path d="M106 188 L110 206 L116 188" fill="none" stroke="#2a2420" stroke-width="2" />
+
+    <!-- front leg -->
+    <path d="M104 188 L100 232 L92 256 L92 292 L108 292 L112 232 Z" fill="url(#cloth)" />
+    <path d="M100 232 L96 252 L104 248 L108 228 Z" fill="url(#clothShadow)" />
+    <!-- torn pant strips -->
+    <path d="M96 252 L92 272 L98 268 Z" fill="#3a322c" />
+    <path d="M104 248 L108 268 L102 264 Z" fill="#3a322c" />
+    <path d="M100 268 L96 288 L102 286 Z" fill="#4a4038" opacity="0.7" />
+    <!-- exposed shin -->
+    <path d="M100 232 L98 252 L104 250 L106 232 Z" fill="url(#skin)" />
+    <path d="M102 242 L100 248" stroke="#5a2020" stroke-width="1.5" opacity="0.6" />
+    <!-- foot -->
+    <path d="M92 292 L108 292 L106 284 L94 284 Z" fill="url(#skinDark)" />
+
+    <!-- front arm -->
+    <path
+      d="M118 112 C124 132 128 154 130 178 C131 186 127 188 125 180 C122 156 118 132 114 110 Z"
+      fill="url(#skin)"
+    />
+    <!-- torn sleeve strips -->
+    <path d="M126 148 L132 158 L128 160 L122 150 Z" fill="#3a322c" />
+    <path d="M128 162 L134 172 L130 174 L124 164 Z" fill="#4a4038" opacity="0.8" />
+    <!-- hand -->
+    <path d="M125 180 C128 188 132 196 130 204 C128 210 124 208 122 200 C120 192 122 184 125 180 Z" fill="url(#skinDark)" />
+    <path d="M130 204 L136 210 M128 206 L134 214 M126 208 L132 216" stroke="#4a3d32" stroke-width="1.6" stroke-linecap="round" />
+
+    <!-- neck -->
+    <path d="M102 108 L114 108 L112 118 L104 118 Z" fill="url(#skinDark)" />
+    <path d="M106 112 C108 116 110 116 112 112" fill="none" stroke="#5a2020" stroke-width="1.2" opacity="0.5" />
+
+    <!-- head -->
+    <path
+      d="M108 48 C98 48 90 58 88 72 C86 86 88 98 94 106 L112 108 C120 102 124 88 124 72 C124 56 118 48 108 48 Z"
+      fill="url(#skin)"
+    />
+
+    <!-- skull shaping -->
+    <path d="M90 72 C92 66 98 62 104 62 C110 62 116 66 118 72" fill="none" stroke="#4a3d32" stroke-width="1.5" opacity="0.5" />
+    <ellipse cx="94" cy="82" rx="6" ry="8" fill="#3a3028" opacity="0.35" />
+    <ellipse cx="114" cy="80" rx="5" ry="7" fill="#3a3028" opacity="0.3" />
+
+    <!-- hair wisps -->
+    <path d="M92 54 C96 50 104 48 110 50" fill="none" stroke="#2a2420" stroke-width="2" stroke-linecap="round" />
+    <path d="M94 52 C98 48 106 46 112 48" fill="none" stroke="#3a322c" stroke-width="1.2" stroke-linecap="round" />
+
+    <!-- eye socket -->
+    <ellipse cx="102" cy="76" rx="7" ry="6" fill="#1a1410" />
+    <!-- sunken eye -->
+    <ellipse cx="103" cy="77" rx="3.5" ry="3" fill="#2a2420" />
+    <ellipse cx="103.5" cy="76.5" rx="1" ry="1.2" fill="#1a1410" />
+
+    <!-- nose cavity -->
+    <path d="M108 78 L106 86 L110 86 Z" fill="#3a2820" opacity="0.7" />
+
+    <!-- open mouth -->
+    <path
+      d="M96 88 C98 94 102 96 106 96 C110 96 114 94 116 88 C112 92 108 94 106 94 C104 94 100 92 96 88 Z"
+      fill="#1a0808"
+    />
+    <!-- upper teeth -->
+    <path d="M98 90 L100 94 L98 93 Z" fill="#b8a898" />
+    <path d="M102 90 L104 94 L102 93 Z" fill="#c8b8a8" />
+    <path d="M106 90 L108 94 L106 93 Z" fill="#b8a898" />
+    <path d="M110 90 L112 93 L110 92 Z" fill="#a89888" />
+    <!-- lower gum -->
+    <path d="M100 94 C104 96 108 96 112 94" fill="none" stroke="#6b5040" stroke-width="1" opacity="0.6" />
+    <!-- drool -->
+    <path d="M104 96 C103 102 105 108 104 114" fill="none" stroke="#4a3830" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+    <ellipse cx="104" cy="116" rx="1.5" ry="2" fill="#4a3830" opacity="0.5" />
+
+    <!-- jaw line -->
+    <path d="M94 92 C96 98 100 100 106 100 C112 100 116 96 118 90" fill="none" stroke="#5a4a3c" stroke-width="1.2" opacity="0.5" />
+
+    <!-- ear -->
+    <ellipse cx="118" cy="78" rx="4" ry="6" fill="url(#skinDark)" />
+
+    <!-- collar / shirt top -->
+    <path d="M98 108 L106 108 L104 114 L100 114 Z" fill="url(#clothShadow)" />
+    <path d="M100 108 L102 114 M106 108 L104 114" stroke="#2a2420" stroke-width="1" />
+
+    <!-- extra ragged cloth strips -->
+    <path d="M86 168 L80 182 L84 184 L90 170 Z" fill="#3a322c" opacity="0.75" />
+    <path d="M120 172 L126 186 L122 188 L116 174 Z" fill="#4a4038" opacity="0.7" />
+    <path d="M94 204 L90 218 L96 216 Z" fill="#3a322c" opacity="0.65" />
+    <path d="M110 206 L114 220 L108 218 Z" fill="#3a322c" opacity="0.65" />
+  </g>
 </svg>

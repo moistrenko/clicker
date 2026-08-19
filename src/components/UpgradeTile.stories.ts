@@ -6,8 +6,8 @@ const meta = {
   component: UpgradeTile,
   tags: ['autodocs'],
   args: {
-    name: 'Reinforced index finger',
-    description: 'Clicks and cursors bake twice as many cookies.',
+    name: 'Reinforced grip',
+    description: 'Manual strikes and baseball bats score twice as many kills.',
     price: 100,
     affordable: true,
   },
@@ -15,7 +15,7 @@ const meta = {
     (story) => ({
       components: { story },
       template:
-        '<div style="max-width: 360px; padding: 16px; background: #2b1a0e;"><story /></div>',
+        '<div style="max-width: 360px; padding: 16px; background: #1e241c;"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof UpgradeTile>
@@ -27,8 +27,8 @@ export const Affordable: Story = {}
 
 export const Unaffordable: Story = {
   args: {
-    name: 'Ambidextrous',
-    description: 'Clicks and cursors bake twice as many cookies.',
+    name: 'Dual wield bats',
+    description: 'Manual strikes and baseball bats score twice as many kills.',
     price: 10_000,
     affordable: false,
   },

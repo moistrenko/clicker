@@ -14,7 +14,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const ModestBakery: Story = {}
+export const EarlyHorde: Story = {}
 
 export const Millions: Story = {
   args: {

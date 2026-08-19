@@ -13,9 +13,9 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Cookie: Story = {}
+export const Zombie: Story = {}
 
-export const BiggerBite: Story = {
+export const BiggerHit: Story = {
   args: {
     gain: 7,
   },

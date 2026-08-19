@@ -11,7 +11,7 @@ const meta = {
   decorators: [
     () => ({
       template:
-        '<div style="width:320px;padding:1rem;background:#f3e2c2;border-radius:12px;"><story /></div>',
+        '<div style="width:320px;padding:1rem;background:#2a3428;border-radius:12px;"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof BuffBar>
@@ -26,8 +26,8 @@ export const SingleBuff: Story = {
     buffs: [
       {
         id: 'buff-1',
-        name: 'Frenzy',
-        description: 'Cookie production ×7',
+        name: 'Slaughter mode',
+        description: 'Kill rate ×7',
         remainingSeconds: 64.2,
       },
     ],
@@ -39,20 +39,20 @@ export const MultipleBuffs: Story = {
     buffs: [
       {
         id: 'buff-1',
-        name: 'Frenzy',
-        description: 'Cookie production ×7',
+        name: 'Slaughter mode',
+        description: 'Kill rate ×7',
         remainingSeconds: 42.5,
       },
       {
         id: 'buff-2',
-        name: 'Click frenzy',
-        description: 'Cookie clicks ×777',
+        name: 'Rage mode',
+        description: 'Manual strikes ×777',
         remainingSeconds: 9.8,
       },
       {
         id: 'buff-3',
-        name: 'Building special',
-        description: 'Grandma production ×7',
+        name: 'Weapon overdrive',
+        description: 'Shotgun Granny ×7 kill rate',
         remainingSeconds: 71,
       },
     ],
