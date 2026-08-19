@@ -2,9 +2,12 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import {
   buy,
+  buyUpgrade,
   click,
   createInitialState,
+  getCookiesPerClick,
   listStoreBuildings,
+  listStoreUpgrades,
   tick,
   totalBuildingsOwned,
   totalCps,
@@ -24,16 +27,21 @@ export const useGameStore = defineStore('game', () => {
 
   const cookies = computed(() => state.value.cookies)
   const cookiesBakedAllTime = computed(() => state.value.cookiesBakedAllTime)
-  const cookiesPerClick = computed(() => state.value.cookiesPerClick)
+  const cookiesPerClick = computed(() => getCookiesPerClick(state.value))
   const cps = computed(() => totalCps(state.value))
   const buildingsOwned = computed(() => totalBuildingsOwned(state.value))
   const storeListings = computed(() => listStoreBuildings(state.value))
+  const upgradeListings = computed(() => listStoreUpgrades(state.value))
   const formattedCookies = computed(() => formatCookies(state.value.cookies))
   const formattedCps = computed(() => formatCookies(cps.value))
   const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime))
 
   function persist(next: GameState = state.value) {
     saver.schedule(next)
+  }
+
+  function flushSave() {
+    saver.flush(state.value)
   }
 
   function clickCookie() {
@@ -44,6 +52,17 @@ export const useGameStore = defineStore('game', () => {
   function buyBuilding(id: BuildingId) {
     const before = state.value
     const next = buy(before, id)
+    if (next === before) {
+      return false
+    }
+    state.value = next
+    persist()
+    return true
+  }
+
+  function purchaseUpgrade(id: string) {
+    const before = state.value
+    const next = buyUpgrade(before, id)
     if (next === before) {
       return false
     }
@@ -65,6 +84,7 @@ export const useGameStore = defineStore('game', () => {
       return
     }
     lastTick = performance.now()
+    window.addEventListener('beforeunload', flushSave)
     intervalId = window.setInterval(() => {
       const now = performance.now()
       const dtSeconds = (now - lastTick) / 1000
@@ -78,7 +98,8 @@ export const useGameStore = defineStore('game', () => {
       window.clearInterval(intervalId)
       intervalId = undefined
     }
-    saver.flush(state.value)
+    window.removeEventListener('beforeunload', flushSave)
+    flushSave()
   }
 
   function reset() {
@@ -94,11 +115,13 @@ export const useGameStore = defineStore('game', () => {
     cps,
     buildingsOwned,
     storeListings,
+    upgradeListings,
     formattedCookies,
     formattedCps,
     formattedBaked,
     clickCookie,
     buyBuilding,
+    buyUpgrade: purchaseUpgrade,
     start,
     stop,
     reset,

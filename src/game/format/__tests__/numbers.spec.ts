@@ -7,6 +7,13 @@ describe('number formatter', () => {
     expect(formatCookies(999_999)).toBe('999,999')
   })
 
+  it('keeps a sensible decimal for non-integers below one million', () => {
+    expect(formatCookies(0.1)).toBe('0.1')
+    expect(formatCookies(1.1)).toBe('1.1')
+    expect(formatCookies(0.8)).toBe('0.8')
+    expect(formatCookies(1234.5)).toBe('1,234.5')
+  })
+
   it('uses million form at 1,000,000', () => {
     expect(formatCookies(1_000_000)).toMatch(/million/)
     expect(formatCookies(1_000_000)).toBe('1 million')

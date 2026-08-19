@@ -32,7 +32,17 @@ export function formatCookies(value: number): string {
   const abs = Math.abs(value)
 
   if (abs < 1_000_000) {
-    return `${sign}${formatGroupedInteger(abs)}`
+    if (Number.isInteger(abs)) {
+      return `${sign}${formatGroupedInteger(abs)}`
+    }
+
+    const trimmed = abs
+      .toFixed(3)
+      .replace(/(\.\d*?)0+$/, '$1')
+      .replace(/\.$/, '')
+    const [intPart = '0', fracPart] = trimmed.split('.')
+    const grouped = Number(intPart).toLocaleString('en-US')
+    return fracPart ? `${sign}${grouped}.${fracPart}` : `${sign}${grouped}`
   }
 
   const firstScale = SHORT_SCALE[0]

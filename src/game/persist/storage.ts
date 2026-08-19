@@ -1,9 +1,12 @@
-import { createInitialState } from '@/game/engine'
+import { createInitialState, getCookiesPerClick } from '@/game/engine'
 import { BUILDINGS } from '@/game/catalog/buildings'
+import { getUpgrade } from '@/game/catalog/upgrades'
 import { SAVE_VERSION, type BuildingCounts, type GameState } from '@/game/types'
 
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
+
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -29,6 +32,23 @@ function parseBuildings(value: unknown): BuildingCounts {
   return buildings
 }
 
+function parseUpgrades(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+
+  const owned: string[] = []
+  const seen = new Set<string>()
+  for (const id of value) {
+    if (typeof id !== 'string' || seen.has(id) || !getUpgrade(id)) {
+      continue
+    }
+    seen.add(id)
+    owned.push(id)
+  }
+  return owned
+}
+
 export function parseSave(raw: string): GameState | null {
   try {
     const data: unknown = JSON.parse(raw)
@@ -37,17 +57,20 @@ export function parseSave(raw: string): GameState | null {
     }
 
     const version = readNumber(data.version, 0)
-    if (version !== SAVE_VERSION) {
+    if (!SUPPORTED_SAVE_VERSIONS.has(version)) {
       return null
     }
 
-    return {
+    const state: GameState = {
       version: SAVE_VERSION,
       cookies: Math.max(0, readNumber(data.cookies, 0)),
       cookiesBakedAllTime: Math.max(0, readNumber(data.cookiesBakedAllTime, 0)),
-      cookiesPerClick: Math.max(0, readNumber(data.cookiesPerClick, 1)),
+      cookiesPerClick: 1,
       buildings: parseBuildings(data.buildings),
+      upgrades: parseUpgrades(data.upgrades),
     }
+    state.cookiesPerClick = getCookiesPerClick(state)
+    return state
   } catch {
     return null
   }

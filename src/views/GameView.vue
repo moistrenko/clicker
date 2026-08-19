@@ -5,6 +5,7 @@ import CookieCounter from '@/components/CookieCounter.vue'
 import GameLayout from '@/components/GameLayout.vue'
 import NewsTicker from '@/components/NewsTicker.vue'
 import StatsPanel from '@/components/StatsPanel.vue'
+import UpgradeShelf from '@/components/UpgradeShelf.vue'
 import { useGameStore } from '@/stores/game'
 
 const game = useGameStore()
@@ -23,6 +24,7 @@ const game = useGameStore()
     </template>
 
     <template #store>
+      <UpgradeShelf :listings="game.upgradeListings" @buy="game.buyUpgrade" />
       <div class="store-list">
         <BuildingRow
           v-for="listing in game.storeListings"

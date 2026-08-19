@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 1
+export const SAVE_VERSION = 2
 
 export type BuildingId =
   | 'cursor'
@@ -31,12 +31,26 @@ export interface BuildingDef {
 
 export type BuildingCounts = Record<BuildingId, number>
 
+export type UpgradeType = 'double'
+
+export interface UpgradeDef {
+  id: string
+  name: string
+  description: string
+  buildingId: BuildingId
+  cost: number
+  unlockOwned: number
+  type: UpgradeType
+  alsoBoostClick?: boolean
+}
+
 export interface GameState {
   version: number
   cookies: number
   cookiesBakedAllTime: number
   cookiesPerClick: number
   buildings: BuildingCounts
+  upgrades: string[]
 }
 
 export interface StoreListing {
@@ -45,4 +59,9 @@ export interface StoreListing {
   price: number
   affordable: boolean
   locked: boolean
+}
+
+export interface UpgradeListing {
+  upgrade: UpgradeDef
+  affordable: boolean
 }
