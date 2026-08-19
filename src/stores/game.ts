@@ -4,8 +4,10 @@ import {
   buy,
   buyUpgrade,
   click,
+  clickGoldenCookie,
   createInitialState,
   getCookiesPerClick,
+  listActiveBuffs,
   listStoreBuildings,
   listStoreUpgrades,
   tick,
@@ -35,6 +37,8 @@ export const useGameStore = defineStore('game', () => {
   const formattedCookies = computed(() => formatCookies(state.value.cookies))
   const formattedCps = computed(() => formatCookies(cps.value))
   const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime))
+  const goldenCookie = computed(() => state.value.goldenCookie)
+  const activeBuffs = computed(() => listActiveBuffs(state.value))
 
   function persist(next: GameState = state.value) {
     saver.schedule(next)
@@ -46,6 +50,16 @@ export const useGameStore = defineStore('game', () => {
 
   function clickCookie() {
     state.value = click(state.value)
+    persist()
+  }
+
+  function collectGoldenCookie() {
+    const before = state.value
+    const next = clickGoldenCookie(before)
+    if (next === before) {
+      return
+    }
+    state.value = next
     persist()
   }
 
@@ -119,7 +133,10 @@ export const useGameStore = defineStore('game', () => {
     formattedCookies,
     formattedCps,
     formattedBaked,
+    goldenCookie,
+    activeBuffs,
     clickCookie,
+    collectGoldenCookie,
     buyBuilding,
     buyUpgrade: purchaseUpgrade,
     start,

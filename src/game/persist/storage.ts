@@ -1,12 +1,23 @@
-import { createInitialState, getCookiesPerClick } from '@/game/engine'
+import {
+  createInitialState,
+  ensureGoldenSpawnScheduled,
+  expireBuffs,
+  getCookiesPerClick,
+} from '@/game/engine'
 import { BUILDINGS } from '@/game/catalog/buildings'
 import { getUpgrade } from '@/game/catalog/upgrades'
-import { SAVE_VERSION, type BuildingCounts, type GameState } from '@/game/types'
+import {
+  SAVE_VERSION,
+  type ActiveBuff,
+  type BuildingCounts,
+  type GameState,
+  type GoldenCookieSpawn,
+} from '@/game/types'
 
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -49,6 +60,69 @@ function parseUpgrades(value: unknown): string[] {
   return owned
 }
 
+function parseActiveBuffs(value: unknown): ActiveBuff[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+
+  const buffs: ActiveBuff[] = []
+  for (const item of value) {
+    if (!isRecord(item)) {
+      continue
+    }
+    const type = item.type
+    if (
+      type !== 'frenzy' &&
+      type !== 'lucky' &&
+      type !== 'clickFrenzy' &&
+      type !== 'buildingSpecial'
+    ) {
+      continue
+    }
+    const id = typeof item.id === 'string' ? item.id : `buff-${buffs.length + 1}`
+    const expiresAt = readNumber(item.expiresAt, 0)
+    const buff: ActiveBuff = { id, type, expiresAt }
+    if (typeof item.multiplier === 'number' && Number.isFinite(item.multiplier)) {
+      buff.multiplier = item.multiplier
+    }
+    if (typeof item.buildingId === 'string') {
+      const known = BUILDINGS.some((building) => building.id === item.buildingId)
+      if (known) {
+        buff.buildingId = item.buildingId as ActiveBuff['buildingId']
+      }
+    }
+    buffs.push(buff)
+  }
+  return buffs
+}
+
+function parseGoldenCookie(value: unknown): GoldenCookieSpawn | null {
+  if (!isRecord(value)) {
+    return null
+  }
+  const x = readNumber(value.x, -1)
+  const y = readNumber(value.y, -1)
+  if (x < 0 || x > 1 || y < 0 || y > 1) {
+    return null
+  }
+  return { x, y }
+}
+
+function finalizeLoadedState(state: GameState): GameState {
+  let next: GameState = {
+    ...state,
+    version: SAVE_VERSION,
+    gameTime: state.gameTime ?? 0,
+    activeBuffs: state.activeBuffs ?? [],
+    goldenCookie: null,
+    nextGoldenSpawnAt: state.nextGoldenSpawnAt ?? null,
+  }
+  next = expireBuffs(next)
+  next = ensureGoldenSpawnScheduled(next)
+  next.cookiesPerClick = getCookiesPerClick(next)
+  return next
+}
+
 export function parseSave(raw: string): GameState | null {
   try {
     const data: unknown = JSON.parse(raw)
@@ -68,9 +142,15 @@ export function parseSave(raw: string): GameState | null {
       cookiesPerClick: 1,
       buildings: parseBuildings(data.buildings),
       upgrades: parseUpgrades(data.upgrades),
+      gameTime: Math.max(0, readNumber(data.gameTime, 0)),
+      activeBuffs: parseActiveBuffs(data.activeBuffs),
+      goldenCookie: parseGoldenCookie(data.goldenCookie),
+      nextGoldenSpawnAt:
+        data.nextGoldenSpawnAt === null || data.nextGoldenSpawnAt === undefined
+          ? null
+          : Math.max(0, readNumber(data.nextGoldenSpawnAt, 0)),
     }
-    state.cookiesPerClick = getCookiesPerClick(state)
-    return state
+    return finalizeLoadedState(state)
   } catch {
     return null
   }

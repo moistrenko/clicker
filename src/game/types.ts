@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 2
+export const SAVE_VERSION = 3
 
 export type BuildingId =
   | 'cursor'
@@ -44,6 +44,21 @@ export interface UpgradeDef {
   alsoBoostClick?: boolean
 }
 
+export type BuffType = 'frenzy' | 'lucky' | 'clickFrenzy' | 'buildingSpecial'
+
+export interface ActiveBuff {
+  id: string
+  type: BuffType
+  multiplier?: number
+  buildingId?: BuildingId
+  expiresAt: number
+}
+
+export interface GoldenCookieSpawn {
+  x: number
+  y: number
+}
+
 export interface GameState {
   version: number
   cookies: number
@@ -51,6 +66,17 @@ export interface GameState {
   cookiesPerClick: number
   buildings: BuildingCounts
   upgrades: string[]
+  gameTime: number
+  activeBuffs: ActiveBuff[]
+  goldenCookie: GoldenCookieSpawn | null
+  nextGoldenSpawnAt: number | null
+}
+
+export interface BuffListing {
+  id: string
+  name: string
+  description: string
+  remainingSeconds: number
 }
 
 export interface StoreListing {

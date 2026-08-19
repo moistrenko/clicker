@@ -9,6 +9,27 @@ import type {
   UpgradeListing,
 } from '@/game/types'
 import { SAVE_VERSION } from '@/game/types'
+import {
+  clickBuffMultiplier,
+  cpsBuffMultipliers,
+  ensureGoldenSpawnScheduled,
+  expireBuffs,
+  updateGoldenCookieSpawn,
+} from '@/game/engine/goldenCookie'
+
+export {
+  clickGoldenCookie,
+  ensureGoldenSpawnScheduled,
+  expireBuffs,
+  getActiveBuffs,
+  listActiveBuffs,
+  luckyBonus,
+  nextGoldenSpawnInterval,
+  randomGoldenPosition,
+  resetBuffIdCounter,
+  updateGoldenCookieSpawn,
+} from '@/game/engine/goldenCookie'
+export type { Rng } from '@/game/engine/goldenCookie'
 
 export const PRICE_GROWTH = 1.15
 export const ALWAYS_VISIBLE_BUILDINGS = 3
@@ -31,6 +52,10 @@ export function createInitialState(): GameState {
     cookiesPerClick: 1,
     buildings: emptyBuildings(),
     upgrades: [],
+    gameTime: 0,
+    activeBuffs: [],
+    goldenCookie: null,
+    nextGoldenSpawnAt: null,
   }
 }
 
@@ -55,7 +80,7 @@ export function buildingMultiplier(state: GameState, buildingId: BuildingId): nu
   return 2 ** doubles
 }
 
-export function getCookiesPerClick(state: GameState): number {
+export function getCookiesPerClick(state: GameState, atTime = state.gameTime): number {
   let amount = 1
   for (const id of state.upgrades ?? []) {
     const upgrade = getUpgrade(id)
@@ -63,26 +88,29 @@ export function getCookiesPerClick(state: GameState): number {
       amount *= 2
     }
   }
-  return amount
+  return amount * clickBuffMultiplier(state, atTime)
 }
 
 export function click(state: GameState): GameState {
   const amount = getCookiesPerClick(state)
-  return {
+  const next = {
     ...state,
     cookies: state.cookies + amount,
     cookiesBakedAllTime: state.cookiesBakedAllTime + amount,
     cookiesPerClick: amount,
   }
+  return ensureGoldenSpawnScheduled(next)
 }
 
-export function totalCps(state: GameState): number {
+export function totalCps(state: GameState, atTime = state.gameTime): number {
+  const { frenzy, building: buildingBuffs } = cpsBuffMultipliers(state, atTime)
   let cps = 0
   for (const building of BUILDINGS) {
     const owned = state.buildings[building.id] ?? 0
-    cps += owned * building.baseCps * buildingMultiplier(state, building.id)
+    const specialMult = buildingBuffs.get(building.id) ?? 1
+    cps += owned * building.baseCps * buildingMultiplier(state, building.id) * specialMult
   }
-  return cps
+  return cps * frenzy
 }
 
 export function canBuy(state: GameState, id: BuildingId): boolean {
@@ -158,22 +186,30 @@ export function listStoreUpgrades(state: GameState): UpgradeListing[] {
   return listings
 }
 
-export function tick(state: GameState, dtSeconds: number): GameState {
+export function tick(state: GameState, dtSeconds: number, rng: () => number = Math.random): GameState {
   if (!(dtSeconds > 0)) {
     return state
   }
 
   const elapsed = Math.min(dtSeconds, MAX_TICK_SECONDS)
-  const gained = totalCps(state) * elapsed
-  if (gained === 0) {
-    return state
+  let next: GameState = {
+    ...state,
+    gameTime: state.gameTime + elapsed,
+  }
+  next = expireBuffs(next)
+  next = updateGoldenCookieSpawn(next, rng)
+
+  const gained = totalCps(next) * elapsed
+  if (gained > 0) {
+    next = {
+      ...next,
+      cookies: next.cookies + gained,
+      cookiesBakedAllTime: next.cookiesBakedAllTime + gained,
+    }
+    next = ensureGoldenSpawnScheduled(next, rng)
   }
 
-  return {
-    ...state,
-    cookies: state.cookies + gained,
-    cookiesBakedAllTime: state.cookiesBakedAllTime + gained,
-  }
+  return next
 }
 
 export function isBuildingNamed(allTimeCookies: number, index: number, baseCost: number): boolean {
