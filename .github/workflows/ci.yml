@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   test:
@@ -41,6 +46,7 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - uses: actions/configure-pages@v4
       - run: GITHUB_PAGES=true npm run build-only
       - uses: actions/upload-pages-artifact@v3
         with:
