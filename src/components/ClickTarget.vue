@@ -33,8 +33,8 @@ function spawnFloaty() {
   floaties.value.push({
     id,
     amount: `+${formatCookies(props.gain)}`,
-    x: 42 + Math.random() * 16,
-    y: 28 + Math.random() * 20,
+    x: 38 + Math.random() * 24,
+    y: 28 + Math.random() * 18,
   })
   const timer = setTimeout(() => {
     floaties.value = floaties.value.filter((item) => item.id !== id)
@@ -81,22 +81,25 @@ onBeforeUnmount(() => {
         draggable="false"
       />
     </button>
-    <span
-      v-for="floaty in floaties"
-      :key="floaty.id"
-      class="floaty"
-      :style="{ left: `${floaty.x}%`, top: `${floaty.y}%` }"
-    >
-      {{ floaty.amount }}
-    </span>
+    <div class="floaty-layer" aria-hidden="true">
+      <span
+        v-for="floaty in floaties"
+        :key="floaty.id"
+        class="floaty"
+        :style="{ left: `${floaty.x}%`, top: `${floaty.y}%` }"
+      >
+        {{ floaty.amount }}
+      </span>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .click-stage {
   position: relative;
-  width: min(58vw, 220px);
-  height: min(86vw, 330px);
+  isolation: isolate;
+  width: min(68vw, 280px);
+  height: min(68vw, 280px);
   margin: 0 auto;
   user-select: none;
 }
@@ -114,15 +117,14 @@ onBeforeUnmount(() => {
 }
 
 .click-target {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  width: 100%;
-  height: 100%;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  transform-origin: 50% 92%;
+  transform-origin: 50% 75%;
   transition: transform 0.08s ease-out;
 }
 
@@ -130,8 +132,10 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+  object-position: center center;
+  filter:
+    drop-shadow(0 0 1px rgba(232, 240, 228, 0.95))
+    drop-shadow(0 0 4px rgba(200, 220, 192, 0.45));
   pointer-events: none;
 }
 
@@ -143,14 +147,24 @@ onBeforeUnmount(() => {
   animation: hit-recoil 0.32s ease-out;
 }
 
+.floaty-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
 .floaty {
   position: absolute;
   pointer-events: none;
   font-weight: 800;
-  font-size: 1.35rem;
-  color: #9ecf7a;
-  text-shadow: 0 1px 0 #1a2218;
-  animation: float-up 0.8s ease-out forwards;
+  font-size: 1.45rem;
+  color: #b8f0a0;
+  text-shadow:
+    0 0 8px rgba(126, 207, 90, 0.55),
+    0 2px 0 #1a2218;
+  animation: float-up 0.85s ease-out forwards;
 }
 
 @keyframes hit-recoil {
@@ -171,11 +185,11 @@ onBeforeUnmount(() => {
 @keyframes float-up {
   0% {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -46px);
+    transform: translate(-50%, -52px) scale(1.08);
   }
 }
 </style>
