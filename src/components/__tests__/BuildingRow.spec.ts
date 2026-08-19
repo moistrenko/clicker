@@ -1,10 +1,12 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import BuildingRow from '@/components/BuildingRow.vue'
+import { i18n } from '@/i18n'
 
 describe('BuildingRow', () => {
   it('is enabled when affordable', () => {
     const wrapper = mount(BuildingRow, {
+      global: { plugins: [i18n] },
       props: {
         name: 'Cursor',
         owned: 0,
@@ -19,6 +21,7 @@ describe('BuildingRow', () => {
 
   it('is disabled when unaffordable', () => {
     const wrapper = mount(BuildingRow, {
+      global: { plugins: [i18n] },
       props: {
         name: 'Cursor',
         owned: 0,
@@ -31,6 +34,7 @@ describe('BuildingRow', () => {
 
   it('shows a mystery label when locked and stays disabled', () => {
     const wrapper = mount(BuildingRow, {
+      global: { plugins: [i18n] },
       props: {
         name: 'Mine',
         owned: 0,

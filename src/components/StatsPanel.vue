@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { clickTarget } from '@/theme/clickTarget'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   baked: string
   buildingsOwned: number
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
-  <section class="stats" aria-label="Survival stats">
-    <h2>Stats</h2>
+  <section class="stats" :aria-label="t('ui.statsAria')">
+    <h2>{{ t('ui.stats') }}</h2>
     <dl>
       <div>
-        <dt>{{ clickTarget.totalStatLabel }}</dt>
+        <dt>{{ t('game.totalStatLabel') }}</dt>
         <dd>{{ baked }}</dd>
       </div>
       <div>
-        <dt>{{ clickTarget.weaponsStatLabel }}</dt>
+        <dt>{{ t('game.weaponsStatLabel') }}</dt>
         <dd>{{ buildingsOwned }}</dd>
       </div>
     </dl>

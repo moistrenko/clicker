@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { clickTarget } from '@/theme/clickTarget'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   cookies: string
   cps: string
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="cookie-counter">
     <p class="cookie-counter__amount">{{ cookies }}</p>
-    <p class="cookie-counter__noun">{{ clickTarget.pluralName }}</p>
-    <p class="cookie-counter__cps">{{ cps }} {{ clickTarget.perSecondSuffix }}</p>
+    <p class="cookie-counter__noun">{{ t('game.pluralName') }}</p>
+    <p class="cookie-counter__cps">{{ cps }} {{ t('game.perSecondSuffix') }}</p>
   </div>
 </template>
 
@@ -21,7 +23,7 @@ defineProps<{
 }
 
 .cookie-counter__amount {
-  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  font-size: clamp(1.85rem, 6vw, 3.4rem);
   font-weight: 800;
   line-height: 1.05;
   color: #e8f0e4;
@@ -29,7 +31,7 @@ defineProps<{
 }
 
 .cookie-counter__noun {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 2.8vw, 1.15rem);
   color: #b8d4ae;
   text-transform: lowercase;
 }
@@ -37,6 +39,6 @@ defineProps<{
 .cookie-counter__cps {
   margin-top: 0.35rem;
   color: #9ecf7a;
-  font-size: 0.95rem;
+  font-size: clamp(0.82rem, 2.4vw, 0.95rem);
 }
 </style>

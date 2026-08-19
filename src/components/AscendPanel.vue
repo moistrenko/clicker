@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   rank: number
@@ -12,15 +13,14 @@ const emit = defineEmits<{
   ascend: []
 }>()
 
+const { t } = useI18n()
 const multiplierPercent = computed(() => Math.round((props.multiplier - 1) * 100))
 
 function handleAscend() {
   if (!props.canAscend) {
     return
   }
-  const confirmed = window.confirm(
-    'Leave the horde behind and start stronger? This resets your run but keeps achievements and Survivor Rank.',
-  )
+  const confirmed = window.confirm(t('ui.ascendConfirm'))
   if (confirmed) {
     emit('ascend')
   }
@@ -28,29 +28,32 @@ function handleAscend() {
 </script>
 
 <template>
-  <section class="ascend" aria-label="Ascension">
-    <h2>Ascend</h2>
-    <p class="tagline">Leave the horde behind and start stronger.</p>
+  <section class="ascend" :aria-label="t('ui.ascend')">
+    <h2>{{ t('ui.ascend') }}</h2>
+    <p class="tagline">{{ t('ui.ascendTagline') }}</p>
 
     <dl>
       <div>
-        <dt>Survivor Rank</dt>
+        <dt>{{ t('ui.survivorRank') }}</dt>
         <dd>{{ rank }}</dd>
       </div>
       <div>
-        <dt>Permanent bonus</dt>
-        <dd>+{{ multiplierPercent }}% kills/sec &amp; click power</dd>
+        <dt>{{ t('ui.permanentBonus') }}</dt>
+        <dd>{{ t('ui.permanentBonusValue', { percent: multiplierPercent }) }}</dd>
       </div>
       <div>
-        <dt>Next ascend</dt>
-        <dd>+{{ projectedGain }} rank<span v-if="projectedGain !== 1">s</span></dd>
+        <dt>{{ t('ui.nextAscend') }}</dt>
+        <dd>
+          +{{ projectedGain }}
+          {{ projectedGain === 1 ? t('ui.rank') : t('ui.ranks') }}
+        </dd>
       </div>
     </dl>
 
     <button type="button" class="ascend-btn" :disabled="!canAscend" @click="handleAscend">
-      Ascend
+      {{ t('ui.ascendButton') }}
     </button>
-    <p v-if="!canAscend" class="hint">Earn enough lifetime kills to gain your next Survivor Rank.</p>
+    <p v-if="!canAscend" class="hint">{{ t('ui.ascendHint') }}</p>
   </section>
 </template>
 

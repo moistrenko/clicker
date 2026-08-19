@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatCookies } from '@/game/format/numbers'
+import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 
 const props = defineProps<{
   kills: number
@@ -10,10 +12,14 @@ const emit = defineEmits<{
   dismissed: []
 }>()
 
+const { t } = useI18n()
 const visible = ref(false)
 let dismissTimer: ReturnType<typeof setTimeout> | undefined
 
-const formattedKills = computed(() => formatCookies(props.kills))
+const formattedKills = computed(() => {
+  const locale = numberLocaleForApp(i18n.global.locale.value as AppLocale)
+  return formatCookies(props.kills, { locale })
+})
 
 function show() {
   if (!(props.kills > 0)) {
@@ -59,12 +65,12 @@ onMounted(() => {
     >
       <span class="offline-banner__icon" aria-hidden="true">🧟</span>
       <div class="offline-banner__body">
-        <p class="offline-banner__label">While you were away</p>
+        <p class="offline-banner__label">{{ t('ui.offlineLabel') }}</p>
         <p class="offline-banner__message">
-          you scored <strong>{{ formattedKills }}</strong> kills
+          {{ t('ui.offlineMessage', { kills: formattedKills }) }}
         </p>
       </div>
-      <button type="button" class="offline-banner__close" aria-label="Dismiss" @click="dismiss">
+      <button type="button" class="offline-banner__close" :aria-label="t('ui.dismiss')" @click="dismiss">
         ×
       </button>
     </article>
@@ -74,7 +80,7 @@ onMounted(() => {
 <style scoped>
 .offline-banner {
   position: fixed;
-  top: 1rem;
+  top: max(3.75rem, calc(env(safe-area-inset-top, 0px) + 3.25rem));
   left: 50%;
   transform: translateX(-50%);
   z-index: 99;
@@ -82,7 +88,7 @@ onMounted(() => {
   grid-template-columns: auto 1fr auto;
   gap: 0.75rem;
   align-items: start;
-  width: min(92vw, 420px);
+  width: min(calc(100vw - 1.5rem), 420px);
   padding: 0.85rem 0.95rem;
   border-radius: 0.75rem;
   background: linear-gradient(135deg, #3d4a3a 0%, #2a3428 100%);
@@ -106,20 +112,6 @@ onMounted(() => {
   margin-top: 0.15rem;
   font-size: 0.95rem;
   color: #e8f0e4;
-}
-
-.offline-banner__message strong {
-  color: #b8ff9a;
-}
-
-.offline-banner__close {
-  border: 0;
-  background: transparent;
-  color: #9ecf7a;
-  font-size: 1.35rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
 }
 
 .offline-banner-enter-active,

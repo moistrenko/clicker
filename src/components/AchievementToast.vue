@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import type { AchievementDef } from '@/game/types'
+import { useCatalogText } from '@/i18n/useCatalogText'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   achievement: AchievementDef | null
@@ -10,6 +12,8 @@ const emit = defineEmits<{
   dismissed: []
 }>()
 
+const { t } = useI18n()
+const { achievementName, achievementDescription } = useCatalogText()
 const visible = ref(false)
 let dismissTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -57,11 +61,11 @@ onMounted(() => {
     >
       <span class="achievement-toast__icon" aria-hidden="true">{{ achievement.icon }}</span>
       <div class="achievement-toast__body">
-        <p class="achievement-toast__label">Achievement unlocked</p>
-        <strong class="achievement-toast__name">{{ achievement.name }}</strong>
-        <p class="achievement-toast__desc">{{ achievement.description }}</p>
+        <p class="achievement-toast__label">{{ t('ui.achievementUnlocked') }}</p>
+        <strong class="achievement-toast__name">{{ achievementName(achievement) }}</strong>
+        <p class="achievement-toast__desc">{{ achievementDescription(achievement) }}</p>
       </div>
-      <button type="button" class="achievement-toast__close" aria-label="Dismiss" @click="dismiss">
+      <button type="button" class="achievement-toast__close" :aria-label="t('ui.dismiss')" @click="dismiss">
         ×
       </button>
     </article>
@@ -71,14 +75,14 @@ onMounted(() => {
 <style scoped>
 .achievement-toast {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: max(3.75rem, calc(env(safe-area-inset-top, 0px) + 3.25rem));
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
   z-index: 100;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 0.75rem;
   align-items: start;
-  width: min(92vw, 360px);
+  width: min(calc(100vw - 1.5rem), 360px);
   padding: 0.85rem 0.9rem;
   border-radius: 0.75rem;
   background: linear-gradient(135deg, #3a4a38 0%, #2a3428 100%);
@@ -132,5 +136,18 @@ onMounted(() => {
 .achievement-toast-leave-to {
   transform: translateX(110%);
   opacity: 0;
+}
+
+@media (max-width: 720px) {
+  .achievement-toast {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .achievement-toast-enter-from,
+  .achievement-toast-leave-to {
+    transform: translateX(-50%) translateY(-110%);
+  }
 }
 </style>

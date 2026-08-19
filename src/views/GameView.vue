@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AscendPanel from '@/components/AscendPanel.vue'
 import AchievementToast from '@/components/AchievementToast.vue'
 import AchievementsPanel from '@/components/AchievementsPanel.vue'
@@ -14,15 +15,18 @@ import OfflineBanner from '@/components/OfflineBanner.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import StatsPanel from '@/components/StatsPanel.vue'
 import UpgradeShelf from '@/components/UpgradeShelf.vue'
+import { useCatalogText } from '@/i18n/useCatalogText'
 import { useGameStore } from '@/stores/game'
 
 const game = useGameStore()
+const { t } = useI18n()
+const { buildingName, upgradeName, upgradeDescription } = useCatalogText()
 const settingsPanel = ref<InstanceType<typeof SettingsPanel> | null>(null)
 
 function handleImportSave(raw: string) {
   const ok = game.importSave(raw)
   if (!ok) {
-    settingsPanel.value?.setImportError('That survivor log is corrupted or from another apocalypse.')
+    settingsPanel.value?.setImportError(t('errors.importFailed'))
   }
 }
 </script>
@@ -63,12 +67,17 @@ function handleImportSave(raw: string) {
     </template>
 
     <template #store>
-      <UpgradeShelf :listings="game.upgradeListings" @buy="game.buyUpgrade" />
+      <UpgradeShelf
+        :listings="game.upgradeListings"
+        :name-for="(listing) => upgradeName(listing.upgrade.id)"
+        :description-for="(listing) => upgradeDescription(listing.upgrade)"
+        @buy="game.buyUpgrade"
+      />
       <div class="store-list">
         <BuildingRow
           v-for="listing in game.storeListings"
           :key="listing.building.id"
-          :name="listing.building.name"
+          :name="buildingName(listing.building.id)"
           :owned="listing.owned"
           :price="listing.price"
           :affordable="listing.affordable"
@@ -86,12 +95,18 @@ function handleImportSave(raw: string) {
 <style scoped>
 .bakery-stage {
   position: relative;
-  width: min(78vw, 340px);
+  width: min(88vw, 340px);
   margin: 0 auto;
 }
 
 .store-list {
   display: grid;
   gap: 0.55rem;
+}
+
+@media (max-width: 720px) {
+  .bakery-stage {
+    width: min(92vw, 360px);
+  }
 }
 </style>

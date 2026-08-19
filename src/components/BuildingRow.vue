@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatCookies } from '@/game/format/numbers'
+import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 
 const props = withDefaults(
   defineProps<{
@@ -17,15 +19,26 @@ const emit = defineEmits<{
   buy: []
 }>()
 
-const label = computed(() => (props.locked ? '???' : props.name))
-const priceLabel = computed(() => (props.locked ? '???' : formatCookies(props.price)))
+const { t } = useI18n()
+
+const label = computed(() => (props.locked ? t('ui.locked') : props.name))
+const priceLabel = computed(() => {
+  if (props.locked) {
+    return t('ui.locked')
+  }
+  const locale = numberLocaleForApp(i18n.global.locale.value as AppLocale)
+  return formatCookies(props.price, { locale })
+})
 const disabled = computed(() => props.locked || !props.affordable)
+const ownedLabel = computed(() =>
+  props.locked ? t('ui.unknown') : t('ui.owned', { count: props.owned }),
+)
 </script>
 
 <template>
   <button class="building-row" type="button" :disabled="disabled" @click="emit('buy')">
     <span class="building-row__name">{{ label }}</span>
-    <span class="building-row__owned" :aria-label="locked ? 'Unknown' : `${owned} owned`">
+    <span class="building-row__owned" :aria-label="ownedLabel">
       {{ locked ? '' : owned }}
     </span>
     <span class="building-row__price">{{ priceLabel }}</span>
@@ -35,7 +48,7 @@ const disabled = computed(() => props.locked || !props.affordable)
 <style scoped>
 .building-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 0.75rem;
   align-items: center;
   width: 100%;
@@ -62,6 +75,9 @@ const disabled = computed(() => props.locked || !props.affordable)
 .building-row__name {
   font-weight: 700;
   letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .building-row__owned {
@@ -73,5 +89,13 @@ const disabled = computed(() => props.locked || !props.affordable)
 .building-row__price {
   font-variant-numeric: tabular-nums;
   color: #ffe7b3;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .building-row {
+    gap: 0.5rem;
+    padding: 0.65rem 0.75rem;
+  }
 }
 </style>

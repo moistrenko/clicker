@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   exportLabel?: string
@@ -13,6 +14,7 @@ const emit = defineEmits<{
   wipeSave: []
 }>()
 
+const { t } = useI18n()
 const importText = ref('')
 const importError = ref('')
 const copied = ref(false)
@@ -29,16 +31,14 @@ function handleImport() {
   importError.value = ''
   const raw = importText.value.trim()
   if (!raw) {
-    importError.value = 'Paste a survivor log before importing.'
+    importError.value = t('ui.importEmpty')
     return
   }
   emit('importSave', raw)
 }
 
 function handleWipe() {
-  const confirmed = window.confirm(
-    'Wipe this survivor log forever? All kills, weapons, and progress will be lost.',
-  )
+  const confirmed = window.confirm(t('ui.wipeConfirm'))
   if (confirmed) {
     importText.value = ''
     importError.value = ''
@@ -55,36 +55,36 @@ defineExpose({ setImportError })
 
 <template>
   <details class="settings">
-    <summary class="settings__toggle">Survivor log</summary>
+    <summary class="settings__toggle">{{ t('ui.settingsTitle') }}</summary>
 
     <div class="settings__body">
-      <p class="settings__hint">Back up, restore, or purge your horde progress.</p>
+      <p class="settings__hint">{{ t('ui.settingsHint') }}</p>
 
       <div class="settings__actions">
         <button type="button" class="settings__btn" @click="handleExport">
-          {{ exportLabel ?? 'Export log' }}
+          {{ exportLabel ?? t('ui.exportLog') }}
         </button>
-        <span v-if="copied" class="settings__copied" role="status">Copied to clipboard</span>
+        <span v-if="copied" class="settings__copied" role="status">{{ t('ui.copied') }}</span>
       </div>
 
       <label class="settings__field">
-        <span class="settings__label">{{ importLabel ?? 'Import log' }}</span>
+        <span class="settings__label">{{ importLabel ?? t('ui.importLog') }}</span>
         <textarea
           v-model="importText"
           class="settings__textarea"
           rows="4"
-          placeholder="Paste exported survivor log JSON here…"
+          :placeholder="t('ui.importPlaceholder')"
           spellcheck="false"
         />
       </label>
 
       <button type="button" class="settings__btn settings__btn--import" @click="handleImport">
-        Apply imported log
+        {{ t('ui.applyImport') }}
       </button>
       <p v-if="importError" class="settings__error" role="alert">{{ importError }}</p>
 
       <button type="button" class="settings__btn settings__btn--wipe" @click="handleWipe">
-        {{ wipeLabel ?? 'Wipe log' }}
+        {{ wipeLabel ?? t('ui.wipeLog') }}
       </button>
     </div>
   </details>

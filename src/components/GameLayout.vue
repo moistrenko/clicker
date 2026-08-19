@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { clickTarget } from '@/theme/clickTarget'
 </script>
 
 <template>
   <div class="game-layout">
     <section class="panel panel--horde">
       <header class="horde-title">
-        <p class="eyebrow">{{ clickTarget.zoneLabel }}</p>
-        <h1>{{ clickTarget.gameTitle }}</h1>
+        <p class="eyebrow">{{ $t('game.zoneLabel') }}</p>
+        <h1>{{ $t('game.title') }}</h1>
       </header>
       <slot name="bakery" />
     </section>
@@ -17,7 +16,7 @@ import { clickTarget } from '@/theme/clickTarget'
     </section>
 
     <aside class="panel panel--store">
-      <h2>{{ clickTarget.storeLabel }}</h2>
+      <h2>{{ $t('game.storeLabel') }}</h2>
       <slot name="store" />
     </aside>
   </div>
@@ -31,7 +30,7 @@ import { clickTarget } from '@/theme/clickTarget'
 }
 
 .panel {
-  padding: 1.4rem 1.2rem 2rem;
+  padding: clamp(0.85rem, 2.5vw, 1.4rem) clamp(0.75rem, 2vw, 1.2rem) clamp(1.25rem, 3vw, 2rem);
 }
 
 .panel--horde {
@@ -41,7 +40,8 @@ import { clickTarget } from '@/theme/clickTarget'
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.65rem, 2vw, 1rem);
+  padding-top: clamp(2.5rem, 6vw, 3.25rem);
 }
 
 .panel--center {
@@ -63,7 +63,7 @@ import { clickTarget } from '@/theme/clickTarget'
 
 .panel--store h2 {
   margin-bottom: 0.9rem;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #9ecf7a;
@@ -81,20 +81,56 @@ import { clickTarget } from '@/theme/clickTarget'
 }
 
 .horde-title h1 {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-size: clamp(1.45rem, 4.5vw, 2.2rem);
   color: #e8f0e4;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .game-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.95fr);
+    grid-template-areas:
+      'horde horde'
+      'center store';
+  }
+
+  .panel--horde {
+    grid-area: horde;
   }
 
   .panel--center {
+    grid-area: center;
     border-left: 0;
+    border-right: 1px solid #4a5a46;
+  }
+
+  .panel--store {
+    grid-area: store;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (max-width: 720px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'horde'
+      'center'
+      'store';
+  }
+
+  .panel--horde {
+    min-height: auto;
+    padding-top: clamp(2.75rem, 10vw, 3.5rem);
+  }
+
+  .panel--center {
     border-right: 0;
     border-top: 1px solid #4a5a46;
     border-bottom: 1px solid #4a5a46;
+  }
+
+  .panel--store {
+    box-shadow: none;
   }
 }
 </style>

@@ -1,23 +1,28 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { UpgradeListing } from '@/game/types'
 import UpgradeTile from '@/components/UpgradeTile.vue'
 
 defineProps<{
   listings: UpgradeListing[]
+  nameFor: (listing: UpgradeListing) => string
+  descriptionFor: (listing: UpgradeListing) => string
 }>()
 
 const emit = defineEmits<{
   buy: [id: string]
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
-  <section v-if="listings.length > 0" class="upgrade-shelf" aria-label="Upgrades">
+  <section v-if="listings.length > 0" class="upgrade-shelf" :aria-label="t('ui.upgrades')">
     <UpgradeTile
       v-for="listing in listings"
       :key="listing.upgrade.id"
-      :name="listing.upgrade.name"
-      :description="listing.upgrade.description"
+      :name="nameFor(listing)"
+      :description="descriptionFor(listing)"
       :price="listing.upgrade.cost"
       :affordable="listing.affordable"
       @buy="emit('buy', listing.upgrade.id)"

@@ -1,4 +1,3 @@
-import { clickTarget } from '@/theme/clickTarget'
 import type { BuildingId, UpgradeDef } from '@/game/types'
 import { BUILDINGS, getBuilding } from './buildings'
 
@@ -12,7 +11,7 @@ const CURSOR_UPGRADES: readonly UpgradeDef[] = [
   {
     id: 'cursor-1',
     name: 'Reinforced grip',
-    description: `Manual strikes and baseball bats score twice as many ${clickTarget.pluralName}.`,
+    description: 'Manual strikes and baseball bats score twice as many kills.',
     buildingId: 'cursor',
     cost: 100,
     unlockOwned: 1,
@@ -22,7 +21,7 @@ const CURSOR_UPGRADES: readonly UpgradeDef[] = [
   {
     id: 'cursor-2',
     name: 'Adrenaline shots',
-    description: `Manual strikes and baseball bats score twice as many ${clickTarget.pluralName}.`,
+    description: 'Manual strikes and baseball bats score twice as many kills.',
     buildingId: 'cursor',
     cost: 500,
     unlockOwned: 1,
@@ -32,7 +31,7 @@ const CURSOR_UPGRADES: readonly UpgradeDef[] = [
   {
     id: 'cursor-3',
     name: 'Dual wield bats',
-    description: `Manual strikes and baseball bats score twice as many ${clickTarget.pluralName}.`,
+    description: 'Manual strikes and baseball bats score twice as many kills.',
     buildingId: 'cursor',
     cost: 10_000,
     unlockOwned: 10,

@@ -1,0 +1,399 @@
+{
+  "game": {
+    "title": "Зомби-кликер",
+    "zoneLabel": "Зона орды",
+    "storeLabel": "Арсенал",
+    "displayName": "Зомби",
+    "pluralName": "убийств",
+    "alt": "Зомби",
+    "totalStatLabel": "Всего убийств",
+    "weaponsStatLabel": "Оружия",
+    "perSecondSuffix": "уб/с",
+    "clickActionLabel": "Ударить зомби",
+    "collectBonusLabel": "Собрать элитного зомби",
+    "newsKicker": "Новости",
+    "newsAria": "Новости: {name}"
+  },
+  "ui": {
+    "stats": "Статистика",
+    "statsAria": "Статистика выживания",
+    "achievements": "Достижения",
+    "locked": "???",
+    "keepSmashing": "Продолжайте бить, чтобы открыть.",
+    "achievementUnlocked": "Достижение получено",
+    "dismiss": "Закрыть",
+    "offlineLabel": "Пока вас не было",
+    "offlineMessage": "вы совершили {kills} убийств",
+    "activeBuffs": "Активные баффы",
+    "upgrades": "Улучшения",
+    "ascend": "Возвышение",
+    "ascendTagline": "Оставьте орду позади и начните сильнее.",
+    "survivorRank": "Ранг выжившего",
+    "permanentBonus": "Постоянный бонус",
+    "permanentBonusValue": "+{percent}% к уб/с и клику",
+    "nextAscend": "Следующее возвышение",
+    "rank": "ранг",
+    "ranks": "ранга",
+    "ascendButton": "Возвыситься",
+    "ascendHint": "Наберите достаточно убийств за всё время, чтобы получить новый ранг.",
+    "ascendConfirm": "Оставить орду позади и начать сильнее? Прогресс сбросится, но достижения и ранг сохранятся.",
+    "owned": "есть: {count}",
+    "unknown": "Неизвестно",
+    "cost": "Цена {price}",
+    "settingsTitle": "Журнал выжившего",
+    "settingsHint": "Сохраните, восстановите или удалите прогресс орды.",
+    "exportLog": "Экспорт",
+    "importLog": "Импорт",
+    "applyImport": "Применить импорт",
+    "wipeLog": "Удалить сохранение",
+    "copied": "Скопировано",
+    "importPlaceholder": "Вставьте JSON сохранения…",
+    "importEmpty": "Сначала вставьте сохранение.",
+    "wipeConfirm": "Удалить сохранение навсегда? Все убийства, оружие и прогресс будут потеряны.",
+    "language": "Язык",
+    "switchToEn": "English",
+    "switchToRu": "Русский"
+  },
+  "errors": {
+    "importFailed": "Сохранение повреждено или из другой игры."
+  },
+  "numbers": {
+    "million": "млн",
+    "billion": "млрд",
+    "trillion": "трлн",
+    "quadrillion": "квадрлн",
+    "quintillion": "quintillion",
+    "sextillion": "sextillion",
+    "septillion": "septillion",
+    "octillion": "octillion",
+    "nonillion": "nonillion",
+    "decillion": "decillion"
+  },
+  "buffs": {
+    "frenzy": {
+      "name": "Режим резни",
+      "description": "Уб/с ×7"
+    },
+    "lucky": {
+      "name": "Бонус хедшота",
+      "description": "Внезапный залп убийств"
+    },
+    "clickFrenzy": {
+      "name": "Ярость",
+      "description": "Ручные удары ×777"
+    },
+    "buildingSpecial": {
+      "name": "Перегруз оружия",
+      "description": "Один тип оружия ×7"
+    },
+    "buildingProduction": "Производство {building} ×{multiplier}"
+  },
+  "buildings": {
+    "cursor": "Бейсбольная бита",
+    "grandma": "Бабушка с дробовиком",
+    "farm": "Яма-ловушка",
+    "mine": "Минное поле",
+    "factory": "Патронный завод",
+    "bank": "Оружейный склад",
+    "temple": "Убежище",
+    "wizardTower": "Огнемётная башня",
+    "shipment": "Сброс с воздуха",
+    "alchemyLab": "Кислотная лаборатория",
+    "portal": "Зона карантина",
+    "timeMachine": "Откат времени",
+    "antimatterCondenser": "Рельсотрон",
+    "prism": "Снайперское гнездо",
+    "chancemaker": "Отряд критов",
+    "fractalEngine": "Рой дронов",
+    "javascriptConsole": "ИИ-убийца",
+    "idleverse": "Параллельная зараза",
+    "cortexBaker": "Пси-глушитель",
+    "you": "Легион клонов"
+  },
+  "upgrades": {
+    "cursor-1": {
+      "name": "Усиленный хват"
+    },
+    "cursor-2": {
+      "name": "Адреналин"
+    },
+    "cursor-3": {
+      "name": "Две биты"
+    },
+    "grandma-1": {
+      "name": "Картечь"
+    },
+    "grandma-2": {
+      "name": "Укороченные стволы"
+    },
+    "grandma-3": {
+      "name": "Огненные патроны"
+    },
+    "farm-1": {
+      "name": "Острые шипы"
+    },
+    "farm-2": {
+      "name": "Скрытые ямы"
+    },
+    "farm-3": {
+      "name": "Приманка"
+    },
+    "mine-1": {
+      "name": "Датчики движения"
+    },
+    "mine-2": {
+      "name": "Растяжки"
+    },
+    "mine-3": {
+      "name": "Дистанционный подрыв"
+    },
+    "factory-1": {
+      "name": "Экспansive-патроны"
+    },
+    "factory-2": {
+      "name": "Бронебойные"
+    },
+    "factory-3": {
+      "name": "Зажигательные"
+    },
+    "bank-1": {
+      "name": "Запертые стойки"
+    },
+    "bank-2": {
+      "name": "Кобуры быстрого доступа"
+    },
+    "bank-3": {
+      "name": "Взрывные запасы"
+    },
+    "temple-1": {
+      "name": "Укреплённые двери"
+    },
+    "temple-2": {
+      "name": "Забарricированные окна"
+    },
+    "temple-3": {
+      "name": "Снайперы на крыше"
+    },
+    "wizardTower-1": {
+      "name": "Длинные шланги"
+    },
+    "wizardTower-2": {
+      "name": "Смесь napalm"
+    },
+    "wizardTower-3": {
+      "name": "Топливно-воздушные заряды"
+    },
+    "shipment-1": {
+      "name": "Ночные сбросы"
+    },
+    "shipment-2": {
+      "name": "GPS-паллеты"
+    },
+    "shipment-3": {
+      "name": "Экстренная подмога"
+    },
+    "alchemyLab-1": {
+      "name": "Коррозийная смесь"
+    },
+    "alchemyLab-2": {
+      "name": "Кислота-пожиратель"
+    },
+    "alchemyLab-3": {
+      "name": "Формула расплава"
+    },
+    "portal-1": {
+      "name": "Печати карантина"
+    },
+    "portal-2": {
+      "name": "Пена сдерживания"
+    },
+    "portal-3": {
+      "name": "Приказ стрелять на поражение"
+    },
+    "timeMachine-1": {
+      "name": "Патроны отката"
+    },
+    "timeMachine-2": {
+      "name": "Парадокс-снаряды"
+    },
+    "timeMachine-3": {
+      "name": "Временная шrapnel"
+    },
+    "antimatterCondenser-1": {
+      "name": "Перезаряженные рельсы"
+    },
+    "antimatterCondenser-2": {
+      "name": "Магнитные ускорители"
+    },
+    "antimatterCondenser-3": {
+      "name": "Орбитальные удары"
+    },
+    "prism-1": {
+      "name": "Тепловые прицелы"
+    },
+    "prism-2": {
+      "name": "Матчевые патроны"
+    },
+    "prism-3": {
+      "name": "Доктрина одного выстрела"
+    },
+    "chancemaker-1": {
+      "name": "Счастливые хедшоты"
+    },
+    "chancemaker-2": {
+      "name": "Крит-прицеливание"
+    },
+    "chancemaker-3": {
+      "name": "Джекпот-цепочка"
+    },
+    "fractalEngine-1": {
+      "name": "Рой тактик"
+    },
+    "fractalEngine-2": {
+      "name": "Координация улья"
+    },
+    "fractalEngine-3": {
+      "name": "Насыщенная бомбардировка"
+    },
+    "javascriptConsole-1": {
+      "name": "Патч автоприцела"
+    },
+    "javascriptConsole-2": {
+      "name": "Приоритет угроз"
+    },
+    "javascriptConsole-3": {
+      "name": "Переполнение квоты"
+    },
+    "idleverse-1": {
+      "name": "Карта заражения"
+    },
+    "idleverse-2": {
+      "name": "Межизмеренная охота"
+    },
+    "idleverse-3": {
+      "name": "Бесконечная орда"
+    },
+    "cortexBaker-1": {
+      "name": "Сбой разума"
+    },
+    "cortexBaker-2": {
+      "name": "Нейроперегруз"
+    },
+    "cortexBaker-3": {
+      "name": "Каскад жарки мозгов"
+    },
+    "you-1": {
+      "name": "Боевые клоны"
+    },
+    "you-2": {
+      "name": "Элитные копии"
+    },
+    "you-3": {
+      "name": "Апокалиптический ты"
+    },
+    "cursorDescription": "Ручные удары и биты дают вдвое больше {kills}.",
+    "buildingDescription": "Удваивает уб/с: {building}."
+  },
+  "achievements": {
+    "first-blood": {
+      "name": "Первая кровь",
+      "description": "Совершите первое убийство."
+    },
+    "finger-workout": {
+      "name": "Тренировка пальцев",
+      "description": "Ударьте зомби 100 раз."
+    },
+    "fresh-meat": {
+      "name": "Свежее мясо",
+      "description": "Наберите 100 убийств."
+    },
+    "bat-basics": {
+      "name": "Основы биты",
+      "description": "Купите первую бейсбольную биту."
+    },
+    "granny-guard": {
+      "name": "Бабушка на страже",
+      "description": "Наймите бабушку с дробовиком."
+    },
+    "click-crazy": {
+      "name": "Кликoman",
+      "description": "Ударьте зомби 1000 раз."
+    },
+    "still-breathing": {
+      "name": "Ещё дышу",
+      "description": "Доживите до 1000 убийств."
+    },
+    "armory-starter": {
+      "name": "Старт арсенала",
+      "description": "Имейте 10 единиц оружия."
+    },
+    "bat-hoarder": {
+      "name": "Коллекционер бит",
+      "description": "Накопите 5 бит."
+    },
+    "granny-squad": {
+      "name": "Отряд бабушек",
+      "description": "Разверните 5 бабушек."
+    },
+    "pit-digger": {
+      "name": "Копатель ям",
+      "description": "Постройте первую яму-ловушку."
+    },
+    "upgrade-initiate": {
+      "name": "Новичок улучшений",
+      "description": "Купите первое улучшение."
+    },
+    "fully-loaded": {
+      "name": "Полная загрузка",
+      "description": "Имейте 5 улучшений."
+    },
+    "killing-machine": {
+      "name": "Машина смерти",
+      "description": "Достигните 100 уб/с."
+    },
+    "weapon-collector": {
+      "name": "Коллекционер оружия",
+      "description": "Имейте 25 единиц оружия."
+    },
+    "mass-extermination": {
+      "name": "Массовое истребление",
+      "description": "Наберите 10 000 убийств."
+    },
+    "click-fury": {
+      "name": "Ярость кликов",
+      "description": "Ударьте зомби 10 000 раз."
+    },
+    "factory-online": {
+      "name": "Завод запущен",
+      "description": "Откройте патронный завод."
+    },
+    "safe-house": {
+      "name": "Убежище",
+      "description": "Оснуйте убежище."
+    },
+    "apocalypse-now": {
+      "name": "Апокалипсис сейчас",
+      "description": "Наберите 100 000 убийств."
+    },
+    "unstoppable": {
+      "name": "Неудержимый",
+      "description": "Достигните 1000 уб/с."
+    },
+    "veteran-clicker": {
+      "name": "Ветеран кликер",
+      "description": "Ударьте зомби 50 000 раз."
+    }
+  },
+  "news": [
+    "Местные выжившие сообщают о беспрецедентной активности зомби в центре.",
+    "Учёные подтверждают: если бить сильно — это кардио.",
+    "Союз бабушек с дробовиками организовался и снова пошёл убивать.",
+    "Вы нашли патроны за диваном. Моральный дух растёт.",
+    "Новости: где-то ферма полна ям-ловушек. Никто не спрашивает почему.",
+    "Огнемётные башни отрицают ответственность за выжженные газоны.",
+    "Руки болят. Орде всё равно.",
+    "Сброс пропал. Убийств у вас почему-то стало больше.",
+    "Праздность — мать метких выстрелов, говорит подозрительно спокойный выживший.",
+    "Вы смотрите на зомби. Зомби смотрит на вас — с аппетитом."
+  ]
+}

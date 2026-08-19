@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { clickTarget } from '@/theme/clickTarget'
 import { formatCookies } from '@/game/format/numbers'
+import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 
 interface Floaty {
   id: number
@@ -21,6 +23,13 @@ const emit = defineEmits<{
   click: []
 }>()
 
+const { t } = useI18n()
+
+function formatGain(value: number): string {
+  const locale = numberLocaleForApp(i18n.global.locale.value as AppLocale)
+  return formatCookies(value, { locale })
+}
+
 const pressed = ref(false)
 const wobbling = ref(false)
 const floaties = ref<Floaty[]>([])
@@ -32,7 +41,7 @@ function spawnFloaty() {
   nextId += 1
   floaties.value.push({
     id,
-    amount: `+${formatCookies(props.gain)}`,
+    amount: `+${formatGain(props.gain)}`,
     x: 38 + Math.random() * 24,
     y: 28 + Math.random() * 18,
   })
@@ -67,7 +76,7 @@ onBeforeUnmount(() => {
       class="click-target"
       type="button"
       :class="{ pressed, wobble: wobbling }"
-      :aria-label="clickTarget.clickActionLabel"
+      :aria-label="t('game.clickActionLabel')"
       @pointerdown="pressed = true"
       @pointerup="pressed = false"
       @pointerleave="pressed = false"
@@ -77,7 +86,7 @@ onBeforeUnmount(() => {
       <img
         class="click-target__image"
         :src="clickTarget.imageUrl"
-        :alt="clickTarget.alt"
+        :alt="t('game.alt')"
         draggable="false"
       />
     </button>

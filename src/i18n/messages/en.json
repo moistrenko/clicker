@@ -1,0 +1,399 @@
+{
+  "game": {
+    "title": "Zombie Clicker",
+    "zoneLabel": "Horde Zone",
+    "storeLabel": "Armory",
+    "displayName": "Zombie",
+    "pluralName": "kills",
+    "alt": "Zombie",
+    "totalStatLabel": "Total kills",
+    "weaponsStatLabel": "Weapons owned",
+    "perSecondSuffix": "kills/sec",
+    "clickActionLabel": "Smash zombie",
+    "collectBonusLabel": "Collect elite zombie",
+    "newsKicker": "News",
+    "newsAria": "{name} news"
+  },
+  "ui": {
+    "stats": "Stats",
+    "statsAria": "Survival stats",
+    "achievements": "Achievements",
+    "locked": "???",
+    "keepSmashing": "Keep smashing to unlock.",
+    "achievementUnlocked": "Achievement unlocked",
+    "dismiss": "Dismiss",
+    "offlineLabel": "While you were away",
+    "offlineMessage": "you scored {kills} kills",
+    "activeBuffs": "Active buffs",
+    "upgrades": "Upgrades",
+    "ascend": "Ascend",
+    "ascendTagline": "Leave the horde behind and start stronger.",
+    "survivorRank": "Survivor Rank",
+    "permanentBonus": "Permanent bonus",
+    "permanentBonusValue": "+{percent}% kills/sec & click power",
+    "nextAscend": "Next ascend",
+    "rank": "rank",
+    "ranks": "ranks",
+    "ascendButton": "Ascend",
+    "ascendHint": "Earn enough lifetime kills to gain your next Survivor Rank.",
+    "ascendConfirm": "Leave the horde behind and start stronger? This resets your run but keeps achievements and Survivor Rank.",
+    "owned": "{count} owned",
+    "unknown": "Unknown",
+    "cost": "Cost {price}",
+    "settingsTitle": "Survivor log",
+    "settingsHint": "Back up, restore, or purge your horde progress.",
+    "exportLog": "Export log",
+    "importLog": "Import log",
+    "applyImport": "Apply imported log",
+    "wipeLog": "Wipe log",
+    "copied": "Copied to clipboard",
+    "importPlaceholder": "Paste exported survivor log JSON here…",
+    "importEmpty": "Paste a survivor log before importing.",
+    "wipeConfirm": "Wipe this survivor log forever? All kills, weapons, and progress will be lost.",
+    "language": "Language",
+    "switchToEn": "English",
+    "switchToRu": "Русский"
+  },
+  "errors": {
+    "importFailed": "That survivor log is corrupted or from another apocalypse."
+  },
+  "numbers": {
+    "million": "million",
+    "billion": "billion",
+    "trillion": "trillion",
+    "quadrillion": "quadrillion",
+    "quintillion": "quintillion",
+    "sextillion": "sextillion",
+    "septillion": "septillion",
+    "octillion": "octillion",
+    "nonillion": "nonillion",
+    "decillion": "decillion"
+  },
+  "buffs": {
+    "frenzy": {
+      "name": "Slaughter mode",
+      "description": "Kill rate ×7"
+    },
+    "lucky": {
+      "name": "Headshot bonus",
+      "description": "A sudden burst of kills"
+    },
+    "clickFrenzy": {
+      "name": "Rage mode",
+      "description": "Manual strikes ×777"
+    },
+    "buildingSpecial": {
+      "name": "Weapon overdrive",
+      "description": "One weapon type ×7 kill rate"
+    },
+    "buildingProduction": "{building} production ×{multiplier}"
+  },
+  "buildings": {
+    "cursor": "Baseball Bat",
+    "grandma": "Shotgun Granny",
+    "farm": "Pit Trap",
+    "mine": "Landmine Field",
+    "factory": "Ammo Factory",
+    "bank": "Weapon Cache",
+    "temple": "Safe House",
+    "wizardTower": "Flamethrower Tower",
+    "shipment": "Supply Airdrop",
+    "alchemyLab": "Acid Lab",
+    "portal": "Containment Zone",
+    "timeMachine": "Time Rewind",
+    "antimatterCondenser": "Railgun Array",
+    "prism": "Sniper Nest",
+    "chancemaker": "Critical Strike Unit",
+    "fractalEngine": "Drone Swarm",
+    "javascriptConsole": "Killbot AI",
+    "idleverse": "Parallel Outbreak",
+    "cortexBaker": "Psionic Jammer",
+    "you": "Clone Legion"
+  },
+  "upgrades": {
+    "cursor-1": {
+      "name": "Reinforced grip"
+    },
+    "cursor-2": {
+      "name": "Adrenaline shots"
+    },
+    "cursor-3": {
+      "name": "Dual wield bats"
+    },
+    "grandma-1": {
+      "name": "Buckshot spread"
+    },
+    "grandma-2": {
+      "name": "Sawed-off barrels"
+    },
+    "grandma-3": {
+      "name": "Dragon breath rounds"
+    },
+    "farm-1": {
+      "name": "Sharper spikes"
+    },
+    "farm-2": {
+      "name": "Hidden pits"
+    },
+    "farm-3": {
+      "name": "Bait piles"
+    },
+    "mine-1": {
+      "name": "Proximity sensors"
+    },
+    "mine-2": {
+      "name": "Tripwire mesh"
+    },
+    "mine-3": {
+      "name": "Remote detonators"
+    },
+    "factory-1": {
+      "name": "Hollow-point line"
+    },
+    "factory-2": {
+      "name": "Armor-piercing rounds"
+    },
+    "factory-3": {
+      "name": "Incendiary loads"
+    },
+    "bank-1": {
+      "name": "Locked racks"
+    },
+    "bank-2": {
+      "name": "Quick-draw holsters"
+    },
+    "bank-3": {
+      "name": "Explosive reserves"
+    },
+    "temple-1": {
+      "name": "Reinforced doors"
+    },
+    "temple-2": {
+      "name": "Barricaded windows"
+    },
+    "temple-3": {
+      "name": "Roof snipers"
+    },
+    "wizardTower-1": {
+      "name": "Longer hoses"
+    },
+    "wizardTower-2": {
+      "name": "Napalm mix"
+    },
+    "wizardTower-3": {
+      "name": "Fuel air bursts"
+    },
+    "shipment-1": {
+      "name": "Night drops"
+    },
+    "shipment-2": {
+      "name": "GPS pallets"
+    },
+    "shipment-3": {
+      "name": "Emergency resupply"
+    },
+    "alchemyLab-1": {
+      "name": "Corrosive blend"
+    },
+    "alchemyLab-2": {
+      "name": "Flesh-eater acid"
+    },
+    "alchemyLab-3": {
+      "name": "Meltdown formula"
+    },
+    "portal-1": {
+      "name": "Quarantine seals"
+    },
+    "portal-2": {
+      "name": "Containment foam"
+    },
+    "portal-3": {
+      "name": "Kill-on-sight protocol"
+    },
+    "timeMachine-1": {
+      "name": "Rewind ammo"
+    },
+    "timeMachine-2": {
+      "name": "Paradox shells"
+    },
+    "timeMachine-3": {
+      "name": "Temporal shrapnel"
+    },
+    "antimatterCondenser-1": {
+      "name": "Overcharged rails"
+    },
+    "antimatterCondenser-2": {
+      "name": "Magnetic accelerators"
+    },
+    "antimatterCondenser-3": {
+      "name": "Orbital strikes"
+    },
+    "prism-1": {
+      "name": "Thermal scopes"
+    },
+    "prism-2": {
+      "name": "Match-grade rounds"
+    },
+    "prism-3": {
+      "name": "One-shot doctrine"
+    },
+    "chancemaker-1": {
+      "name": "Lucky headshots"
+    },
+    "chancemaker-2": {
+      "name": "Critical targeting"
+    },
+    "chancemaker-3": {
+      "name": "Jackpot kill chain"
+    },
+    "fractalEngine-1": {
+      "name": "Swarm tactics"
+    },
+    "fractalEngine-2": {
+      "name": "Hive coordination"
+    },
+    "fractalEngine-3": {
+      "name": "Saturation bombing"
+    },
+    "javascriptConsole-1": {
+      "name": "Auto-targeting patch"
+    },
+    "javascriptConsole-2": {
+      "name": "Threat prioritization"
+    },
+    "javascriptConsole-3": {
+      "name": "Kill quota overflow"
+    },
+    "idleverse-1": {
+      "name": "Outbreak mapping"
+    },
+    "idleverse-2": {
+      "name": "Cross-dimensional hunt"
+    },
+    "idleverse-3": {
+      "name": "Infinite horde exploit"
+    },
+    "cortexBaker-1": {
+      "name": "Mind scramble"
+    },
+    "cortexBaker-2": {
+      "name": "Neural overload"
+    },
+    "cortexBaker-3": {
+      "name": "Brain fry cascade"
+    },
+    "you-1": {
+      "name": "Combat clones"
+    },
+    "you-2": {
+      "name": "Elite duplicates"
+    },
+    "you-3": {
+      "name": "Apocalypse you"
+    },
+    "cursorDescription": "Manual strikes and baseball bats score twice as many {kills}.",
+    "buildingDescription": "Doubles {building} kill rate."
+  },
+  "achievements": {
+    "first-blood": {
+      "name": "First Blood",
+      "description": "Score your first kill."
+    },
+    "finger-workout": {
+      "name": "Finger Workout",
+      "description": "Smash the zombie 100 times."
+    },
+    "fresh-meat": {
+      "name": "Fresh Meat",
+      "description": "Rack up 100 total kills."
+    },
+    "bat-basics": {
+      "name": "Bat Basics",
+      "description": "Own your first Baseball Bat."
+    },
+    "granny-guard": {
+      "name": "Granny Guard",
+      "description": "Recruit a Shotgun Granny."
+    },
+    "click-crazy": {
+      "name": "Click Crazy",
+      "description": "Smash the zombie 1,000 times."
+    },
+    "still-breathing": {
+      "name": "Still Breathing",
+      "description": "Survive to 1,000 total kills."
+    },
+    "armory-starter": {
+      "name": "Armory Starter",
+      "description": "Own 10 weapons total."
+    },
+    "bat-hoarder": {
+      "name": "Bat Hoarder",
+      "description": "Stockpile 5 Baseball Bats."
+    },
+    "granny-squad": {
+      "name": "Granny Squad",
+      "description": "Deploy 5 Shotgun Grannies."
+    },
+    "pit-digger": {
+      "name": "Pit Digger",
+      "description": "Build your first Pit Trap."
+    },
+    "upgrade-initiate": {
+      "name": "Upgrade Initiate",
+      "description": "Purchase your first upgrade."
+    },
+    "fully-loaded": {
+      "name": "Fully Loaded",
+      "description": "Own 5 upgrades."
+    },
+    "killing-machine": {
+      "name": "Killing Machine",
+      "description": "Reach 100 kills per second."
+    },
+    "weapon-collector": {
+      "name": "Weapon Collector",
+      "description": "Own 25 weapons total."
+    },
+    "mass-extermination": {
+      "name": "Mass Extermination",
+      "description": "Amass 10,000 total kills."
+    },
+    "click-fury": {
+      "name": "Click Fury",
+      "description": "Smash the zombie 10,000 times."
+    },
+    "factory-online": {
+      "name": "Factory Online",
+      "description": "Open an Ammo Factory."
+    },
+    "safe-house": {
+      "name": "Safe House",
+      "description": "Establish a Safe House."
+    },
+    "apocalypse-now": {
+      "name": "Apocalypse Now",
+      "description": "Reach 100,000 total kills."
+    },
+    "unstoppable": {
+      "name": "Unstoppable",
+      "description": "Reach 1,000 kills per second."
+    },
+    "veteran-clicker": {
+      "name": "Veteran Clicker",
+      "description": "Smash the zombie 50,000 times."
+    }
+  },
+  "news": [
+    "Local survivors report unprecedented zombie activity downtown.",
+    "Scientists confirm: smashing is cardio if you swing hard enough.",
+    "Shotgun grannies unionize, then immediately go back to killing.",
+    "You find spare ammo behind a couch. Morale soars.",
+    "News: a farm somewhere is full of pit traps. Nobody asks why.",
+    "Flamethrower towers deny all responsibility for scorched lawns.",
+    "Your arms ache. The horde does not care.",
+    "An airdrop was lost. Somehow you still have more kills.",
+    "Idle hands make the finest headshots, says a suspiciously calm survivor.",
+    "You stare at the zombie. The zombie stares back, hungrily."
+  ]
+}

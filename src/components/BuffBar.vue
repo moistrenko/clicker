@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { BuffListing } from '@/game/types'
+import { useCatalogText } from '@/i18n/useCatalogText'
 
-defineProps<{
+const props = defineProps<{
   buffs: BuffListing[]
 }>()
+
+const { t } = useI18n()
+const { buffName, buffDescription, buildingName } = useCatalogText()
 
 function formatRemaining(seconds: number): string {
   if (seconds >= 60) {
@@ -13,16 +19,34 @@ function formatRemaining(seconds: number): string {
   }
   return `${Math.ceil(seconds)}s`
 }
+
+function localizedDescription(buff: BuffListing): string {
+  if (buff.type === 'buildingSpecial' && buff.buildingId) {
+    return t('buffs.buildingProduction', {
+      building: buildingName(buff.buildingId),
+      multiplier: buff.multiplier ?? 7,
+    })
+  }
+  return buffDescription(buff.type, buff.description)
+}
+
+const localizedBuffs = computed(() =>
+  props.buffs.map((buff) => ({
+    ...buff,
+    localizedName: buffName(buff.type),
+    localizedDescription: localizedDescription(buff),
+  })),
+)
 </script>
 
 <template>
-  <div v-if="buffs.length > 0" class="buff-bar" aria-label="Active buffs">
-    <article v-for="buff in buffs" :key="buff.id" class="buff-bar__item">
+  <div v-if="localizedBuffs.length > 0" class="buff-bar" :aria-label="t('ui.activeBuffs')">
+    <article v-for="buff in localizedBuffs" :key="buff.id" class="buff-bar__item">
       <div class="buff-bar__header">
-        <strong class="buff-bar__name">{{ buff.name }}</strong>
+        <strong class="buff-bar__name">{{ buff.localizedName }}</strong>
         <span class="buff-bar__timer">{{ formatRemaining(buff.remainingSeconds) }}</span>
       </div>
-      <p class="buff-bar__desc">{{ buff.description }}</p>
+      <p class="buff-bar__desc">{{ buff.localizedDescription }}</p>
     </article>
   </div>
 </template>

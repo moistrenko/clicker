@@ -3,11 +3,18 @@
   --horde-ink: #e8f0e4;
   --accent-toxic: #7ecf5a;
   --accent-blood: #c62828;
+  --bp-tablet: 1100px;
+  --bp-mobile: 720px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   font-family:
     Inter,
     system-ui,
@@ -19,6 +26,7 @@ body {
     sans-serif;
   background: #1a2218;
   color: var(--horde-ink);
+  overflow-x: hidden;
 }
 
 *,
@@ -33,4 +41,5 @@ button {
 
 #app {
   min-height: 100vh;
+  min-height: 100dvh;
 }

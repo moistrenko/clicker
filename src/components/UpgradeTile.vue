@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatCookies } from '@/game/format/numbers'
+import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 
 const props = defineProps<{
   name: string
@@ -13,8 +15,13 @@ const emit = defineEmits<{
   buy: []
 }>()
 
+const { t } = useI18n()
+
 const initial = computed(() => props.name.charAt(0).toUpperCase() || '?')
-const priceLabel = computed(() => formatCookies(props.price))
+const priceLabel = computed(() => {
+  const locale = numberLocaleForApp(i18n.global.locale.value as AppLocale)
+  return formatCookies(props.price, { locale })
+})
 const tooltip = computed(() => `${props.name} — ${props.description}`)
 </script>
 
@@ -24,7 +31,7 @@ const tooltip = computed(() => `${props.name} — ${props.description}`)
     type="button"
     :disabled="!affordable"
     :title="tooltip"
-    :aria-label="`${name}: ${description}. Cost ${priceLabel}`"
+    :aria-label="`${name}: ${description}. ${t('ui.cost', { price: priceLabel })}`"
     @click="emit('buy')"
   >
     <span class="upgrade-tile__icon" aria-hidden="true">{{ initial }}</span>
@@ -83,5 +90,12 @@ const tooltip = computed(() => `${props.name} — ${props.description}`)
   font-size: 0.62rem;
   font-variant-numeric: tabular-nums;
   color: #ffe7b3;
+}
+
+@media (max-width: 720px) {
+  .upgrade-tile {
+    width: 64px;
+    height: 64px;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { clickTarget } from '@/theme/clickTarget'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   x: number
@@ -9,13 +9,15 @@ defineProps<{
 const emit = defineEmits<{
   click: []
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
   <button
     class="elite-zombie"
     type="button"
-    :aria-label="clickTarget.collectBonusLabel"
+    :aria-label="t('game.collectBonusLabel')"
     :style="{ left: `${x * 100}%`, top: `${y * 100}%` }"
     @click="emit('click')"
   >
@@ -31,8 +33,8 @@ const emit = defineEmits<{
 <style scoped>
 .elite-zombie {
   position: absolute;
-  width: 58px;
-  height: 58px;
+  width: clamp(48px, 14vw, 58px);
+  height: clamp(48px, 14vw, 58px);
   padding: 0;
   border: 0;
   background: transparent;

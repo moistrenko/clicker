@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import type { AchievementListing } from '@/game/types'
+import { useCatalogText } from '@/i18n/useCatalogText'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   listings: AchievementListing[]
 }>()
+
+const { t } = useI18n()
+const { achievementName, achievementDescription } = useCatalogText()
 
 const unlockedCount = (listings: AchievementListing[]) =>
   listings.filter((entry) => entry.unlocked).length
 </script>
 
 <template>
-  <section class="achievements" aria-label="Achievements">
+  <section class="achievements" :aria-label="t('ui.achievements')">
     <header class="achievements__header">
-      <h2>Achievements</h2>
+      <h2>{{ t('ui.achievements') }}</h2>
       <span class="achievements__count">{{ unlockedCount(listings) }} / {{ listings.length }}</span>
     </header>
     <ul class="achievements__grid">
@@ -23,14 +28,14 @@ const unlockedCount = (listings: AchievementListing[]) =>
         :class="{ 'achievements__item--locked': !unlocked }"
       >
         <span class="achievements__icon" aria-hidden="true">
-          {{ unlocked ? achievement.icon : '???' }}
+          {{ unlocked ? achievement.icon : t('ui.locked') }}
         </span>
         <div class="achievements__body">
           <strong class="achievements__name">
-            {{ unlocked ? achievement.name : '???' }}
+            {{ unlocked ? achievementName(achievement) : t('ui.locked') }}
           </strong>
           <p class="achievements__desc">
-            {{ unlocked ? achievement.description : 'Keep smashing to unlock.' }}
+            {{ unlocked ? achievementDescription(achievement) : t('ui.keepSmashing') }}
           </p>
         </div>
       </li>
@@ -114,5 +119,11 @@ const unlockedCount = (listings: AchievementListing[]) =>
 .achievements__item--locked .achievements__desc {
   color: #8a9a82;
   font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .achievements__grid {
+    max-height: none;
+  }
 }
 </style>

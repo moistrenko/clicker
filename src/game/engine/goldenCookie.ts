@@ -75,9 +75,12 @@ export function listActiveBuffs(state: GameState, atTime = state.gameTime): Buff
       }
       return {
         id: buff.id,
+        type: buff.type,
         name: meta.name,
         description,
         remainingSeconds: Math.max(0, buff.expiresAt - atTime),
+        buildingId: buff.buildingId,
+        multiplier: buff.multiplier,
       }
     })
     .sort((a, b) => a.remainingSeconds - b.remainingSeconds)

@@ -21,11 +21,35 @@ import {
   totalCps,
 } from '@/game/engine'
 import { formatCookies } from '@/game/format/numbers'
+import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 import { createDebouncedSave, loadGame, parseSave, saveGame } from '@/game/persist/storage'
 import type { AchievementDef, BuildingId, GameState } from '@/game/types'
 
 const TICK_MS = 50
 const ACHIEVEMENT_TICK_INTERVAL_SECONDS = 5
+
+function scaleNamesFromI18n() {
+  const t = i18n.global.t
+  return {
+    million: t('numbers.million'),
+    billion: t('numbers.billion'),
+    trillion: t('numbers.trillion'),
+    quadrillion: t('numbers.quadrillion'),
+    quintillion: t('numbers.quintillion'),
+    sextillion: t('numbers.sextillion'),
+    septillion: t('numbers.septillion'),
+    octillion: t('numbers.octillion'),
+    nonillion: t('numbers.nonillion'),
+    decillion: t('numbers.decillion'),
+  }
+}
+
+function formatOptions() {
+  return {
+    locale: numberLocaleForApp(i18n.global.locale.value as AppLocale),
+    scaleNames: scaleNamesFromI18n(),
+  }
+}
 
 export const useGameStore = defineStore('game', () => {
   const loadResult = loadGame()
@@ -46,9 +70,9 @@ export const useGameStore = defineStore('game', () => {
   const buildingsOwned = computed(() => totalBuildingsOwned(state.value))
   const storeListings = computed(() => listStoreBuildings(state.value))
   const upgradeListings = computed(() => listStoreUpgrades(state.value))
-  const formattedCookies = computed(() => formatCookies(state.value.cookies))
-  const formattedCps = computed(() => formatCookies(cps.value))
-  const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime))
+  const formattedCookies = computed(() => formatCookies(state.value.cookies, formatOptions()))
+  const formattedCps = computed(() => formatCookies(cps.value, formatOptions()))
+  const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime, formatOptions()))
   const goldenCookie = computed(() => state.value.goldenCookie)
   const activeBuffs = computed(() => listActiveBuffs(state.value))
   const achievementList = computed(() => listAchievements(state.value))

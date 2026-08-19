@@ -1,15 +1,4 @@
 export const clickTarget = {
   id: 'zombie',
-  displayName: 'Zombie',
-  pluralName: 'kills',
   imageUrl: new URL('../assets/theme/click-target.svg', import.meta.url).href,
-  alt: 'Zombie',
-  gameTitle: 'Zombie Clicker',
-  zoneLabel: 'Horde Zone',
-  storeLabel: 'Armory',
-  totalStatLabel: 'Total kills',
-  weaponsStatLabel: 'Weapons owned',
-  perSecondSuffix: 'kills/sec',
-  clickActionLabel: 'Smash zombie',
-  collectBonusLabel: 'Collect elite zombie',
 } as const

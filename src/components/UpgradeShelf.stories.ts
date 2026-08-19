@@ -36,6 +36,8 @@ const meta = {
   tags: ['autodocs'],
   args: {
     listings: sampleListings,
+    nameFor: (listing: UpgradeListing) => listing.upgrade.name,
+    descriptionFor: (listing: UpgradeListing) => listing.upgrade.description,
   },
   decorators: [
     (story) => ({

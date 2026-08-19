@@ -100,9 +100,12 @@ export interface GameState {
 
 export interface BuffListing {
   id: string
+  type: BuffType
   name: string
   description: string
   remainingSeconds: number
+  buildingId?: BuildingId
+  multiplier?: number
 }
 
 export interface StoreListing {
