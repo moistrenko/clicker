@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 4
+export const SAVE_VERSION = 6
 
 export type BuildingId =
   | 'cursor'
@@ -93,6 +93,9 @@ export interface GameState {
   activeBuffs: ActiveBuff[]
   goldenCookie: GoldenCookieSpawn | null
   nextGoldenSpawnAt: number | null
+  prestigeLevel: number
+  lifetimeKills: number
+  lastSavedAt: number
 }
 
 export interface BuffListing {

@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import {
   buy,
   buyUpgrade,
+  canAscend,
   checkAchievements,
   click,
   clickGoldenCookie,
@@ -12,19 +13,24 @@ import {
   listActiveBuffs,
   listStoreBuildings,
   listStoreUpgrades,
+  prestigeMultiplier,
+  projectAscendGain,
+  ascend as ascendState,
   tick,
   totalBuildingsOwned,
   totalCps,
 } from '@/game/engine'
 import { formatCookies } from '@/game/format/numbers'
-import { createDebouncedSave, loadGame, saveGame } from '@/game/persist/storage'
+import { createDebouncedSave, loadGame, parseSave, saveGame } from '@/game/persist/storage'
 import type { AchievementDef, BuildingId, GameState } from '@/game/types'
 
 const TICK_MS = 50
 const ACHIEVEMENT_TICK_INTERVAL_SECONDS = 5
 
 export const useGameStore = defineStore('game', () => {
-  const state = ref<GameState>(loadGame())
+  const loadResult = loadGame()
+  const state = ref<GameState>(loadResult.state)
+  const offlineKills = ref(loadResult.offlineKills)
   const saver = createDebouncedSave((next) => saveGame(next))
   const recentAchievement = ref<AchievementDef | null>(null)
   const pendingAchievementToasts: AchievementDef[] = []
@@ -46,6 +52,10 @@ export const useGameStore = defineStore('game', () => {
   const goldenCookie = computed(() => state.value.goldenCookie)
   const activeBuffs = computed(() => listActiveBuffs(state.value))
   const achievementList = computed(() => listAchievements(state.value))
+  const prestigeLevel = computed(() => state.value.prestigeLevel ?? 0)
+  const prestigeBonus = computed(() => prestigeMultiplier(state.value))
+  const ascendGain = computed(() => projectAscendGain(state.value))
+  const canAscendNow = computed(() => canAscend(state.value))
 
   function persist(next: GameState = state.value) {
     saver.schedule(next)
@@ -161,16 +171,60 @@ export const useGameStore = defineStore('game', () => {
     flushSave()
   }
 
+  function ascend() {
+    const before = state.value
+    const next = ascendState(before)
+    if (next === before) {
+      return false
+    }
+    achievementTickAccumulator = 0
+    commit(next, false)
+    return true
+  }
+
+  function clearOfflineBanner() {
+    offlineKills.value = 0
+  }
+
+  async function exportSaveToClipboard(): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(state.value))
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  function importSave(raw: string): boolean {
+    const parsed = parseSave(raw)
+    if (!parsed) {
+      return false
+    }
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
+    offlineKills.value = 0
+    state.value = { ...parsed, lastSavedAt: Date.now() }
+    saver.flush(state.value)
+    return true
+  }
+
+  function wipeSave() {
+    reset()
+  }
+
   function reset() {
     achievementTickAccumulator = 0
     pendingAchievementToasts.length = 0
     recentAchievement.value = null
+    offlineKills.value = 0
     state.value = createInitialState()
     saver.flush(state.value)
   }
 
   return {
     state,
+    offlineKills,
     cookies,
     cookiesBakedAllTime,
     cookiesPerClick,
@@ -184,14 +238,23 @@ export const useGameStore = defineStore('game', () => {
     goldenCookie,
     activeBuffs,
     achievementList,
+    prestigeLevel,
+    prestigeBonus,
+    ascendGain,
+    canAscendNow,
     recentAchievement,
     clickCookie,
     collectGoldenCookie,
     buyBuilding,
     buyUpgrade: purchaseUpgrade,
     clearRecentAchievement,
+    ascend,
     start,
     stop,
     reset,
+    wipeSave,
+    exportSaveToClipboard,
+    importSave,
+    clearOfflineBanner,
   }
 })

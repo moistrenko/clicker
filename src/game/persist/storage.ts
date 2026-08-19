@@ -5,6 +5,7 @@ import {
   getCookiesPerClick,
   parseAchievements,
 } from '@/game/engine'
+import { applyOfflineProgress } from '@/game/engine/offline'
 import { BUILDINGS } from '@/game/catalog/buildings'
 import { getUpgrade } from '@/game/catalog/upgrades'
 import {
@@ -18,7 +19,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -119,6 +120,9 @@ function finalizeLoadedState(state: GameState): GameState {
     activeBuffs: state.activeBuffs ?? [],
     goldenCookie: null,
     nextGoldenSpawnAt: state.nextGoldenSpawnAt ?? null,
+    prestigeLevel: state.prestigeLevel ?? 0,
+    lifetimeKills: state.lifetimeKills ?? 0,
+    lastSavedAt: state.lastSavedAt ?? 0,
   }
   next = expireBuffs(next)
   next = ensureGoldenSpawnScheduled(next)
@@ -154,6 +158,9 @@ export function parseSave(raw: string): GameState | null {
         data.nextGoldenSpawnAt === null || data.nextGoldenSpawnAt === undefined
           ? null
           : Math.max(0, readNumber(data.nextGoldenSpawnAt, 0)),
+      prestigeLevel: Math.max(0, readNumber(data.prestigeLevel, 0)),
+      lifetimeKills: Math.max(0, readNumber(data.lifetimeKills, 0)),
+      lastSavedAt: Math.max(0, readNumber(data.lastSavedAt, 0)),
     }
     return finalizeLoadedState(state)
   } catch {
@@ -161,16 +168,33 @@ export function parseSave(raw: string): GameState | null {
   }
 }
 
-export function loadGame(storage: Pick<Storage, 'getItem'> = localStorage): GameState {
+export interface LoadGameResult {
+  state: GameState
+  offlineKills: number
+}
+
+export function loadGame(
+  storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage,
+  nowMs = Date.now(),
+): LoadGameResult {
   const raw = storage.getItem(STORAGE_KEY)
   if (!raw) {
-    return createInitialState()
+    return { state: createInitialState(), offlineKills: 0 }
   }
-  return parseSave(raw) ?? createInitialState()
+
+  const parsed = parseSave(raw)
+  if (!parsed) {
+    return { state: createInitialState(), offlineKills: 0 }
+  }
+
+  const { state, offlineKills } = applyOfflineProgress(parsed, nowMs)
+  const withTimestamp = { ...state, lastSavedAt: nowMs }
+  saveGame(withTimestamp, storage)
+  return { state: withTimestamp, offlineKills }
 }
 
 export function saveGame(state: GameState, storage: Pick<Storage, 'setItem'> = localStorage): void {
-  storage.setItem(STORAGE_KEY, JSON.stringify(state))
+  storage.setItem(STORAGE_KEY, JSON.stringify({ ...state, lastSavedAt: Date.now() }))
 }
 
 export function createDebouncedSave(

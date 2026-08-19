@@ -1,0 +1,2 @@
+export const OFFLINE_MAX_HOURS = 8
+export const OFFLINE_MAX_SECONDS = OFFLINE_MAX_HOURS * 60 * 60

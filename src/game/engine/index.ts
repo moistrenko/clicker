@@ -1,14 +1,12 @@
 import { BUILDINGS, getBuilding } from '@/game/catalog/buildings'
 import { getUpgrade, UPGRADES } from '@/game/catalog/upgrades'
 import type {
-  BuildingCounts,
   BuildingId,
   GameState,
   StoreListing,
   UpgradeDef,
   UpgradeListing,
 } from '@/game/types'
-import { SAVE_VERSION } from '@/game/types'
 import {
   clickBuffMultiplier,
   cpsBuffMultipliers,
@@ -16,7 +14,18 @@ import {
   expireBuffs,
   updateGoldenCookieSpawn,
 } from '@/game/engine/goldenCookie'
+import { prestigeMultiplier } from '@/game/engine/prestige'
 
+export {
+  ascend,
+  ASCEND_THRESHOLD,
+  canAscend,
+  PRESTIGE_BONUS_PER_RANK,
+  prestigeMultiplier,
+  projectAscendGain,
+  rankFromKills,
+  totalLifetimeKills,
+} from '@/game/engine/prestige'
 export {
   clickGoldenCookie,
   ensureGoldenSpawnScheduled,
@@ -36,30 +45,7 @@ export const ALWAYS_VISIBLE_BUILDINGS = 3
 export const REVEAL_THRESHOLD = 0.5
 export const MAX_TICK_SECONDS = 30
 
-export function emptyBuildings(): BuildingCounts {
-  const buildings = {} as BuildingCounts
-  for (const building of BUILDINGS) {
-    buildings[building.id] = 0
-  }
-  return buildings
-}
-
-export function createInitialState(): GameState {
-  return {
-    version: SAVE_VERSION,
-    cookies: 0,
-    cookiesBakedAllTime: 0,
-    cookiesPerClick: 1,
-    totalClicks: 0,
-    buildings: emptyBuildings(),
-    upgrades: [],
-    achievements: [],
-    gameTime: 0,
-    activeBuffs: [],
-    goldenCookie: null,
-    nextGoldenSpawnAt: null,
-  }
-}
+export { createInitialState, emptyBuildings } from '@/game/engine/state'
 
 export function buildingPrice(baseCost: number, owned: number): number {
   return Math.ceil(baseCost * Math.pow(PRICE_GROWTH, owned))
@@ -90,7 +76,7 @@ export function getCookiesPerClick(state: GameState, atTime = state.gameTime): n
       amount *= 2
     }
   }
-  return amount * clickBuffMultiplier(state, atTime)
+  return amount * clickBuffMultiplier(state, atTime) * prestigeMultiplier(state)
 }
 
 export function click(state: GameState): GameState {
@@ -113,7 +99,7 @@ export function totalCps(state: GameState, atTime = state.gameTime): number {
     const specialMult = buildingBuffs.get(building.id) ?? 1
     cps += owned * building.baseCps * buildingMultiplier(state, building.id) * specialMult
   }
-  return cps * frenzy
+  return cps * frenzy * prestigeMultiplier(state)
 }
 
 export function canBuy(state: GameState, id: BuildingId): boolean {

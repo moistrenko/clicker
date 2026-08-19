@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import AscendPanel from '@/components/AscendPanel.vue'
 import AchievementToast from '@/components/AchievementToast.vue'
 import AchievementsPanel from '@/components/AchievementsPanel.vue'
 import BuffBar from '@/components/BuffBar.vue'
@@ -8,11 +10,21 @@ import CookieCounter from '@/components/CookieCounter.vue'
 import GameLayout from '@/components/GameLayout.vue'
 import GoldenCookie from '@/components/GoldenCookie.vue'
 import NewsTicker from '@/components/NewsTicker.vue'
+import OfflineBanner from '@/components/OfflineBanner.vue'
+import SettingsPanel from '@/components/SettingsPanel.vue'
 import StatsPanel from '@/components/StatsPanel.vue'
 import UpgradeShelf from '@/components/UpgradeShelf.vue'
 import { useGameStore } from '@/stores/game'
 
 const game = useGameStore()
+const settingsPanel = ref<InstanceType<typeof SettingsPanel> | null>(null)
+
+function handleImportSave(raw: string) {
+  const ok = game.importSave(raw)
+  if (!ok) {
+    settingsPanel.value?.setImportError('That survivor log is corrupted or from another apocalypse.')
+  }
+}
 </script>
 
 <template>
@@ -33,8 +45,21 @@ const game = useGameStore()
 
     <template #center>
       <StatsPanel :baked="game.formattedBaked" :buildings-owned="game.buildingsOwned" />
+      <AscendPanel
+        :rank="game.prestigeLevel"
+        :multiplier="game.prestigeBonus"
+        :projected-gain="game.ascendGain"
+        :can-ascend="game.canAscendNow"
+        @ascend="game.ascend"
+      />
       <AchievementsPanel :listings="game.achievementList" />
       <NewsTicker />
+      <SettingsPanel
+        ref="settingsPanel"
+        @export-save="game.exportSaveToClipboard"
+        @import-save="handleImportSave"
+        @wipe-save="game.wipeSave"
+      />
     </template>
 
     <template #store>
@@ -55,6 +80,7 @@ const game = useGameStore()
   </GameLayout>
 
   <AchievementToast :achievement="game.recentAchievement" @dismissed="game.clearRecentAchievement" />
+  <OfflineBanner :kills="game.offlineKills" @dismissed="game.clearOfflineBanner" />
 </template>
 
 <style scoped>
