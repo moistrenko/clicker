@@ -3,10 +3,12 @@ import { defineStore } from 'pinia'
 import {
   buy,
   buyUpgrade,
+  checkAchievements,
   click,
   clickGoldenCookie,
   createInitialState,
   getCookiesPerClick,
+  listAchievements,
   listActiveBuffs,
   listStoreBuildings,
   listStoreUpgrades,
@@ -16,16 +18,20 @@ import {
 } from '@/game/engine'
 import { formatCookies } from '@/game/format/numbers'
 import { createDebouncedSave, loadGame, saveGame } from '@/game/persist/storage'
-import type { BuildingId, GameState } from '@/game/types'
+import type { AchievementDef, BuildingId, GameState } from '@/game/types'
 
 const TICK_MS = 50
+const ACHIEVEMENT_TICK_INTERVAL_SECONDS = 5
 
 export const useGameStore = defineStore('game', () => {
   const state = ref<GameState>(loadGame())
   const saver = createDebouncedSave((next) => saveGame(next))
+  const recentAchievement = ref<AchievementDef | null>(null)
+  const pendingAchievementToasts: AchievementDef[] = []
 
   let intervalId: number | undefined
   let lastTick = 0
+  let achievementTickAccumulator = 0
 
   const cookies = computed(() => state.value.cookies)
   const cookiesBakedAllTime = computed(() => state.value.cookiesBakedAllTime)
@@ -39,6 +45,7 @@ export const useGameStore = defineStore('game', () => {
   const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime))
   const goldenCookie = computed(() => state.value.goldenCookie)
   const activeBuffs = computed(() => listActiveBuffs(state.value))
+  const achievementList = computed(() => listAchievements(state.value))
 
   function persist(next: GameState = state.value) {
     saver.schedule(next)
@@ -48,9 +55,39 @@ export const useGameStore = defineStore('game', () => {
     saver.flush(state.value)
   }
 
+  function pumpAchievementToast() {
+    if (pendingAchievementToasts.length === 0) {
+      recentAchievement.value = null
+      return
+    }
+    recentAchievement.value = pendingAchievementToasts.shift() ?? null
+  }
+
+  function notifyAchievements(newlyUnlocked: AchievementDef[]) {
+    if (newlyUnlocked.length === 0) {
+      return
+    }
+    pendingAchievementToasts.push(...newlyUnlocked)
+    if (recentAchievement.value === null) {
+      pumpAchievementToast()
+    }
+  }
+
+  function commit(next: GameState, checkAchievementsNow = true) {
+    if (checkAchievementsNow) {
+      const result = checkAchievements(next)
+      state.value = result.state
+      if (result.newlyUnlocked.length > 0) {
+        notifyAchievements(result.newlyUnlocked)
+      }
+    } else {
+      state.value = next
+    }
+    persist(state.value)
+  }
+
   function clickCookie() {
-    state.value = click(state.value)
-    persist()
+    commit(click(state.value))
   }
 
   function collectGoldenCookie() {
@@ -59,8 +96,7 @@ export const useGameStore = defineStore('game', () => {
     if (next === before) {
       return
     }
-    state.value = next
-    persist()
+    commit(next)
   }
 
   function buyBuilding(id: BuildingId) {
@@ -69,8 +105,7 @@ export const useGameStore = defineStore('game', () => {
     if (next === before) {
       return false
     }
-    state.value = next
-    persist()
+    commit(next)
     return true
   }
 
@@ -80,17 +115,27 @@ export const useGameStore = defineStore('game', () => {
     if (next === before) {
       return false
     }
-    state.value = next
-    persist()
+    commit(next)
     return true
   }
 
   function applyTick(dtSeconds: number) {
     const next = tick(state.value, dtSeconds)
-    if (next !== state.value) {
-      state.value = next
-      persist()
+    if (next === state.value) {
+      return
     }
+
+    achievementTickAccumulator += dtSeconds
+    const shouldCheckAchievements = achievementTickAccumulator >= ACHIEVEMENT_TICK_INTERVAL_SECONDS
+    if (shouldCheckAchievements) {
+      achievementTickAccumulator = 0
+    }
+    commit(next, shouldCheckAchievements)
+  }
+
+  function clearRecentAchievement() {
+    recentAchievement.value = null
+    pumpAchievementToast()
   }
 
   function start() {
@@ -117,6 +162,9 @@ export const useGameStore = defineStore('game', () => {
   }
 
   function reset() {
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
     state.value = createInitialState()
     saver.flush(state.value)
   }
@@ -135,10 +183,13 @@ export const useGameStore = defineStore('game', () => {
     formattedBaked,
     goldenCookie,
     activeBuffs,
+    achievementList,
+    recentAchievement,
     clickCookie,
     collectGoldenCookie,
     buyBuilding,
     buyUpgrade: purchaseUpgrade,
+    clearRecentAchievement,
     start,
     stop,
     reset,

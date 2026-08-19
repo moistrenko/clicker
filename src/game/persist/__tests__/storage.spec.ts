@@ -14,8 +14,10 @@ describe('save persistence', () => {
     const parsed = parseSave(raw)
     expect(parsed).not.toBeNull()
     expect(parsed?.version).toBe(SAVE_VERSION)
-    expect(parsed?.version).toBe(3)
+    expect(parsed?.version).toBe(4)
     expect(parsed?.upgrades).toEqual([])
+    expect(parsed?.totalClicks).toBe(0)
+    expect(parsed?.achievements).toEqual([])
     expect(parsed?.cookies).toBe(50)
     expect(parsed?.cookiesBakedAllTime).toBe(80)
     expect(parsed?.buildings.cursor).toBe(2)
@@ -36,25 +38,21 @@ describe('save persistence', () => {
     const parsed = parseSave(raw)
     expect(parsed?.upgrades).toEqual(['cursor-1'])
     expect(parsed?.cookiesPerClick).toBe(2)
-    expect(parsed?.version).toBe(3)
+    expect(parsed?.version).toBe(4)
+    expect(parsed?.totalClicks).toBe(0)
+    expect(parsed?.achievements).toEqual([])
     expect(parsed?.gameTime).toBe(0)
   })
 
-  it('loads v3 buffs and expires stale buffs on load', () => {
+  it('migrates a v3 save with default clicks and achievements', () => {
     const raw = JSON.stringify({
       version: 3,
       cookies: 1000,
       cookiesBakedAllTime: 5000,
       buildings: { grandma: 2 },
-      upgrades: [],
+      upgrades: ['cursor-1'],
       gameTime: 100,
       activeBuffs: [
-        {
-          id: 'buff-old',
-          type: 'frenzy',
-          multiplier: 7,
-          expiresAt: 50,
-        },
         {
           id: 'buff-live',
           type: 'clickFrenzy',
@@ -66,14 +64,37 @@ describe('save persistence', () => {
       nextGoldenSpawnAt: 140,
     })
     const parsed = parseSave(raw)
+    expect(parsed?.version).toBe(4)
+    expect(parsed?.totalClicks).toBe(0)
+    expect(parsed?.achievements).toEqual([])
     expect(parsed?.activeBuffs).toHaveLength(1)
     expect(parsed?.activeBuffs[0]?.id).toBe('buff-live')
     expect(parsed?.goldenCookie).toBeNull()
     expect(parsed?.nextGoldenSpawnAt).toBe(140)
   })
 
+  it('loads v4 achievements and click counts', () => {
+    const raw = JSON.stringify({
+      version: 4,
+      cookies: 50,
+      cookiesBakedAllTime: 200,
+      totalClicks: 42,
+      buildings: { cursor: 1 },
+      upgrades: [],
+      achievements: ['first-blood', 'not-real', 'first-blood'],
+      gameTime: 0,
+      activeBuffs: [],
+      goldenCookie: null,
+      nextGoldenSpawnAt: null,
+    })
+    const parsed = parseSave(raw)
+    expect(parsed?.totalClicks).toBe(42)
+    expect(parsed?.achievements).toEqual(['first-blood'])
+    expect(parsed?.version).toBe(4)
+  })
+
   it('rejects unsupported save versions', () => {
     expect(parseSave(JSON.stringify({ version: 0, cookies: 1 }))).toBeNull()
-    expect(parseSave(JSON.stringify({ version: 4, cookies: 1 }))).toBeNull()
+    expect(parseSave(JSON.stringify({ version: 5, cookies: 1 }))).toBeNull()
   })
 })

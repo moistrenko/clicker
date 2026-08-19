@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 3
+export const SAVE_VERSION = 4
 
 export type BuildingId =
   | 'cursor'
@@ -59,13 +59,36 @@ export interface GoldenCookieSpawn {
   y: number
 }
 
+export type AchievementCondition =
+  | { type: 'totalKills'; threshold: number }
+  | { type: 'clicks'; threshold: number }
+  | { type: 'buildingOwned'; buildingId: BuildingId; count: number }
+  | { type: 'totalBuildings'; threshold: number }
+  | { type: 'cps'; threshold: number }
+  | { type: 'upgradesOwned'; threshold: number }
+
+export interface AchievementDef {
+  id: string
+  name: string
+  description: string
+  icon: string
+  condition: AchievementCondition
+}
+
+export interface AchievementListing {
+  achievement: AchievementDef
+  unlocked: boolean
+}
+
 export interface GameState {
   version: number
   cookies: number
   cookiesBakedAllTime: number
   cookiesPerClick: number
+  totalClicks: number
   buildings: BuildingCounts
   upgrades: string[]
+  achievements: string[]
   gameTime: number
   activeBuffs: ActiveBuff[]
   goldenCookie: GoldenCookieSpawn | null

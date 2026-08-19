@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AchievementToast from '@/components/AchievementToast.vue'
+import AchievementsPanel from '@/components/AchievementsPanel.vue'
 import BuffBar from '@/components/BuffBar.vue'
 import BuildingRow from '@/components/BuildingRow.vue'
 import ClickTarget from '@/components/ClickTarget.vue'
@@ -31,6 +33,7 @@ const game = useGameStore()
 
     <template #center>
       <StatsPanel :baked="game.formattedBaked" :buildings-owned="game.buildingsOwned" />
+      <AchievementsPanel :listings="game.achievementList" />
       <NewsTicker />
     </template>
 
@@ -50,6 +53,8 @@ const game = useGameStore()
       </div>
     </template>
   </GameLayout>
+
+  <AchievementToast :achievement="game.recentAchievement" @dismissed="game.clearRecentAchievement" />
 </template>
 
 <style scoped>

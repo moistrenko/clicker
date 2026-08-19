@@ -17,6 +17,7 @@ describe('game engine', () => {
     expect(next.cookies).toBe(1)
     expect(next.cookiesBakedAllTime).toBe(1)
     expect(next.cookiesPerClick).toBe(1)
+    expect(next.totalClicks).toBe(1)
   })
 
   it('buying cursor at 0 owned costs 15, then next costs ceil(15 * 1.15)', () => {

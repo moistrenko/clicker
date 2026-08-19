@@ -50,8 +50,10 @@ export function createInitialState(): GameState {
     cookies: 0,
     cookiesBakedAllTime: 0,
     cookiesPerClick: 1,
+    totalClicks: 0,
     buildings: emptyBuildings(),
     upgrades: [],
+    achievements: [],
     gameTime: 0,
     activeBuffs: [],
     goldenCookie: null,
@@ -98,6 +100,7 @@ export function click(state: GameState): GameState {
     cookies: state.cookies + amount,
     cookiesBakedAllTime: state.cookiesBakedAllTime + amount,
     cookiesPerClick: amount,
+    totalClicks: (state.totalClicks ?? 0) + 1,
   }
   return ensureGoldenSpawnScheduled(next)
 }
@@ -265,3 +268,9 @@ export function totalBuildingsOwned(state: GameState): number {
   }
   return owned
 }
+
+export {
+  checkAchievements,
+  listAchievements,
+  parseAchievements,
+} from '@/game/engine/achievements'

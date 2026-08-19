@@ -3,6 +3,7 @@ import {
   ensureGoldenSpawnScheduled,
   expireBuffs,
   getCookiesPerClick,
+  parseAchievements,
 } from '@/game/engine'
 import { BUILDINGS } from '@/game/catalog/buildings'
 import { getUpgrade } from '@/game/catalog/upgrades'
@@ -17,7 +18,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -112,6 +113,8 @@ function finalizeLoadedState(state: GameState): GameState {
   let next: GameState = {
     ...state,
     version: SAVE_VERSION,
+    totalClicks: state.totalClicks ?? 0,
+    achievements: state.achievements ?? [],
     gameTime: state.gameTime ?? 0,
     activeBuffs: state.activeBuffs ?? [],
     goldenCookie: null,
@@ -140,8 +143,10 @@ export function parseSave(raw: string): GameState | null {
       cookies: Math.max(0, readNumber(data.cookies, 0)),
       cookiesBakedAllTime: Math.max(0, readNumber(data.cookiesBakedAllTime, 0)),
       cookiesPerClick: 1,
+      totalClicks: Math.max(0, readNumber(data.totalClicks, 0)),
       buildings: parseBuildings(data.buildings),
       upgrades: parseUpgrades(data.upgrades),
+      achievements: parseAchievements(data.achievements),
       gameTime: Math.max(0, readNumber(data.gameTime, 0)),
       activeBuffs: parseActiveBuffs(data.activeBuffs),
       goldenCookie: parseGoldenCookie(data.goldenCookie),
