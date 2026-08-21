@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 
-export type BuyBulk = 1 | 10 | 20 | 100
+export type BuyBulk = 1 | 10 | 20 | 'max'
 
 export function resolveBuyBulk(modifiers: {
   shiftKey: boolean
@@ -9,7 +9,7 @@ export function resolveBuyBulk(modifiers: {
   metaKey: boolean
 }): BuyBulk {
   if (modifiers.ctrlKey || modifiers.metaKey) {
-    return 100
+    return 'max'
   }
   if (modifiers.altKey) {
     return 20

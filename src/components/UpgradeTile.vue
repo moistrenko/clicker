@@ -129,7 +129,7 @@ const ariaLabel = computed(() => {
 .upgrade-tile__tooltip {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 0.45rem);
+  top: calc(100% + 0.45rem);
   transform: translateX(-50%);
   display: none;
   width: max(180px, 100%);
@@ -142,6 +142,7 @@ const ariaLabel = computed(() => {
   text-align: left;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
   pointer-events: none;
+  z-index: 20;
 }
 
 .upgrade-tile:hover .upgrade-tile__tooltip,

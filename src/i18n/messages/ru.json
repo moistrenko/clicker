@@ -58,12 +58,13 @@
     "cpsGain": "+{rate}/с",
     "clickGain": "+{rate} за клик",
     "upgradeEffect": "Эффект",
-    "buyBulkHint": "Покупка: Shift ×10 · Alt ×20 · Ctrl ×100",
+    "buyBulkHint": "Покупка: Shift ×10 · Alt ×20 · Ctrl максимум",
     "buyBulk": "×{count}",
     "soundOn": "Звук: вкл",
     "soundOff": "Звук: выкл",
     "musicOn": "Музыка: вкл",
-    "musicOff": "Музыка: выкл"
+    "musicOff": "Музыка: выкл",
+    "buyBulkMax": "МАКС ×{count}"
   },
   "errors": {
     "importFailed": "Сохранение повреждено или из другой игры."

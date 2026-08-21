@@ -14,8 +14,9 @@ const props = withDefaults(
     cpsEach?: number
     cpsTotal?: number
     buyCount?: number
+    isMaxBulk?: boolean
   }>(),
-  { locked: false, cpsEach: 0, cpsTotal: 0, buyCount: 1 },
+  { locked: false, cpsEach: 0, cpsTotal: 0, buyCount: 1, isMaxBulk: false },
 )
 
 const emit = defineEmits<{
@@ -40,7 +41,13 @@ const disabled = computed(() => props.locked || !props.affordable)
 const ownedLabel = computed(() =>
   props.locked ? t('ui.unknown') : t('ui.owned', { count: props.owned }),
 )
-const showBulk = computed(() => !props.locked && props.buyCount > 1)
+const showBulk = computed(() => !props.locked && (props.isMaxBulk || props.buyCount > 1))
+const bulkLabel = computed(() => {
+  if (props.isMaxBulk) {
+    return t('ui.buyBulkMax', { count: props.buyCount })
+  }
+  return t('ui.buyBulk', { count: props.buyCount })
+})
 
 const statsLine = computed(() => {
   if (props.locked) {
@@ -65,7 +72,7 @@ const statsLine = computed(() => {
     <span class="building-row__main">
       <span class="building-row__name">
         {{ label }}
-        <span v-if="showBulk" class="building-row__bulk">{{ t('ui.buyBulk', { count: buyCount }) }}</span>
+        <span v-if="showBulk" class="building-row__bulk">{{ bulkLabel }}</span>
       </span>
       <span v-if="statsLine" class="building-row__stats">{{ statsLine }}</span>
     </span>

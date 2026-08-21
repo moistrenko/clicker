@@ -52,7 +52,11 @@ function spawnFloaty() {
   timers.add(timer)
 }
 
-function onClick() {
+function onClick(event: MouseEvent) {
+  const target = event.currentTarget
+  if (target instanceof HTMLElement) {
+    target.blur()
+  }
   wobbling.value = false
   requestAnimationFrame(() => {
     wobbling.value = true
@@ -136,6 +140,17 @@ onBeforeUnmount(() => {
   cursor: pointer;
   transform-origin: 50% 75%;
   transition: transform 0.08s ease-out;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  outline: none;
+}
+
+.click-target:focus,
+.click-target:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .click-target__image {

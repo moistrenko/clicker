@@ -18,7 +18,7 @@ import StatsPanel from '@/components/StatsPanel.vue'
 import UpgradeShelf from '@/components/UpgradeShelf.vue'
 import { useBuyBulk } from '@/composables/useBuyBulk'
 import { useGameAudio } from '@/composables/useGameAudio'
-import { bulkBuildingPrice } from '@/game/engine'
+import { bulkBuildingPrice, maxAffordableBuildingCount } from '@/game/engine'
 import { useCatalogText } from '@/i18n/useCatalogText'
 import { useGameStore } from '@/stores/game'
 
@@ -42,21 +42,25 @@ const storeRows = computed(() =>
     if (listing.locked || bulk.value === 1) {
       return {
         ...listing,
-        buyCount: 1 as const,
+        buyCount: 1,
         displayPrice: listing.price,
         canAffordBulk: listing.affordable,
+        isMaxBulk: false,
       }
     }
-    const displayPrice = bulkBuildingPrice(
-      listing.building.baseCost,
-      listing.owned,
-      bulk.value,
-    )
+
+    const buyCount =
+      bulk.value === 'max'
+        ? maxAffordableBuildingCount(listing.building.baseCost, listing.owned, game.cookies)
+        : bulk.value
+    const displayPrice = bulkBuildingPrice(listing.building.baseCost, listing.owned, buyCount)
+
     return {
       ...listing,
-      buyCount: bulk.value,
+      buyCount,
       displayPrice,
-      canAffordBulk: game.cookies >= displayPrice,
+      canAffordBulk: buyCount > 0 && game.cookies >= displayPrice,
+      isMaxBulk: bulk.value === 'max',
     }
   }),
 )
@@ -155,6 +159,7 @@ function handleBuyUpgrade(id: string) {
           :cps-each="listing.cpsEach"
           :cps-total="listing.cpsTotal"
           :buy-count="listing.buyCount"
+          :is-max-bulk="listing.isMaxBulk"
           @buy="handleBuyBuilding(listing.building.id, listing.buyCount)"
         />
       </div>

@@ -6,6 +6,7 @@ import {
   buildingCpsTotal,
   buildingPrice,
   bulkBuildingPrice,
+  maxAffordableBuildingCount,
   canBuy,
   click,
   createInitialState,
@@ -218,8 +219,22 @@ describe('game engine', () => {
   it('resolves keyboard buy bulk modifiers', () => {
     expect(resolveBuyBulk({ shiftKey: true, altKey: false, ctrlKey: false, metaKey: false })).toBe(10)
     expect(resolveBuyBulk({ shiftKey: false, altKey: true, ctrlKey: false, metaKey: false })).toBe(20)
-    expect(resolveBuyBulk({ shiftKey: true, altKey: false, ctrlKey: true, metaKey: false })).toBe(100)
-    expect(resolveBuyBulk({ shiftKey: false, altKey: false, ctrlKey: false, metaKey: true })).toBe(100)
+    expect(resolveBuyBulk({ shiftKey: true, altKey: false, ctrlKey: true, metaKey: false })).toBe('max')
+    expect(resolveBuyBulk({ shiftKey: false, altKey: false, ctrlKey: false, metaKey: true })).toBe('max')
     expect(resolveBuyBulk({ shiftKey: false, altKey: false, ctrlKey: false, metaKey: false })).toBe(1)
+  })
+
+  it('buys as many buildings as the budget allows', () => {
+    const count = maxAffordableBuildingCount(15, 0, 100)
+    expect(count).toBeGreaterThan(1)
+    expect(bulkBuildingPrice(15, 0, count)).toBeLessThanOrEqual(100)
+    expect(bulkBuildingPrice(15, 0, count + 1)).toBeGreaterThan(100)
+
+    let state = { ...createInitialState(), cookies: 100 }
+    state = buy(state, 'cursor', count)
+    expect(state.buildings.cursor).toBe(count)
+    expect(state.cookies).toBe(100 - bulkBuildingPrice(15, 0, count))
+    expect(maxAffordableBuildingCount(15, 0, 0)).toBe(0)
+    expect(maxAffordableBuildingCount(15, 0, 14)).toBe(0)
   })
 })

@@ -69,6 +69,29 @@ export function bulkBuildingPrice(baseCost: number, owned: number, count: number
   return total
 }
 
+const MAX_AFFORDABLE_BUILDINGS = 10_000
+
+export function maxAffordableBuildingCount(
+  baseCost: number,
+  owned: number,
+  budget: number,
+): number {
+  if (!(budget > 0)) {
+    return 0
+  }
+  let count = 0
+  let remaining = budget
+  while (count < MAX_AFFORDABLE_BUILDINGS) {
+    const price = buildingPrice(baseCost, owned + count)
+    if (remaining < price) {
+      break
+    }
+    remaining -= price
+    count += 1
+  }
+  return count
+}
+
 export function currentPrice(state: GameState, id: BuildingId): number {
   const building = getBuilding(id)
   const owned = state.buildings[id] ?? 0
