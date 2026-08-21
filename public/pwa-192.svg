@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="Zombie Clicker">
+  <rect width="192" height="192" rx="36" fill="#1c2418"/>
+  <circle cx="96" cy="94" r="56" fill="#3d5a34"/>
+  <circle cx="75" cy="82" r="10" fill="#111"/>
+  <circle cx="117" cy="82" r="10" fill="#111"/>
+  <path d="M64 112 Q96 134 128 112" fill="none" stroke="#9ad07a" stroke-width="8" stroke-linecap="round"/>
+</svg>
