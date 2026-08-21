@@ -14,7 +14,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: null,
-      includeAssets: ['favicon.ico', 'pwa-192.svg', 'pwa-512.svg'],
+      includeAssets: ['favicon.ico', 'pwa-192.svg', 'pwa-512.svg', 'og.png'],
       manifest: {
         name: 'Zombie Clicker',
         short_name: 'ZClicker',
