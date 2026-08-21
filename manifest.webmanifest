@@ -1,0 +1,31 @@
+{
+  "name": "Zombie Clicker",
+  "short_name": "ZClicker",
+  "description": "Survive the outbreak — click zombies, arm survivors, grow your kill rate.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#121610",
+  "theme_color": "#1c2418",
+  "lang": "en",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "pwa-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "pwa-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "pwa-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
