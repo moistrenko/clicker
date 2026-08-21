@@ -119,7 +119,9 @@
     "javascriptConsole": "Killbot AI",
     "idleverse": "Parallel Outbreak",
     "cortexBaker": "Psionic Jammer",
-    "you": "Clone Legion"
+    "you": "Clone Legion",
+    "warRig": "War Rig",
+    "orbitalLaser": "Orbital Laser"
   },
   "upgrades": {
     "cursor-1": {
@@ -303,7 +305,25 @@
       "name": "Apocalypse you"
     },
     "cursorDescription": "Manual strikes and baseball bats score twice as many {kills}.",
-    "buildingDescription": "Doubles {building} kill rate."
+    "buildingDescription": "Doubles {building} kill rate.",
+    "warRig-1": {
+      "name": "Spiked bumpers"
+    },
+    "warRig-2": {
+      "name": "Ram plating"
+    },
+    "warRig-3": {
+      "name": "Highway purge"
+    },
+    "orbitalLaser-1": {
+      "name": "Target uplink"
+    },
+    "orbitalLaser-2": {
+      "name": "Sustained beam"
+    },
+    "orbitalLaser-3": {
+      "name": "City eraser protocol"
+    }
   },
   "achievements": {
     "first-blood": {
@@ -405,6 +425,27 @@
     "Your arms ache. The horde does not care.",
     "An airdrop was lost. Somehow you still have more kills.",
     "Idle hands make the finest headshots, says a suspiciously calm survivor.",
-    "You stare at the zombie. The zombie stares back, hungrily."
-  ]
+    "You stare at the zombie. The zombie stares back, hungrily.",
+    "WAR RIGS roll through the quarantine corridor.",
+    "Orbital targeting lasers warm up above the city.",
+    "Horde Night sirens howl across the safe zone."
+  ],
+  "events": {
+    "hordeNight": {
+      "name": "Horde Night",
+      "description": "Kill rate ×2 while the night burns."
+    },
+    "adrenalineRush": {
+      "name": "Adrenaline Rush",
+      "description": "Click kills ×3 — keep swinging."
+    },
+    "supplyDrop": {
+      "name": "Supply Drop",
+      "description": "Emergency crates dump instant kills."
+    },
+    "eliteHunt": {
+      "name": "Elite Hunt",
+      "description": "Elite zombies appear more often."
+    }
+  }
 }

@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 6
+export const SAVE_VERSION = 7
 
 export type BuildingId =
   | 'cursor'
@@ -21,6 +21,8 @@ export type BuildingId =
   | 'idleverse'
   | 'cortexBaker'
   | 'you'
+  | 'warRig'
+  | 'orbitalLaser'
 
 export interface BuildingDef {
   id: BuildingId
@@ -46,11 +48,19 @@ export interface UpgradeDef {
 
 export type BuffType = 'frenzy' | 'lucky' | 'clickFrenzy' | 'buildingSpecial'
 
+export type WorldEventType = 'hordeNight' | 'adrenalineRush' | 'supplyDrop' | 'eliteHunt'
+
 export interface ActiveBuff {
   id: string
   type: BuffType
   multiplier?: number
   buildingId?: BuildingId
+  expiresAt: number
+}
+
+export interface ActiveWorldEvent {
+  id: string
+  type: WorldEventType
   expiresAt: number
 }
 
@@ -96,6 +106,8 @@ export interface GameState {
   prestigeLevel: number
   lifetimeKills: number
   lastSavedAt: number
+  activeEvents: ActiveWorldEvent[]
+  nextWorldEventAt: number | null
 }
 
 export interface BuffListing {
@@ -123,4 +135,10 @@ export interface UpgradeListing {
   affordable: boolean
   cpsGain: number
   clickGain: number
+}
+
+export interface WorldEventListing {
+  id: string
+  type: WorldEventType
+  remainingSeconds: number
 }

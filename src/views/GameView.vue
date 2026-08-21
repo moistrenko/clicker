@@ -8,6 +8,7 @@ import BuffBar from '@/components/BuffBar.vue'
 import BuildingRow from '@/components/BuildingRow.vue'
 import ClickTarget from '@/components/ClickTarget.vue'
 import CookieCounter from '@/components/CookieCounter.vue'
+import EventBanner from '@/components/EventBanner.vue'
 import GameLayout from '@/components/GameLayout.vue'
 import GoldenCookie from '@/components/GoldenCookie.vue'
 import NewsTicker from '@/components/NewsTicker.vue'
@@ -108,6 +109,7 @@ function handleBuyUpgrade(id: string) {
         />
       </div>
       <BuffBar :buffs="game.activeBuffs" />
+      <EventBanner :events="game.activeEvents" />
     </template>
 
     <template #center>

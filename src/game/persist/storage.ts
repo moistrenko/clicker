@@ -11,6 +11,7 @@ import { getUpgrade } from '@/game/catalog/upgrades'
 import {
   SAVE_VERSION,
   type ActiveBuff,
+  type ActiveWorldEvent,
   type BuildingCounts,
   type GameState,
   type GoldenCookieSpawn,
@@ -19,7 +20,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -98,6 +99,31 @@ function parseActiveBuffs(value: unknown): ActiveBuff[] {
   return buffs
 }
 
+function parseActiveEvents(value: unknown): ActiveWorldEvent[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+  const events: ActiveWorldEvent[] = []
+  for (const item of value) {
+    if (!isRecord(item)) {
+      continue
+    }
+    const type = item.type
+    if (
+      type !== 'hordeNight' &&
+      type !== 'adrenalineRush' &&
+      type !== 'supplyDrop' &&
+      type !== 'eliteHunt'
+    ) {
+      continue
+    }
+    const id = typeof item.id === 'string' ? item.id : `event-${events.length + 1}`
+    const expiresAt = readNumber(item.expiresAt, 0)
+    events.push({ id, type, expiresAt })
+  }
+  return events
+}
+
 function parseGoldenCookie(value: unknown): GoldenCookieSpawn | null {
   if (!isRecord(value)) {
     return null
@@ -123,6 +149,8 @@ function finalizeLoadedState(state: GameState): GameState {
     prestigeLevel: state.prestigeLevel ?? 0,
     lifetimeKills: state.lifetimeKills ?? 0,
     lastSavedAt: state.lastSavedAt ?? 0,
+    activeEvents: state.activeEvents ?? [],
+    nextWorldEventAt: state.nextWorldEventAt ?? null,
   }
   next = expireBuffs(next)
   next = ensureGoldenSpawnScheduled(next)
@@ -161,6 +189,11 @@ export function parseSave(raw: string): GameState | null {
       prestigeLevel: Math.max(0, readNumber(data.prestigeLevel, 0)),
       lifetimeKills: Math.max(0, readNumber(data.lifetimeKills, 0)),
       lastSavedAt: Math.max(0, readNumber(data.lastSavedAt, 0)),
+      activeEvents: parseActiveEvents(data.activeEvents),
+      nextWorldEventAt:
+        data.nextWorldEventAt === null || data.nextWorldEventAt === undefined
+          ? null
+          : Math.max(0, readNumber(data.nextWorldEventAt, 0)),
     }
     return finalizeLoadedState(state)
   } catch {

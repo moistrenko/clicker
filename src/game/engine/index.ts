@@ -15,6 +15,13 @@ import {
   updateGoldenCookieSpawn,
 } from '@/game/engine/goldenCookie'
 import { prestigeMultiplier } from '@/game/engine/prestige'
+import {
+  ensureWorldEventScheduled,
+  eventClickMultiplier,
+  eventCpsMultiplier,
+  eventEliteSpawnBoost,
+  updateWorldEvents,
+} from '@/game/engine/events'
 
 export {
   ascend,
@@ -125,7 +132,7 @@ export function getCookiesPerClick(state: GameState, atTime = state.gameTime): n
       amount *= 2
     }
   }
-  return amount * clickBuffMultiplier(state, atTime) * prestigeMultiplier(state)
+  return amount * clickBuffMultiplier(state, atTime) * prestigeMultiplier(state) * eventClickMultiplier(state, atTime)
 }
 
 export function click(state: GameState): GameState {
@@ -148,7 +155,7 @@ export function totalCps(state: GameState, atTime = state.gameTime): number {
     const specialMult = buildingBuffs.get(building.id) ?? 1
     cps += owned * building.baseCps * buildingMultiplier(state, building.id) * specialMult
   }
-  return cps * frenzy * prestigeMultiplier(state)
+  return cps * frenzy * prestigeMultiplier(state) * eventCpsMultiplier(state, atTime)
 }
 
 export function canBuy(state: GameState, id: BuildingId, count = 1): boolean {
@@ -241,7 +248,9 @@ export function tick(state: GameState, dtSeconds: number, rng: () => number = Ma
     gameTime: state.gameTime + elapsed,
   }
   next = expireBuffs(next)
-  next = updateGoldenCookieSpawn(next, rng)
+  next = updateWorldEvents(next, rng)
+  const eliteScale = 1 - eventEliteSpawnBoost(next)
+  next = updateGoldenCookieSpawn(next, rng, eliteScale)
 
   const gained = totalCps(next) * elapsed
   if (gained > 0) {
@@ -250,7 +259,8 @@ export function tick(state: GameState, dtSeconds: number, rng: () => number = Ma
       cookies: next.cookies + gained,
       cookiesBakedAllTime: next.cookiesBakedAllTime + gained,
     }
-    next = ensureGoldenSpawnScheduled(next, rng)
+    next = ensureGoldenSpawnScheduled(next, rng, eliteScale)
+    next = ensureWorldEventScheduled(next, rng)
   }
 
   return next
@@ -320,3 +330,5 @@ export {
   listAchievements,
   parseAchievements,
 } from '@/game/engine/achievements'
+
+export { listActiveWorldEvents, triggerWorldEvent } from '@/game/engine/events'

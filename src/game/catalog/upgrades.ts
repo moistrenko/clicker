@@ -63,6 +63,8 @@ const BUILDING_UPGRADE_NAMES: Record<
   idleverse: ['Outbreak mapping', 'Cross-dimensional hunt', 'Infinite horde exploit'],
   cortexBaker: ['Mind scramble', 'Neural overload', 'Brain fry cascade'],
   you: ['Combat clones', 'Elite duplicates', 'Apocalypse you'],
+  warRig: ['Spiked bumpers', 'Ram plating', 'Highway purge'],
+  orbitalLaser: ['Target uplink', 'Sustained beam', 'City eraser protocol'],
 }
 
 function upgradesForBuilding(id: Exclude<BuildingId, 'cursor'>): UpgradeDef[] {

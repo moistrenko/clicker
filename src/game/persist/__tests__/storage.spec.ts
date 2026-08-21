@@ -26,7 +26,7 @@ describe('save persistence', () => {
     const parsed = parseSave(raw)
     expect(parsed).not.toBeNull()
     expect(parsed?.version).toBe(SAVE_VERSION)
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.upgrades).toEqual([])
     expect(parsed?.totalClicks).toBe(0)
     expect(parsed?.achievements).toEqual([])
@@ -51,7 +51,7 @@ describe('save persistence', () => {
     const parsed = parseSave(raw)
     expect(parsed?.upgrades).toEqual(['cursor-1'])
     expect(parsed?.cookiesPerClick).toBe(2)
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.totalClicks).toBe(0)
     expect(parsed?.achievements).toEqual([])
     expect(parsed?.gameTime).toBe(0)
@@ -77,7 +77,7 @@ describe('save persistence', () => {
       nextGoldenSpawnAt: 140,
     })
     const parsed = parseSave(raw)
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.totalClicks).toBe(0)
     expect(parsed?.achievements).toEqual([])
     expect(parsed?.activeBuffs).toHaveLength(1)
@@ -103,7 +103,7 @@ describe('save persistence', () => {
     const parsed = parseSave(raw)
     expect(parsed?.totalClicks).toBe(42)
     expect(parsed?.achievements).toEqual(['first-blood'])
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.prestigeLevel).toBe(0)
     expect(parsed?.lifetimeKills).toBe(0)
   })
@@ -125,7 +125,7 @@ describe('save persistence', () => {
       lifetimeKills: 4_000_000,
     })
     const parsed = parseSave(raw)
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.prestigeLevel).toBe(3)
     expect(parsed?.lifetimeKills).toBe(4_000_000)
     expect(parsed?.lastSavedAt).toBe(0)
@@ -149,13 +149,13 @@ describe('save persistence', () => {
       lastSavedAt: 1_700_000_000_000,
     })
     const parsed = parseSave(raw)
-    expect(parsed?.version).toBe(6)
+    expect(parsed?.version).toBe(SAVE_VERSION)
     expect(parsed?.lastSavedAt).toBe(1_700_000_000_000)
   })
 
   it('rejects unsupported save versions', () => {
     expect(parseSave(JSON.stringify({ version: 0, cookies: 1 }))).toBeNull()
-    expect(parseSave(JSON.stringify({ version: 7, cookies: 1 }))).toBeNull()
+    expect(parseSave(JSON.stringify({ version: 8, cookies: 1 }))).toBeNull()
   })
 
   it('saveGame stamps lastSavedAt onto the stored payload', () => {

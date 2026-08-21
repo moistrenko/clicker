@@ -31,11 +31,12 @@ function nextBuffId(): string {
   return `buff-${buffIdCounter}`
 }
 
-export function nextGoldenSpawnInterval(rng: Rng = Math.random): number {
+export function nextGoldenSpawnInterval(rng: Rng = Math.random, intervalScale = 1): number {
   const jitter =
     GOLDEN_SPAWN_JITTER_MIN +
     rng() * (GOLDEN_SPAWN_JITTER_MAX - GOLDEN_SPAWN_JITTER_MIN)
-  return GOLDEN_SPAWN_MEAN_SECONDS * jitter
+  const scale = Math.min(1, Math.max(0.2, intervalScale))
+  return GOLDEN_SPAWN_MEAN_SECONDS * jitter * scale
 }
 
 export function randomGoldenPosition(rng: Rng = Math.random): { x: number; y: number } {
@@ -172,7 +173,11 @@ function createBuff(
   }
 }
 
-export function ensureGoldenSpawnScheduled(state: GameState, rng: Rng = Math.random): GameState {
+export function ensureGoldenSpawnScheduled(
+  state: GameState,
+  rng: Rng = Math.random,
+  intervalScale = 1,
+): GameState {
   if (state.cookiesBakedAllTime < GOLDEN_COOKIE_MIN_BAKED) {
     return state
   }
@@ -181,12 +186,16 @@ export function ensureGoldenSpawnScheduled(state: GameState, rng: Rng = Math.ran
   }
   return {
     ...state,
-    nextGoldenSpawnAt: state.gameTime + nextGoldenSpawnInterval(rng),
+    nextGoldenSpawnAt: state.gameTime + nextGoldenSpawnInterval(rng, intervalScale),
   }
 }
 
-export function updateGoldenCookieSpawn(state: GameState, rng: Rng = Math.random): GameState {
-  const next = ensureGoldenSpawnScheduled(state, rng)
+export function updateGoldenCookieSpawn(
+  state: GameState,
+  rng: Rng = Math.random,
+  intervalScale = 1,
+): GameState {
+  const next = ensureGoldenSpawnScheduled(state, rng, intervalScale)
   if (next.goldenCookie !== null) {
     return next
   }

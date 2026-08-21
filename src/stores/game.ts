@@ -11,6 +11,7 @@ import {
   getCookiesPerClick,
   listAchievements,
   listActiveBuffs,
+  listActiveWorldEvents,
   listStoreBuildings,
   listStoreUpgrades,
   prestigeMultiplier,
@@ -76,6 +77,7 @@ export const useGameStore = defineStore('game', () => {
   const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime, formatOptions()))
   const goldenCookie = computed(() => state.value.goldenCookie)
   const activeBuffs = computed(() => listActiveBuffs(state.value))
+  const activeEvents = computed(() => listActiveWorldEvents(state.value))
   const achievementList = computed(() => listAchievements(state.value))
   const prestigeLevel = computed(() => state.value.prestigeLevel ?? 0)
   const prestigeBonus = computed(() => prestigeMultiplier(state.value))
@@ -263,6 +265,7 @@ export const useGameStore = defineStore('game', () => {
     formattedBaked,
     goldenCookie,
     activeBuffs,
+    activeEvents,
     achievementList,
     prestigeLevel,
     prestigeBonus,

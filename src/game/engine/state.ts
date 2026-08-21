@@ -27,5 +27,7 @@ export function createInitialState(): GameState {
     prestigeLevel: 0,
     lifetimeKills: 0,
     lastSavedAt: 0,
+    activeEvents: [],
+    nextWorldEventAt: null,
   }
 }
