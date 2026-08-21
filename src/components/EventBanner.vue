@@ -55,6 +55,18 @@ const localized = computed(() =>
   background: linear-gradient(120deg, rgba(72, 42, 18, 0.55), rgba(28, 36, 24, 0.7));
   padding: 0.55rem 0.7rem;
   color: #f0d7b4;
+  animation: event-in 280ms ease-out;
+}
+
+@keyframes event-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .events__item[data-type='hordeNight'] {

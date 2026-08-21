@@ -1,12 +1,12 @@
 import type { BuildingDef, BuildingId } from '@/game/types'
 
 export const BUILDINGS: readonly BuildingDef[] = [
-  { id: 'cursor', name: 'Baseball Bat', baseCost: 15, baseCps: 0.1 },
-  { id: 'grandma', name: 'Shotgun Granny', baseCost: 100, baseCps: 1 },
-  { id: 'farm', name: 'Pit Trap', baseCost: 1100, baseCps: 8 },
-  { id: 'mine', name: 'Landmine Field', baseCost: 12_000, baseCps: 47 },
-  { id: 'factory', name: 'Ammo Factory', baseCost: 130_000, baseCps: 260 },
-  { id: 'bank', name: 'Weapon Cache', baseCost: 1_400_000, baseCps: 1400 },
+  { id: 'cursor', name: 'Baseball Bat', baseCost: 15, baseCps: 0.15 },
+  { id: 'grandma', name: 'Shotgun Granny', baseCost: 100, baseCps: 1.2 },
+  { id: 'farm', name: 'Pit Trap', baseCost: 1_000, baseCps: 8 },
+  { id: 'mine', name: 'Landmine Field', baseCost: 11_000, baseCps: 47 },
+  { id: 'factory', name: 'Ammo Factory', baseCost: 120_000, baseCps: 260 },
+  { id: 'bank', name: 'Weapon Cache', baseCost: 1_300_000, baseCps: 1_400 },
   { id: 'temple', name: 'Safe House', baseCost: 20_000_000, baseCps: 7800 },
   { id: 'wizardTower', name: 'Flamethrower Tower', baseCost: 330_000_000, baseCps: 44_000 },
   { id: 'shipment', name: 'Supply Airdrop', baseCost: 5_100_000_000, baseCps: 260_000 },

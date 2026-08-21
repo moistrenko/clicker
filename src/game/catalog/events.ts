@@ -10,34 +10,34 @@ export interface WorldEventDef {
   weight: number
 }
 
-export const WORLD_EVENT_MIN_BAKED = 500
-export const WORLD_EVENT_MEAN_SECONDS = 180
-export const WORLD_EVENT_JITTER_MIN = 0.6
-export const WORLD_EVENT_JITTER_MAX = 1.4
+export const WORLD_EVENT_MIN_BAKED = 250
+export const WORLD_EVENT_MEAN_SECONDS = 140
+export const WORLD_EVENT_JITTER_MIN = 0.55
+export const WORLD_EVENT_JITTER_MAX = 1.35
 
 export const WORLD_EVENTS: readonly WorldEventDef[] = [
   {
     type: 'hordeNight',
-    durationSeconds: 75,
+    durationSeconds: 90,
     cpsMultiplier: 2,
     weight: 30,
   },
   {
     type: 'adrenalineRush',
-    durationSeconds: 40,
-    clickMultiplier: 3,
-    weight: 25,
+    durationSeconds: 45,
+    clickMultiplier: 3.5,
+    weight: 26,
   },
   {
     type: 'supplyDrop',
-    durationSeconds: 1,
-    instantKillRatio: 0.2,
-    weight: 25,
+    durationSeconds: 8,
+    instantKillRatio: 0.22,
+    weight: 24,
   },
   {
     type: 'eliteHunt',
-    durationSeconds: 90,
-    eliteSpawnBoost: 0.45,
+    durationSeconds: 100,
+    eliteSpawnBoost: 0.5,
     weight: 20,
   },
 ]

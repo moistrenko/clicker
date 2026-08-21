@@ -44,20 +44,20 @@ function pick(next: AppLocale) {
   right: max(0.75rem, env(safe-area-inset-right, 0px));
   z-index: 120;
   display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.2rem;
-  border-radius: 999px;
-  background: rgba(20, 26, 20, 0.88);
-  border: 1px solid rgba(126, 207, 90, 0.35);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  gap: 0.2rem;
+  padding: 0.18rem;
+  border-radius: 0.45rem;
+  background: rgba(20, 26, 20, 0.9);
+  border: 1px solid rgba(126, 207, 90, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(6px);
 }
 
 .language-toggle__btn {
-  min-width: 2.4rem;
+  min-width: 2.35rem;
   padding: 0.35rem 0.55rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0.3rem;
   background: transparent;
   color: #b8d4ae;
   font-size: 0.72rem;
@@ -67,7 +67,7 @@ function pick(next: AppLocale) {
 }
 
 .language-toggle__btn--active {
-  background: linear-gradient(180deg, #5a8f48 0%, #3f6835 100%);
+  background: #456a3a;
   color: #f0f8ec;
 }
 

@@ -437,11 +437,11 @@
     },
     "adrenalineRush": {
       "name": "Adrenaline Rush",
-      "description": "Click kills ×3 — keep swinging."
+      "description": "Click kills ×3.5 — keep swinging."
     },
     "supplyDrop": {
       "name": "Supply Drop",
-      "description": "Emergency crates dump instant kills."
+      "description": "Emergency crates dump a burst of kills."
     },
     "eliteHunt": {
       "name": "Elite Hunt",

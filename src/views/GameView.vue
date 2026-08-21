@@ -177,6 +177,7 @@ function handleBuyUpgrade(id: string) {
   font-size: 0.72rem;
   line-height: 1.35;
   color: #8fa888;
+  opacity: 0.92;
 }
 
 .store-list {

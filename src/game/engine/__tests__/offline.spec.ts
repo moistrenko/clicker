@@ -35,9 +35,9 @@ describe('offline progress', () => {
       buildings: { ...createInitialState().buildings, cursor: 1 },
     }
     const next = tickOffline(state, 10)
-    expect(totalCps(state)).toBeCloseTo(0.1)
-    expect(next.cookies).toBeCloseTo(1)
-    expect(next.cookiesBakedAllTime).toBeCloseTo(201)
+    expect(totalCps(state)).toBeCloseTo(0.15)
+    expect(next.cookies).toBeCloseTo(1.5)
+    expect(next.cookiesBakedAllTime).toBeCloseTo(201.5)
     expect(next.gameTime).toBe(10)
     expect(next.goldenCookie).toBeNull()
     expect(next.nextGoldenSpawnAt).toBeNull()
@@ -53,8 +53,8 @@ describe('offline progress', () => {
       buildings: { ...createInitialState().buildings, cursor: 1 },
     }
     const result = applyOfflineProgress(state, now)
-    expect(result.offlineKills).toBeCloseTo(10)
-    expect(result.state.cookies).toBeCloseTo(15)
+    expect(result.offlineKills).toBeCloseTo(15)
+    expect(result.state.cookies).toBeCloseTo(20)
   })
 
   it('does not spawn golden cookies during offline catch-up', () => {

@@ -22,7 +22,7 @@ describe('world events', () => {
     let state = createInitialState()
     const base = getCookiesPerClick(state)
     state = triggerWorldEvent(state, 'adrenalineRush', () => 0)
-    expect(getCookiesPerClick(state)).toBeCloseTo(base * 3)
+    expect(getCookiesPerClick(state)).toBeCloseTo(base * 3.5)
   })
 
   it('schedules and fires events after threshold', () => {

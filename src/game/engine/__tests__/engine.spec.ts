@@ -50,26 +50,26 @@ describe('game engine', () => {
     expect(next.buildings.cursor).toBe(0)
   })
 
-  it('CpS is 0.1 with 1 cursor, 1.1 with 1 cursor + 1 grandma', () => {
+  it('CpS is 0.15 with 1 cursor, 1.35 with 1 cursor + 1 grandma', () => {
     const withCursor = {
       ...createInitialState(),
       buildings: { ...createInitialState().buildings, cursor: 1 },
     }
-    expect(totalCps(withCursor)).toBeCloseTo(0.1)
+    expect(totalCps(withCursor)).toBeCloseTo(0.15)
 
     const withBoth = {
       ...withCursor,
       buildings: { ...withCursor.buildings, grandma: 1 },
     }
-    expect(totalCps(withBoth)).toBeCloseTo(1.1)
+    expect(totalCps(withBoth)).toBeCloseTo(1.35)
   })
 
-  it('1 cursor is 0.1 CpS without upgrades', () => {
+  it('1 cursor is 0.15 CpS without upgrades', () => {
     const state = {
       ...createInitialState(),
       buildings: { ...createInitialState().buildings, cursor: 1 },
     }
-    expect(totalCps(state)).toBeCloseTo(0.1)
+    expect(totalCps(state)).toBeCloseTo(0.15)
     expect(getCookiesPerClick(state)).toBe(1)
   })
 
@@ -82,7 +82,7 @@ describe('game engine', () => {
     state = buyUpgrade(state, 'cursor-1')
     expect(state.upgrades).toEqual(['cursor-1'])
     expect(state.cookies).toBe(0)
-    expect(totalCps(state)).toBeCloseTo(0.2)
+    expect(totalCps(state)).toBeCloseTo(0.3)
     expect(getCookiesPerClick(state)).toBe(2)
     expect(state.cookiesPerClick).toBe(2)
 
@@ -90,25 +90,25 @@ describe('game engine', () => {
     expect(clicked.cookies).toBeCloseTo(2)
   })
 
-  it('all 3 cursor click upgrades make cookiesPerClick 8 and 1 cursor 0.8 CpS', () => {
+  it('all 3 cursor click upgrades make cookiesPerClick 8 and 1 cursor 1.2 CpS', () => {
     const state = {
       ...createInitialState(),
       upgrades: ['cursor-1', 'cursor-2', 'cursor-3'],
       buildings: { ...createInitialState().buildings, cursor: 1 },
     }
     expect(getCookiesPerClick(state)).toBe(8)
-    expect(totalCps(state)).toBeCloseTo(0.8)
+    expect(totalCps(state)).toBeCloseTo(1.2)
   })
 
-  it('grandma double upgrade doubles grandma CpS from 1 to 2', () => {
+  it('grandma double upgrade doubles grandma CpS from 1.2 to 2.4', () => {
     let state = {
       ...createInitialState(),
       cookies: 1000,
       buildings: { ...createInitialState().buildings, grandma: 1 },
     }
-    expect(totalCps(state)).toBeCloseTo(1)
+    expect(totalCps(state)).toBeCloseTo(1.2)
     state = buyUpgrade(state, 'grandma-1')
-    expect(totalCps(state)).toBeCloseTo(2)
+    expect(totalCps(state)).toBeCloseTo(2.4)
     expect(getCookiesPerClick(state)).toBe(1)
   })
 
@@ -150,18 +150,18 @@ describe('game engine', () => {
       buildings: { ...createInitialState().buildings, grandma: 1 },
     }
     const next = tick(state, 1)
-    expect(next.cookies).toBeCloseTo(2)
-    expect(next.cookiesBakedAllTime).toBeCloseTo(2)
+    expect(next.cookies).toBeCloseTo(2.4)
+    expect(next.cookiesBakedAllTime).toBeCloseTo(2.4)
   })
 
-  it('tick(1 second) with 1 grandma adds ~1 cookie', () => {
+  it('tick(1 second) with 1 grandma adds ~1.2 cookies', () => {
     const state = {
       ...createInitialState(),
       buildings: { ...createInitialState().buildings, grandma: 1 },
     }
     const next = tick(state, 1)
-    expect(next.cookies).toBeCloseTo(1)
-    expect(next.cookiesBakedAllTime).toBeCloseTo(1)
+    expect(next.cookies).toBeCloseTo(1.2)
+    expect(next.cookiesBakedAllTime).toBeCloseTo(1.2)
   })
 
   it('price formula for n=0,1,10', () => {
@@ -176,12 +176,12 @@ describe('game engine', () => {
       ...createInitialState(),
       buildings: { ...createInitialState().buildings, cursor: 2 },
     }
-    expect(buildingCpsEach(state, 'cursor')).toBeCloseTo(0.1)
-    expect(buildingCpsTotal(state, 'cursor')).toBeCloseTo(0.2)
+    expect(buildingCpsEach(state, 'cursor')).toBeCloseTo(0.15)
+    expect(buildingCpsTotal(state, 'cursor')).toBeCloseTo(0.3)
 
     const listing = listStoreBuildings(state).find((entry) => entry.building.id === 'cursor')
-    expect(listing?.cpsEach).toBeCloseTo(0.1)
-    expect(listing?.cpsTotal).toBeCloseTo(0.2)
+    expect(listing?.cpsEach).toBeCloseTo(0.15)
+    expect(listing?.cpsTotal).toBeCloseTo(0.3)
   })
 
   it('preview upgrade gains for cps and click power', () => {
@@ -195,11 +195,11 @@ describe('game engine', () => {
     if (!upgrade) {
       return
     }
-    expect(upgradeCpsGain(state, upgrade)).toBeCloseTo(0.1)
+    expect(upgradeCpsGain(state, upgrade)).toBeCloseTo(0.15)
     expect(upgradeClickGain(state, upgrade)).toBe(1)
 
     const listing = listStoreUpgrades(state).find((entry) => entry.upgrade.id === 'cursor-1')
-    expect(listing?.cpsGain).toBeCloseTo(0.1)
+    expect(listing?.cpsGain).toBeCloseTo(0.15)
     expect(listing?.clickGain).toBe(1)
   })
 

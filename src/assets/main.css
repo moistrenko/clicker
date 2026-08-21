@@ -16,15 +16,13 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    Helvetica,
-    Arial,
+    'Source Sans 3',
+    'Segoe UI',
     sans-serif;
-  background: #1a2218;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(126, 207, 90, 0.08), transparent 28%),
+    radial-gradient(circle at 88% 0%, rgba(70, 90, 50, 0.18), transparent 32%),
+    #1a2218;
   color: var(--horde-ink);
   overflow-x: hidden;
 }

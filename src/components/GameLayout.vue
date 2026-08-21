@@ -63,6 +63,7 @@
 
 .panel--store h2 {
   margin-bottom: 0.9rem;
+  font-family: Rajdhani, 'Source Sans 3', sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.2rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -81,6 +82,9 @@
 }
 
 .horde-title h1 {
+  font-family: Rajdhani, 'Source Sans 3', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   font-size: clamp(1.45rem, 4.5vw, 2.2rem);
   color: #e8f0e4;
 }

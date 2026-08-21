@@ -110,7 +110,7 @@ describe('golden cookies', () => {
         },
       ],
     }
-    expect(totalCps(state)).toBeCloseTo(7)
+    expect(totalCps(state)).toBeCloseTo(8.4)
   })
 
   it('click frenzy multiplies cookies per click', () => {

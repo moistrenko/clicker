@@ -190,8 +190,8 @@ describe('save persistence', () => {
     })
 
     const result = loadGame(storage, now)
-    expect(result.offlineKills).toBeCloseTo(10)
-    expect(result.state.cookies).toBeCloseTo(10)
+    expect(result.offlineKills).toBeCloseTo(15)
+    expect(result.state.cookies).toBeCloseTo(15)
     expect(result.state.lastSavedAt).toBe(now)
   })
 
@@ -218,6 +218,6 @@ describe('save persistence', () => {
     })
 
     const result = loadGame(storage, now)
-    expect(result.offlineKills).toBeCloseTo(OFFLINE_MAX_SECONDS * 0.1)
+    expect(result.offlineKills).toBeCloseTo(OFFLINE_MAX_SECONDS * 0.15)
   })
 })
