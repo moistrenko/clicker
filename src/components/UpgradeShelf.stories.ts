@@ -15,6 +15,8 @@ const sampleListings: UpgradeListing[] = [
       alsoBoostClick: true,
     },
     affordable: true,
+    cpsGain: 0.1,
+    clickGain: 1,
   },
   {
     upgrade: {
@@ -27,6 +29,8 @@ const sampleListings: UpgradeListing[] = [
       type: 'double',
     },
     affordable: false,
+    cpsGain: 5,
+    clickGain: 0,
   },
 ]
 

@@ -20,7 +20,7 @@ import {
   totalBuildingsOwned,
   totalCps,
 } from '@/game/engine'
-import { formatCookies } from '@/game/format/numbers'
+import { formatCookies, formatCookiesParts } from '@/game/format/numbers'
 import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 import { createDebouncedSave, loadGame, parseSave, saveGame } from '@/game/persist/storage'
 import type { AchievementDef, BuildingId, GameState } from '@/game/types'
@@ -70,6 +70,7 @@ export const useGameStore = defineStore('game', () => {
   const buildingsOwned = computed(() => totalBuildingsOwned(state.value))
   const storeListings = computed(() => listStoreBuildings(state.value))
   const upgradeListings = computed(() => listStoreUpgrades(state.value))
+  const cookiesDisplay = computed(() => formatCookiesParts(state.value.cookies, formatOptions()))
   const formattedCookies = computed(() => formatCookies(state.value.cookies, formatOptions()))
   const formattedCps = computed(() => formatCookies(cps.value, formatOptions()))
   const formattedBaked = computed(() => formatCookies(state.value.cookiesBakedAllTime, formatOptions()))
@@ -133,9 +134,9 @@ export const useGameStore = defineStore('game', () => {
     commit(next)
   }
 
-  function buyBuilding(id: BuildingId) {
+  function buyBuilding(id: BuildingId, count = 1) {
     const before = state.value
-    const next = buy(before, id)
+    const next = buy(before, id, count)
     if (next === before) {
       return false
     }
@@ -256,6 +257,7 @@ export const useGameStore = defineStore('game', () => {
     buildingsOwned,
     storeListings,
     upgradeListings,
+    cookiesDisplay,
     formattedCookies,
     formattedCps,
     formattedBaked,

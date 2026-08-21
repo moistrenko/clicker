@@ -114,9 +114,13 @@ export interface StoreListing {
   price: number
   affordable: boolean
   locked: boolean
+  cpsEach: number
+  cpsTotal: number
 }
 
 export interface UpgradeListing {
   upgrade: UpgradeDef
   affordable: boolean
+  cpsGain: number
+  clickGain: number
 }

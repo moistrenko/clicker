@@ -25,6 +25,8 @@ const { t } = useI18n()
       :description="descriptionFor(listing)"
       :price="listing.upgrade.cost"
       :affordable="listing.affordable"
+      :cps-gain="listing.cpsGain"
+      :click-gain="listing.clickGain"
       @buy="emit('buy', listing.upgrade.id)"
     />
   </section>

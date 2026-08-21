@@ -6,7 +6,8 @@ const meta = {
   component: CookieCounter,
   tags: ['autodocs'],
   args: {
-    cookies: '1,234',
+    coefficient: '1,234',
+    scale: null,
     cps: '0.1',
   },
 } satisfies Meta<typeof CookieCounter>
@@ -18,7 +19,8 @@ export const EarlyHorde: Story = {}
 
 export const Millions: Story = {
   args: {
-    cookies: '1.235 million',
+    coefficient: '1.235',
+    scale: 'million',
     cps: '12,400',
   },
 }

@@ -24,7 +24,7 @@ export const ThreeColumns: Story = {
     template: `
       <GameLayout>
         <template #bakery>
-          <CookieCounter cookies="128" cps="1.1" />
+          <CookieCounter coefficient="128" cps="1.1" />
           <ClickTarget :gain="1" />
         </template>
         <template #center>

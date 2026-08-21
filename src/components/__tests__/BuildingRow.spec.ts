@@ -12,11 +12,29 @@ describe('BuildingRow', () => {
         owned: 0,
         price: 15,
         affordable: true,
+        cpsEach: 0.1,
+        cpsTotal: 0,
       },
     })
     expect(wrapper.get('button').attributes('disabled')).toBeUndefined()
     expect(wrapper.text()).toContain('Cursor')
     expect(wrapper.text()).toContain('15')
+    expect(wrapper.text()).toMatch(/0\.1/)
+  })
+
+  it('shows total cps when owned', () => {
+    const wrapper = mount(BuildingRow, {
+      global: { plugins: [i18n] },
+      props: {
+        name: 'Cursor',
+        owned: 5,
+        price: 30,
+        affordable: true,
+        cpsEach: 0.1,
+        cpsTotal: 0.5,
+      },
+    })
+    expect(wrapper.text()).toMatch(/0\.5/)
   })
 
   it('is disabled when unaffordable', () => {

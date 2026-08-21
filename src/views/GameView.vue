@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AscendPanel from '@/components/AscendPanel.vue'
 import AchievementToast from '@/components/AchievementToast.vue'
@@ -15,18 +15,77 @@ import OfflineBanner from '@/components/OfflineBanner.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import StatsPanel from '@/components/StatsPanel.vue'
 import UpgradeShelf from '@/components/UpgradeShelf.vue'
+import { useBuyBulk } from '@/composables/useBuyBulk'
+import { useGameAudio } from '@/composables/useGameAudio'
+import { bulkBuildingPrice } from '@/game/engine'
 import { useCatalogText } from '@/i18n/useCatalogText'
 import { useGameStore } from '@/stores/game'
 
 const game = useGameStore()
 const { t } = useI18n()
 const { buildingName, upgradeName, upgradeDescription } = useCatalogText()
+const { bulk } = useBuyBulk()
+const {
+  muted,
+  musicMuted,
+  playClick,
+  playBuy,
+  playElite,
+  toggleMuted,
+  toggleMusicMuted,
+} = useGameAudio()
 const settingsPanel = ref<InstanceType<typeof SettingsPanel> | null>(null)
+
+const storeRows = computed(() =>
+  game.storeListings.map((listing) => {
+    if (listing.locked || bulk.value === 1) {
+      return {
+        ...listing,
+        buyCount: 1 as const,
+        displayPrice: listing.price,
+        canAffordBulk: listing.affordable,
+      }
+    }
+    const displayPrice = bulkBuildingPrice(
+      listing.building.baseCost,
+      listing.owned,
+      bulk.value,
+    )
+    return {
+      ...listing,
+      buyCount: bulk.value,
+      displayPrice,
+      canAffordBulk: game.cookies >= displayPrice,
+    }
+  }),
+)
 
 function handleImportSave(raw: string) {
   const ok = game.importSave(raw)
   if (!ok) {
     settingsPanel.value?.setImportError(t('errors.importFailed'))
+  }
+}
+
+function handleClick() {
+  playClick()
+  game.clickCookie()
+}
+
+function handleElite() {
+  playElite()
+  game.collectGoldenCookie()
+}
+
+function handleBuyBuilding(id: Parameters<typeof game.buyBuilding>[0], count: number) {
+  if (game.buyBuilding(id, count)) {
+    playBuy()
+  }
+}
+
+function handleBuyUpgrade(id: string) {
+  if (game.buyUpgrade(id)) {
+    playBuy()
   }
 }
 </script>
@@ -35,13 +94,17 @@ function handleImportSave(raw: string) {
   <GameLayout>
     <template #bakery>
       <div class="bakery-stage">
-        <CookieCounter :cookies="game.formattedCookies" :cps="game.formattedCps" />
-        <ClickTarget :gain="game.cookiesPerClick" @click="game.clickCookie" />
+        <CookieCounter
+          :coefficient="game.cookiesDisplay.coefficient"
+          :scale="game.cookiesDisplay.scale"
+          :cps="game.formattedCps"
+        />
+        <ClickTarget :gain="game.cookiesPerClick" @click="handleClick" />
         <GoldenCookie
           v-if="game.goldenCookie"
           :x="game.goldenCookie.x"
           :y="game.goldenCookie.y"
-          @click="game.collectGoldenCookie"
+          @click="handleElite"
         />
       </div>
       <BuffBar :buffs="game.activeBuffs" />
@@ -60,29 +123,37 @@ function handleImportSave(raw: string) {
       <NewsTicker />
       <SettingsPanel
         ref="settingsPanel"
+        :muted="muted"
+        :music-muted="musicMuted"
         @export-save="game.exportSaveToClipboard"
         @import-save="handleImportSave"
         @wipe-save="game.wipeSave"
+        @toggle-muted="toggleMuted"
+        @toggle-music-muted="toggleMusicMuted"
       />
     </template>
 
     <template #store>
+      <p class="buy-bulk-hint">{{ t('ui.buyBulkHint') }}</p>
       <UpgradeShelf
         :listings="game.upgradeListings"
         :name-for="(listing) => upgradeName(listing.upgrade.id)"
         :description-for="(listing) => upgradeDescription(listing.upgrade)"
-        @buy="game.buyUpgrade"
+        @buy="handleBuyUpgrade"
       />
       <div class="store-list">
         <BuildingRow
-          v-for="listing in game.storeListings"
+          v-for="listing in storeRows"
           :key="listing.building.id"
           :name="buildingName(listing.building.id)"
           :owned="listing.owned"
-          :price="listing.price"
-          :affordable="listing.affordable"
+          :price="listing.displayPrice"
+          :affordable="listing.canAffordBulk"
           :locked="listing.locked"
-          @buy="game.buyBuilding(listing.building.id)"
+          :cps-each="listing.cpsEach"
+          :cps-total="listing.cpsTotal"
+          :buy-count="listing.buyCount"
+          @buy="handleBuyBuilding(listing.building.id, listing.buyCount)"
         />
       </div>
     </template>
@@ -97,6 +168,13 @@ function handleImportSave(raw: string) {
   position: relative;
   width: min(88vw, 340px);
   margin: 0 auto;
+}
+
+.buy-bulk-hint {
+  margin: -0.35rem 0 0.75rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: #8fa888;
 }
 
 .store-list {

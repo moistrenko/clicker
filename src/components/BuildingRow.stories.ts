@@ -11,6 +11,8 @@ const meta = {
     price: 23,
     affordable: true,
     locked: false,
+    cpsEach: 0.1,
+    cpsTotal: 0.3,
   },
   decorators: [
     (story) => ({

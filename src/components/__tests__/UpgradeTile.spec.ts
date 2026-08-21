@@ -12,10 +12,13 @@ describe('UpgradeTile', () => {
         description: 'Manual strikes and baseball bats score twice as many kills.',
         price: 100,
         affordable: true,
+        cpsGain: 0.1,
+        clickGain: 1,
       },
     })
     expect(wrapper.get('button').element.disabled).toBe(false)
     expect(wrapper.text()).toContain('100')
+    expect(wrapper.get('button').attributes('aria-label')).toMatch(/0\.1/)
   })
 
   it('is disabled when unaffordable', () => {

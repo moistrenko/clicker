@@ -52,7 +52,18 @@
     "wipeConfirm": "Wipe this survivor log forever? All kills, weapons, and progress will be lost.",
     "language": "Language",
     "switchToEn": "English",
-    "switchToRu": "Русский"
+    "switchToRu": "Русский",
+    "cpsEach": "{rate}/s each",
+    "cpsTotal": "{rate}/s total",
+    "cpsGain": "+{rate}/s",
+    "clickGain": "+{rate} per click",
+    "upgradeEffect": "Effect",
+    "buyBulkHint": "Buy: Shift ×10 · Alt ×20 · Ctrl ×100",
+    "buyBulk": "×{count}",
+    "soundOn": "Sound: on",
+    "soundOff": "Sound: off",
+    "musicOn": "Music: on",
+    "musicOff": "Music: off"
   },
   "errors": {
     "importFailed": "That survivor log is corrupted or from another apocalypse."

@@ -51,10 +51,27 @@ export function buildingPrice(baseCost: number, owned: number): number {
   return Math.ceil(baseCost * Math.pow(PRICE_GROWTH, owned))
 }
 
+export function bulkBuildingPrice(baseCost: number, owned: number, count: number): number {
+  if (!(count > 0)) {
+    return 0
+  }
+  let total = 0
+  for (let i = 0; i < count; i += 1) {
+    total += buildingPrice(baseCost, owned + i)
+  }
+  return total
+}
+
 export function currentPrice(state: GameState, id: BuildingId): number {
   const building = getBuilding(id)
   const owned = state.buildings[id] ?? 0
   return buildingPrice(building.baseCost, owned)
+}
+
+export function currentBulkPrice(state: GameState, id: BuildingId, count: number): number {
+  const building = getBuilding(id)
+  const owned = state.buildings[id] ?? 0
+  return bulkBuildingPrice(building.baseCost, owned, count)
 }
 
 export function buildingMultiplier(state: GameState, buildingId: BuildingId): number {
@@ -66,6 +83,38 @@ export function buildingMultiplier(state: GameState, buildingId: BuildingId): nu
     }
   }
   return 2 ** doubles
+}
+
+export function buildingCpsEach(state: GameState, buildingId: BuildingId, atTime = state.gameTime): number {
+  const building = getBuilding(buildingId)
+  const { frenzy, building: buildingBuffs } = cpsBuffMultipliers(state, atTime)
+  const specialMult = buildingBuffs.get(buildingId) ?? 1
+  return (
+    building.baseCps *
+    buildingMultiplier(state, buildingId) *
+    specialMult *
+    frenzy *
+    prestigeMultiplier(state)
+  )
+}
+
+export function buildingCpsTotal(state: GameState, buildingId: BuildingId, atTime = state.gameTime): number {
+  const owned = state.buildings[buildingId] ?? 0
+  return owned * buildingCpsEach(state, buildingId, atTime)
+}
+
+export function upgradeCpsGain(state: GameState, upgrade: UpgradeDef, atTime = state.gameTime): number {
+  if (upgrade.type !== 'double') {
+    return 0
+  }
+  return buildingCpsTotal(state, upgrade.buildingId, atTime)
+}
+
+export function upgradeClickGain(state: GameState, upgrade: UpgradeDef, atTime = state.gameTime): number {
+  if (!upgrade.alsoBoostClick) {
+    return 0
+  }
+  return getCookiesPerClick(state, atTime)
 }
 
 export function getCookiesPerClick(state: GameState, atTime = state.gameTime): number {
@@ -102,23 +151,27 @@ export function totalCps(state: GameState, atTime = state.gameTime): number {
   return cps * frenzy * prestigeMultiplier(state)
 }
 
-export function canBuy(state: GameState, id: BuildingId): boolean {
-  return state.cookies >= currentPrice(state, id)
+export function canBuy(state: GameState, id: BuildingId, count = 1): boolean {
+  return state.cookies >= currentBulkPrice(state, id, count)
 }
 
-export function buy(state: GameState, id: BuildingId): GameState {
-  const price = currentPrice(state, id)
+export function buy(state: GameState, id: BuildingId, count = 1): GameState {
+  if (!(count > 0)) {
+    return state
+  }
+  const building = getBuilding(id)
+  const owned = state.buildings[id] ?? 0
+  const price = bulkBuildingPrice(building.baseCost, owned, count)
   if (state.cookies < price) {
     return state
   }
 
-  const owned = state.buildings[id] ?? 0
   return {
     ...state,
     cookies: state.cookies - price,
     buildings: {
       ...state.buildings,
-      [id]: owned + 1,
+      [id]: owned + count,
     },
   }
 }
@@ -168,6 +221,8 @@ export function listStoreUpgrades(state: GameState): UpgradeListing[] {
     listings.push({
       upgrade,
       affordable: state.cookies >= upgrade.cost,
+      cpsGain: upgradeCpsGain(state, upgrade),
+      clickGain: upgradeClickGain(state, upgrade),
     })
   }
 
@@ -222,12 +277,15 @@ export function listStoreBuildings(state: GameState): StoreListing[] {
     if (named) {
       const owned = state.buildings[building.id] ?? 0
       const price = buildingPrice(building.baseCost, owned)
+      const cpsEach = buildingCpsEach(state, building.id)
       listings.push({
         building,
         owned,
         price,
         affordable: state.cookies >= price,
         locked: false,
+        cpsEach,
+        cpsTotal: owned * cpsEach,
       })
       continue
     }
@@ -240,6 +298,8 @@ export function listStoreBuildings(state: GameState): StoreListing[] {
         price: 0,
         affordable: false,
         locked: true,
+        cpsEach: 0,
+        cpsTotal: 0,
       })
     }
   }

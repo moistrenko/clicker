@@ -29,6 +29,11 @@ export interface FormatCookiesOptions {
   scaleNames?: Partial<Record<(typeof SHORT_SCALE)[number]['key'], string>>
 }
 
+export interface FormattedCookiesParts {
+  coefficient: string
+  scale: string | null
+}
+
 function formatGroupedInteger(value: number, locale: string): string {
   return Math.trunc(value).toLocaleString(locale)
 }
@@ -41,12 +46,15 @@ function formatShortCoefficient(value: number): string {
   return rounded.toFixed(3).replace(/\.?0+$/, '')
 }
 
-export function formatCookies(value: number, options: FormatCookiesOptions = {}): string {
+export function formatCookiesParts(
+  value: number,
+  options: FormatCookiesOptions = {},
+): FormattedCookiesParts {
   const locale = options.locale ?? 'en-US'
   const scaleNames = { ...DEFAULT_SCALE_NAMES, ...options.scaleNames }
 
   if (!Number.isFinite(value)) {
-    return '0'
+    return { coefficient: '0', scale: null }
   }
 
   const sign = value < 0 ? '-' : ''
@@ -54,7 +62,7 @@ export function formatCookies(value: number, options: FormatCookiesOptions = {})
 
   if (abs < 1_000_000) {
     if (Number.isInteger(abs)) {
-      return `${sign}${formatGroupedInteger(abs, locale)}`
+      return { coefficient: `${sign}${formatGroupedInteger(abs, locale)}`, scale: null }
     }
 
     const trimmed = abs
@@ -63,12 +71,13 @@ export function formatCookies(value: number, options: FormatCookiesOptions = {})
       .replace(/\.$/, '')
     const [intPart = '0', fracPart] = trimmed.split('.')
     const grouped = Number(intPart).toLocaleString(locale)
-    return fracPart ? `${sign}${grouped}.${fracPart}` : `${sign}${grouped}`
+    const coefficient = fracPart ? `${sign}${grouped}.${fracPart}` : `${sign}${grouped}`
+    return { coefficient, scale: null }
   }
 
   const firstScale = SHORT_SCALE[0]
   if (!firstScale) {
-    return `${sign}${formatGroupedInteger(abs, locale)}`
+    return { coefficient: `${sign}${formatGroupedInteger(abs, locale)}`, scale: null }
   }
 
   let scale: (typeof SHORT_SCALE)[number] = firstScale
@@ -79,5 +88,13 @@ export function formatCookies(value: number, options: FormatCookiesOptions = {})
   }
 
   const coefficient = abs / scale.value
-  return `${sign}${formatShortCoefficient(coefficient)} ${scaleNames[scale.key]}`
+  return {
+    coefficient: `${sign}${formatShortCoefficient(coefficient)}`,
+    scale: scaleNames[scale.key],
+  }
+}
+
+export function formatCookies(value: number, options: FormatCookiesOptions = {}): string {
+  const parts = formatCookiesParts(value, options)
+  return parts.scale ? `${parts.coefficient} ${parts.scale}` : parts.coefficient
 }

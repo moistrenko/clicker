@@ -2,14 +2,23 @@ import { describe, expect, it } from 'vitest'
 import {
   buy,
   buyUpgrade,
+  buildingCpsEach,
+  buildingCpsTotal,
   buildingPrice,
+  bulkBuildingPrice,
   canBuy,
   click,
   createInitialState,
   getCookiesPerClick,
+  listStoreBuildings,
+  listStoreUpgrades,
   tick,
   totalCps,
+  upgradeClickGain,
+  upgradeCpsGain,
 } from '@/game/engine'
+import { getUpgrade } from '@/game/catalog/upgrades'
+import { resolveBuyBulk } from '@/composables/useBuyBulk'
 
 describe('game engine', () => {
   it('click increases cookies and all-time baked', () => {
@@ -160,5 +169,57 @@ describe('game engine', () => {
     expect(buildingPrice(15, 1)).toBe(18)
     expect(buildingPrice(15, 10)).toBe(Math.ceil(15 * Math.pow(1.15, 10)))
     expect(buildingPrice(15, 10)).toBe(61)
+  })
+
+  it('exposes per-weapon and total cps for store listings', () => {
+    const state = {
+      ...createInitialState(),
+      buildings: { ...createInitialState().buildings, cursor: 2 },
+    }
+    expect(buildingCpsEach(state, 'cursor')).toBeCloseTo(0.1)
+    expect(buildingCpsTotal(state, 'cursor')).toBeCloseTo(0.2)
+
+    const listing = listStoreBuildings(state).find((entry) => entry.building.id === 'cursor')
+    expect(listing?.cpsEach).toBeCloseTo(0.1)
+    expect(listing?.cpsTotal).toBeCloseTo(0.2)
+  })
+
+  it('preview upgrade gains for cps and click power', () => {
+    const state = {
+      ...createInitialState(),
+      buildings: { ...createInitialState().buildings, cursor: 1 },
+      cookies: 500,
+    }
+    const upgrade = getUpgrade('cursor-1')
+    expect(upgrade).toBeTruthy()
+    if (!upgrade) {
+      return
+    }
+    expect(upgradeCpsGain(state, upgrade)).toBeCloseTo(0.1)
+    expect(upgradeClickGain(state, upgrade)).toBe(1)
+
+    const listing = listStoreUpgrades(state).find((entry) => entry.upgrade.id === 'cursor-1')
+    expect(listing?.cpsGain).toBeCloseTo(0.1)
+    expect(listing?.clickGain).toBe(1)
+  })
+
+  it('buys buildings in bulk and charges the summed price curve', () => {
+    let state = { ...createInitialState(), cookies: 10_000 }
+    const expected = bulkBuildingPrice(15, 0, 10)
+    expect(expected).toBe(
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].reduce((sum, owned) => sum + buildingPrice(15, owned), 0),
+    )
+    expect(canBuy(state, 'cursor', 10)).toBe(true)
+    state = buy(state, 'cursor', 10)
+    expect(state.buildings.cursor).toBe(10)
+    expect(state.cookies).toBe(10_000 - expected)
+  })
+
+  it('resolves keyboard buy bulk modifiers', () => {
+    expect(resolveBuyBulk({ shiftKey: true, altKey: false, ctrlKey: false, metaKey: false })).toBe(10)
+    expect(resolveBuyBulk({ shiftKey: false, altKey: true, ctrlKey: false, metaKey: false })).toBe(20)
+    expect(resolveBuyBulk({ shiftKey: true, altKey: false, ctrlKey: true, metaKey: false })).toBe(100)
+    expect(resolveBuyBulk({ shiftKey: false, altKey: false, ctrlKey: false, metaKey: true })).toBe(100)
+    expect(resolveBuyBulk({ shiftKey: false, altKey: false, ctrlKey: false, metaKey: false })).toBe(1)
   })
 })

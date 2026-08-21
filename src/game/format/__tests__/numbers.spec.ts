@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatCookies } from '@/game/format/numbers'
+import { formatCookies, formatCookiesParts } from '@/game/format/numbers'
 
 describe('number formatter', () => {
   it('groups integers below one million', () => {
@@ -23,5 +23,11 @@ describe('number formatter', () => {
   it('uses billion form at 1e9', () => {
     expect(formatCookies(1e9)).toMatch(/billion/)
     expect(formatCookies(1e9)).toBe('1 billion')
+  })
+
+  it('exposes coefficient and scale separately for stable UI layout', () => {
+    expect(formatCookiesParts(999_999)).toEqual({ coefficient: '999,999', scale: null })
+    expect(formatCookiesParts(1_235_000)).toEqual({ coefficient: '1.235', scale: 'million' })
+    expect(formatCookiesParts(1e9)).toEqual({ coefficient: '1', scale: 'billion' })
   })
 })

@@ -52,7 +52,18 @@
     "wipeConfirm": "Удалить сохранение навсегда? Все убийства, оружие и прогресс будут потеряны.",
     "language": "Язык",
     "switchToEn": "English",
-    "switchToRu": "Русский"
+    "switchToRu": "Русский",
+    "cpsEach": "{rate}/с каждое",
+    "cpsTotal": "{rate}/с всего",
+    "cpsGain": "+{rate}/с",
+    "clickGain": "+{rate} за клик",
+    "upgradeEffect": "Эффект",
+    "buyBulkHint": "Покупка: Shift ×10 · Alt ×20 · Ctrl ×100",
+    "buyBulk": "×{count}",
+    "soundOn": "Звук: вкл",
+    "soundOff": "Звук: выкл",
+    "musicOn": "Музыка: вкл",
+    "musicOff": "Музыка: выкл"
   },
   "errors": {
     "importFailed": "Сохранение повреждено или из другой игры."
