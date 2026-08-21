@@ -75,6 +75,7 @@ onBeforeUnmount(() => {
     <button
       class="click-target"
       type="button"
+      data-testid="click-target"
       :class="{ pressed, wobble: wobbling }"
       :aria-label="t('game.clickActionLabel')"
       @pointerdown="pressed = true"

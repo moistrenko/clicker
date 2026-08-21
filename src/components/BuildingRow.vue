@@ -55,7 +55,13 @@ const statsLine = computed(() => {
 </script>
 
 <template>
-  <button class="building-row" type="button" :disabled="disabled" @click="emit('buy')">
+  <button
+    class="building-row"
+    type="button"
+    data-testid="building-row"
+    :disabled="disabled"
+    @click="emit('buy')"
+  >
     <span class="building-row__main">
       <span class="building-row__name">
         {{ label }}

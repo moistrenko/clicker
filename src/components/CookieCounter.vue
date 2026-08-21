@@ -11,9 +11,9 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="cookie-counter">
-    <div class="cookie-counter__amount" aria-live="polite">
-      <p class="cookie-counter__coefficient">{{ coefficient }}</p>
+  <div class="cookie-counter" data-testid="kill-counter">
+    <div class="cookie-counter__amount" aria-live="polite" data-testid="kill-amount">
+      <p class="cookie-counter__coefficient" data-testid="kill-coefficient">{{ coefficient }}</p>
       <p class="cookie-counter__scale" :class="{ 'cookie-counter__scale--empty': !scale }">
         {{ scale || '\u00A0' }}
       </p>

@@ -21,6 +21,8 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test -- --run
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
 
   deploy:
     needs: test
