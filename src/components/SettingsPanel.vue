@@ -6,12 +6,16 @@ defineProps<{
   exportLabel?: string
   importLabel?: string
   wipeLabel?: string
+  muted?: boolean
+  musicMuted?: boolean
 }>()
 
 const emit = defineEmits<{
   exportSave: []
   importSave: [raw: string]
   wipeSave: []
+  toggleMuted: []
+  toggleMusicMuted: []
 }>()
 
 const { t } = useI18n()
@@ -59,6 +63,15 @@ defineExpose({ setImportError })
 
     <div class="settings__body">
       <p class="settings__hint">{{ t('ui.settingsHint') }}</p>
+
+      <div class="settings__audio">
+        <button type="button" class="settings__btn" @click="emit('toggleMuted')">
+          {{ muted ? t('ui.soundOff') : t('ui.soundOn') }}
+        </button>
+        <button type="button" class="settings__btn" @click="emit('toggleMusicMuted')">
+          {{ musicMuted ? t('ui.musicOff') : t('ui.musicOn') }}
+        </button>
+      </div>
 
       <div class="settings__actions">
         <button type="button" class="settings__btn" @click="handleExport">
@@ -123,6 +136,12 @@ defineExpose({ setImportError })
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.settings__audio {
+  display: flex;
+  gap: 0.55rem;
   flex-wrap: wrap;
 }
 
