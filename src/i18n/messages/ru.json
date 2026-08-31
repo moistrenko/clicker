@@ -466,6 +466,7 @@
     "errorGeneric": "Не удалось начать дуэль.",
     "leaderboardTitle": "Рейтинг",
     "leaderboardEmpty": "Пока пусто. Играйте или деритесь, чтобы попасть в таблицу.",
+    "leaderboardRank": "Ранг {rank}",
     "refresh": "Обновить",
     "modeOnline": "Онлайн",
     "modeLocal": "Локальный мок",

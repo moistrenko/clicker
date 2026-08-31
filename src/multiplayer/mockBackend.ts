@@ -1,3 +1,4 @@
+import { rankFromKills } from '@/game/engine/prestige'
 import { normalizeDisplayName, validateDisplayName } from '@/multiplayer/profileName'
 import {
   BOT_USER_ID,
@@ -67,7 +68,12 @@ function writeLeaderboard(entries: LeaderboardEntry[]) {
 function upsertLeaderboard(entry: LeaderboardEntry) {
   const list = readLeaderboard().filter((item) => item.id !== entry.id)
   list.push(entry)
-  list.sort((a, b) => b.lifetimeKills - a.lifetimeKills || b.duelWins - a.duelWins)
+  list.sort(
+    (a, b) =>
+      rankFromKills(b.lifetimeKills) - rankFromKills(a.lifetimeKills) ||
+      b.duelWins - a.duelWins ||
+      b.lifetimeKills - a.lifetimeKills,
+  )
   writeLeaderboard(list)
 }
 

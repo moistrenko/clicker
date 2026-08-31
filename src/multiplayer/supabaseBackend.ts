@@ -1,4 +1,5 @@
 import { createClient, type RealtimeChannel, type SupabaseClient } from '@supabase/supabase-js'
+import { rankFromKills } from '@/game/engine/prestige'
 import { getSupabaseEnv } from '@/multiplayer/config'
 import { normalizeDisplayName, validateDisplayName } from '@/multiplayer/profileName'
 import type {
@@ -193,7 +194,7 @@ export function createSupabaseBackend(): MultiplayerBackend {
       if (error) {
         throw error
       }
-      return ((data as Array<{
+      const entries = ((data as Array<{
         id: string
         display_name: string
         lifetime_kills: number
@@ -206,6 +207,13 @@ export function createSupabaseBackend(): MultiplayerBackend {
         duelWins: row.duel_wins ?? 0,
         duelLosses: row.duel_losses ?? 0,
       }))
+      entries.sort(
+        (a, b) =>
+          rankFromKills(b.lifetimeKills) - rankFromKills(a.lifetimeKills) ||
+          b.duelWins - a.duelWins ||
+          b.lifetimeKills - a.lifetimeKills,
+      )
+      return entries.slice(0, limit)
     },
 
     async syncLifetimeKills(kills: number) {

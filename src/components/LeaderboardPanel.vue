@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { formatCookies } from '@/game/format/numbers'
-import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
+import { rankFromKills } from '@/game/engine/prestige'
 import { useDuelStore } from '@/stores/duel'
 
 const duel = useDuelStore()
@@ -12,9 +11,8 @@ onMounted(() => {
   void duel.refreshLeaderboard()
 })
 
-function format(value: number): string {
-  const locale = numberLocaleForApp(i18n.global.locale.value as AppLocale)
-  return formatCookies(value, { locale })
+function survivorRank(lifetimeKills: number): number {
+  return rankFromKills(lifetimeKills)
 }
 </script>
 
@@ -37,12 +35,14 @@ function format(value: number): string {
         :key="entry.id"
         :class="{ 'leaderboard__row--you': entry.id === duel.profile?.id }"
       >
-        <span class="leaderboard__rank">{{ index + 1 }}</span>
+        <span class="leaderboard__place">{{ index + 1 }}</span>
         <span class="leaderboard__name">
           {{ entry.displayName }}
           <span v-if="entry.id === duel.profile?.id" class="leaderboard__you-tag">{{ t('multiplayer.youTag') }}</span>
         </span>
-        <span class="leaderboard__kills">{{ format(entry.lifetimeKills) }}</span>
+        <span class="leaderboard__survivor-rank" :title="t('ui.survivorRank')">
+          {{ t('multiplayer.leaderboardRank', { rank: survivorRank(entry.lifetimeKills) }) }}
+        </span>
         <span class="leaderboard__record">{{ entry.duelWins }}–{{ entry.duelLosses }}</span>
       </li>
     </ol>
@@ -119,7 +119,7 @@ function format(value: number): string {
   letter-spacing: 0.04em;
 }
 
-.leaderboard__rank {
+.leaderboard__place {
   color: #8fa888;
   font-variant-numeric: tabular-nums;
 }
@@ -131,9 +131,10 @@ function format(value: number): string {
   color: #e8f0e4;
 }
 
-.leaderboard__kills {
+.leaderboard__survivor-rank {
   color: #b8f0a0;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .leaderboard__record {

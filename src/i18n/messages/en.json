@@ -466,6 +466,7 @@
     "errorGeneric": "Could not start a duel.",
     "leaderboardTitle": "Leaderboard",
     "leaderboardEmpty": "No survivors ranked yet. Play or duel to appear here.",
+    "leaderboardRank": "SR {rank}",
     "refresh": "Refresh",
     "modeOnline": "Online",
     "modeLocal": "Local mock",
