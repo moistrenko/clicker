@@ -8,9 +8,11 @@ import BuffBar from '@/components/BuffBar.vue'
 import BuildingRow from '@/components/BuildingRow.vue'
 import ClickTarget from '@/components/ClickTarget.vue'
 import CookieCounter from '@/components/CookieCounter.vue'
+import DuelPanel from '@/components/DuelPanel.vue'
 import EventBanner from '@/components/EventBanner.vue'
 import GameLayout from '@/components/GameLayout.vue'
 import GoldenCookie from '@/components/GoldenCookie.vue'
+import LeaderboardPanel from '@/components/LeaderboardPanel.vue'
 import NewsTicker from '@/components/NewsTicker.vue'
 import OfflineBanner from '@/components/OfflineBanner.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
@@ -117,17 +119,22 @@ function handleBuyUpgrade(id: string) {
     </template>
 
     <template #center>
+      <p v-if="game.duelMode" class="duel-banner">{{ t('multiplayer.duelTitle') }}</p>
       <StatsPanel :baked="game.formattedBaked" :buildings-owned="game.buildingsOwned" />
+      <DuelPanel />
+      <LeaderboardPanel />
       <AscendPanel
+        v-if="!game.duelMode"
         :rank="game.prestigeLevel"
         :multiplier="game.prestigeBonus"
         :projected-gain="game.ascendGain"
         :can-ascend="game.canAscendNow"
         @ascend="game.ascend"
       />
-      <AchievementsPanel :listings="game.achievementList" />
-      <NewsTicker />
+      <AchievementsPanel v-if="!game.duelMode" :listings="game.achievementList" />
+      <NewsTicker v-if="!game.duelMode" />
       <SettingsPanel
+        v-if="!game.duelMode"
         ref="settingsPanel"
         :muted="muted"
         :music-muted="musicMuted"
@@ -175,6 +182,15 @@ function handleBuyUpgrade(id: string) {
   position: relative;
   width: min(88vw, 340px);
   margin: 0 auto;
+}
+
+.duel-banner {
+  margin: 0 0 0.35rem;
+  font-family: Rajdhani, 'Source Sans 3', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffe7b3;
+  font-size: 0.95rem;
 }
 
 .buy-bulk-hint {

@@ -59,6 +59,7 @@ export const useGameStore = defineStore('game', () => {
   const saver = createDebouncedSave((next) => saveGame(next))
   const recentAchievement = ref<AchievementDef | null>(null)
   const pendingAchievementToasts: AchievementDef[] = []
+  const duelMode = ref(false)
 
   let intervalId: number | undefined
   let lastTick = 0
@@ -85,10 +86,16 @@ export const useGameStore = defineStore('game', () => {
   const canAscendNow = computed(() => canAscend(state.value))
 
   function persist(next: GameState = state.value) {
+    if (duelMode.value) {
+      return
+    }
     saver.schedule(next)
   }
 
   function flushSave() {
+    if (duelMode.value) {
+      return
+    }
     saver.flush(state.value)
   }
 
@@ -198,7 +205,47 @@ export const useGameStore = defineStore('game', () => {
     flushSave()
   }
 
+  function wipeSave() {
+    if (duelMode.value) {
+      return
+    }
+    reset()
+  }
+
+  function reset() {
+    if (duelMode.value) {
+      return
+    }
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
+    offlineKills.value = 0
+    state.value = createInitialState()
+    saver.flush(state.value)
+  }
+
+  function enterDuelMode(duelState: GameState) {
+    flushSave()
+    duelMode.value = true
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
+    state.value = duelState
+  }
+
+  function exitDuelMode(mainState: GameState) {
+    duelMode.value = false
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
+    state.value = { ...mainState, lastSavedAt: Date.now() }
+    saver.flush(state.value)
+  }
+
   function ascend() {
+    if (duelMode.value) {
+      return false
+    }
     const before = state.value
     const next = ascendState(before)
     if (next === before) {
@@ -206,6 +253,23 @@ export const useGameStore = defineStore('game', () => {
     }
     achievementTickAccumulator = 0
     commit(next, false)
+    return true
+  }
+
+  function importSave(raw: string): boolean {
+    if (duelMode.value) {
+      return false
+    }
+    const parsed = parseSave(raw)
+    if (!parsed) {
+      return false
+    }
+    achievementTickAccumulator = 0
+    pendingAchievementToasts.length = 0
+    recentAchievement.value = null
+    offlineKills.value = 0
+    state.value = { ...parsed, lastSavedAt: Date.now() }
+    saver.flush(state.value)
     return true
   }
 
@@ -222,36 +286,10 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  function importSave(raw: string): boolean {
-    const parsed = parseSave(raw)
-    if (!parsed) {
-      return false
-    }
-    achievementTickAccumulator = 0
-    pendingAchievementToasts.length = 0
-    recentAchievement.value = null
-    offlineKills.value = 0
-    state.value = { ...parsed, lastSavedAt: Date.now() }
-    saver.flush(state.value)
-    return true
-  }
-
-  function wipeSave() {
-    reset()
-  }
-
-  function reset() {
-    achievementTickAccumulator = 0
-    pendingAchievementToasts.length = 0
-    recentAchievement.value = null
-    offlineKills.value = 0
-    state.value = createInitialState()
-    saver.flush(state.value)
-  }
-
   return {
     state,
     offlineKills,
+    duelMode,
     cookies,
     cookiesBakedAllTime,
     cookiesPerClick,
@@ -285,5 +323,7 @@ export const useGameStore = defineStore('game', () => {
     exportSaveToClipboard,
     importSave,
     clearOfflineBanner,
+    enterDuelMode,
+    exitDuelMode,
   }
 })
