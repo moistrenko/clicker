@@ -32,9 +32,16 @@ function format(value: number): string {
     </p>
 
     <ol v-else class="leaderboard__list">
-      <li v-for="(entry, index) in duel.leaderboard" :key="entry.id">
+      <li
+        v-for="(entry, index) in duel.leaderboard"
+        :key="entry.id"
+        :class="{ 'leaderboard__row--you': entry.id === duel.profile?.id }"
+      >
         <span class="leaderboard__rank">{{ index + 1 }}</span>
-        <span class="leaderboard__name">{{ entry.displayName }}</span>
+        <span class="leaderboard__name">
+          {{ entry.displayName }}
+          <span v-if="entry.id === duel.profile?.id" class="leaderboard__you-tag">{{ t('multiplayer.youTag') }}</span>
+        </span>
         <span class="leaderboard__kills">{{ format(entry.lifetimeKills) }}</span>
         <span class="leaderboard__record">{{ entry.duelWins }}–{{ entry.duelLosses }}</span>
       </li>
@@ -97,6 +104,19 @@ function format(value: number): string {
   padding: 0.35rem 0.45rem;
   background: rgba(0, 0, 0, 0.18);
   font-size: 0.78rem;
+}
+
+.leaderboard__row--you {
+  border: 1px solid rgba(126, 207, 90, 0.35);
+  background: rgba(61, 90, 52, 0.28);
+}
+
+.leaderboard__you-tag {
+  margin-left: 0.35rem;
+  font-size: 0.62rem;
+  color: #9ecf7a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .leaderboard__rank {

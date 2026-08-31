@@ -328,6 +328,19 @@ export const useDuelStore = defineStore('duel', () => {
     phase.value = 'idle'
   }
 
+  async function ensureProfile() {
+    const backend = getMultiplayerBackend()
+    profile.value = await backend.ensureAuth()
+    return profile.value
+  }
+
+  async function saveDisplayName(raw: string) {
+    const backend = getMultiplayerBackend()
+    profile.value = await backend.updateDisplayName(raw)
+    await refreshLeaderboard()
+    return profile.value
+  }
+
   function myScore() {
     if (!match.value || !profile.value) {
       return 0
@@ -358,6 +371,8 @@ export const useDuelStore = defineStore('duel', () => {
     dismissResult,
     refreshLeaderboard,
     syncProfileKills,
+    ensureProfile,
+    saveDisplayName,
     myScore,
     theirScore,
   }

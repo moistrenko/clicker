@@ -1,5 +1,6 @@
 import { createClient, type RealtimeChannel, type SupabaseClient } from '@supabase/supabase-js'
 import { getSupabaseEnv } from '@/multiplayer/config'
+import { normalizeDisplayName, validateDisplayName } from '@/multiplayer/profileName'
 import type {
   DuelMatch,
   LeaderboardEntry,
@@ -213,6 +214,24 @@ export function createSupabaseBackend(): MultiplayerBackend {
       if (error) {
         throw error
       }
+    },
+
+    async updateDisplayName(displayName: string) {
+      const me = await this.ensureAuth()
+      const validationError = validateDisplayName(displayName)
+      if (validationError) {
+        throw new Error(validationError)
+      }
+      const name = normalizeDisplayName(displayName)
+      const { error } = await client
+        .from('profiles')
+        .update({ display_name: name, updated_at: new Date().toISOString() })
+        .eq('id', me.id)
+      if (error) {
+        throw error
+      }
+      profile = { id: me.id, displayName: name }
+      return profile
     },
   }
 }

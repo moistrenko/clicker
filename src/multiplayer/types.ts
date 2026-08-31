@@ -42,6 +42,7 @@ export interface MultiplayerBackend {
   subscribeMatch(matchId: string, onUpdate: (match: DuelMatch) => void): () => void
   getLeaderboard(limit?: number): Promise<LeaderboardEntry[]>
   syncLifetimeKills(kills: number): Promise<void>
+  updateDisplayName(displayName: string): Promise<MultiplayerProfile>
 }
 
 export function isPlayerA(match: DuelMatch, userId: string): boolean {

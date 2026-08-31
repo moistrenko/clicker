@@ -1,3 +1,4 @@
+import { normalizeDisplayName, validateDisplayName } from '@/multiplayer/profileName'
 import {
   BOT_USER_ID,
   DUEL_DURATION_SECONDS,
@@ -286,6 +287,25 @@ export function createMockBackend(): MultiplayerBackend {
         duelWins: profile.duelWins,
         duelLosses: profile.duelLosses,
       })
+    },
+
+    async updateDisplayName(displayName: string) {
+      const error = validateDisplayName(displayName)
+      if (error) {
+        throw new Error(error)
+      }
+      const name = normalizeDisplayName(displayName)
+      const profile = readProfile()
+      profile.displayName = name
+      writeProfile(profile)
+      upsertLeaderboard({
+        id: profile.id,
+        displayName: profile.displayName,
+        lifetimeKills: profile.lifetimeKills,
+        duelWins: profile.duelWins,
+        duelLosses: profile.duelLosses,
+      })
+      return { id: profile.id, displayName: profile.displayName }
     },
   }
 }

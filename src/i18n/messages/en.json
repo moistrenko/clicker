@@ -468,6 +468,23 @@
     "leaderboardEmpty": "No survivors ranked yet. Play or duel to appear here.",
     "refresh": "Refresh",
     "modeOnline": "Online",
-    "modeLocal": "Local mock"
+    "modeLocal": "Local mock",
+    "profileTitle": "Survivor profile",
+    "profileHint": "Your name in the game and on the global leaderboard. Not related to duels.",
+    "displayName": "Your name",
+    "saveName": "Save name",
+    "saving": "Saving…",
+    "nameSaved": "Saved",
+    "youTag": "you",
+    "profileErrors": {
+      "empty": "Enter a name.",
+      "short": "Name is too short.",
+      "long": "Name is too long (max 20).",
+      "invalid": "Use letters, numbers, spaces, _ - . only.",
+      "save": "Could not save name. Try again."
+    },
+    "anonymousName": "Survivor",
+    "openProfile": "Open profile settings",
+    "closeProfile": "Close profile"
   }
 }
