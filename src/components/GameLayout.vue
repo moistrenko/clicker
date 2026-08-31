@@ -1,8 +1,11 @@
 <script setup lang="ts">
+defineProps<{
+  dueling?: boolean
+}>()
 </script>
 
 <template>
-  <div class="game-layout">
+  <div class="game-layout" :class="{ 'game-layout--duel': dueling }">
     <section class="panel panel--horde">
       <header class="horde-title">
         <p class="eyebrow">{{ $t('game.zoneLabel') }}</p>
@@ -89,6 +92,32 @@
   color: #e8f0e4;
 }
 
+.game-layout--duel .panel--horde {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(198, 40, 40, 0.28), transparent 48%),
+    linear-gradient(180deg, #5c2a32 0%, #3a1c22 55%, #1f1014 100%);
+}
+
+.game-layout--duel .panel--center {
+  background: #2a181c;
+  border-left-color: #6a3a42;
+  border-right-color: #6a3a42;
+}
+
+.game-layout--duel .panel--store {
+  background:
+    repeating-linear-gradient(90deg, #241618 0 14px, #160e10 14px 15px),
+    linear-gradient(180deg, #2c1a1e, #120a0c);
+}
+
+.game-layout--duel .panel--store h2 {
+  color: #e07070;
+}
+
+.game-layout--duel .eyebrow {
+  color: #d08080;
+}
+
 @media (max-width: 1100px) {
   .game-layout {
     grid-template-columns: minmax(0, 1fr) minmax(240px, 0.95fr);
@@ -105,6 +134,10 @@
     grid-area: center;
     border-left: 0;
     border-right: 1px solid #4a5a46;
+  }
+
+  .game-layout--duel .panel--center {
+    border-right-color: #6a3a42;
   }
 
   .panel--store {
@@ -131,6 +164,11 @@
     border-right: 0;
     border-top: 1px solid #4a5a46;
     border-bottom: 1px solid #4a5a46;
+  }
+
+  .game-layout--duel .panel--center {
+    border-top-color: #6a3a42;
+    border-bottom-color: #6a3a42;
   }
 
   .panel--store {

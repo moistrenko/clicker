@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AscendPanel from '@/components/AscendPanel.vue'
 import AchievementToast from '@/components/AchievementToast.vue'
@@ -38,6 +38,14 @@ const {
   toggleMusicMuted,
 } = useGameAudio()
 const settingsPanel = ref<InstanceType<typeof SettingsPanel> | null>(null)
+
+watchEffect(() => {
+  document.body.classList.toggle('duel-active', game.duelMode)
+})
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('duel-active')
+})
 
 const storeRows = computed(() =>
   game.storeListings.map((listing) => {
@@ -98,7 +106,7 @@ function handleBuyUpgrade(id: string) {
 </script>
 
 <template>
-  <GameLayout>
+  <GameLayout :dueling="game.duelMode">
     <template #bakery>
       <div class="bakery-stage">
         <CookieCounter
@@ -189,7 +197,7 @@ function handleBuyUpgrade(id: string) {
   font-family: Rajdhani, 'Source Sans 3', sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #ffe7b3;
+  color: #ffb4b4;
   font-size: 0.95rem;
 }
 
