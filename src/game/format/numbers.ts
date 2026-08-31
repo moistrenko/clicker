@@ -43,7 +43,8 @@ function formatShortCoefficient(value: number): string {
   if (Number.isInteger(rounded)) {
     return rounded.toFixed(0)
   }
-  return rounded.toFixed(3).replace(/\.?0+$/, '')
+  // Keep three fraction digits so 9.68 → 9.680 and the counter width stays stable.
+  return rounded.toFixed(3)
 }
 
 export function formatCookiesParts(
@@ -65,14 +66,10 @@ export function formatCookiesParts(
       return { coefficient: `${sign}${formatGroupedInteger(abs, locale)}`, scale: null }
     }
 
-    const trimmed = abs
-      .toFixed(3)
-      .replace(/(\.\d*?)0+$/, '$1')
-      .replace(/\.$/, '')
-    const [intPart = '0', fracPart] = trimmed.split('.')
+    const fixed = abs.toFixed(3)
+    const [intPart = '0', fracPart = '000'] = fixed.split('.')
     const grouped = Number(intPart).toLocaleString(locale)
-    const coefficient = fracPart ? `${sign}${grouped}.${fracPart}` : `${sign}${grouped}`
-    return { coefficient, scale: null }
+    return { coefficient: `${sign}${grouped}.${fracPart}`, scale: null }
   }
 
   const firstScale = SHORT_SCALE[0]
