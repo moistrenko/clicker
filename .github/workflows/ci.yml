@@ -44,7 +44,13 @@ jobs:
           GITHUB_PAGES: 'true'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        run: npm run build-only
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::error::Missing GitHub Actions secrets VITE_SUPABASE_URL and/or VITE_SUPABASE_ANON_KEY."
+            echo "Add them under Repo → Settings → Secrets and variables → Actions, then re-run deploy."
+            exit 1
+          fi
+          npm run build-only
 
       - name: Publish to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
