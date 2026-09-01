@@ -155,6 +155,16 @@ export function createSupabaseBackend(): MultiplayerBackend {
       return row ? mapMatch(row) : null
     },
 
+    async getActiveMatch() {
+      await this.ensureAuth()
+      const { data, error } = await client.rpc('get_active_duel')
+      if (error) {
+        throw error
+      }
+      const row = unwrapMatchRow(data)
+      return row ? mapMatch(row) : null
+    },
+
     subscribeMatch(matchId, onUpdate) {
       const channel: RealtimeChannel = client
         .channel(`duel:${matchId}`)

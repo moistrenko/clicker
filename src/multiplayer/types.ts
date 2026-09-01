@@ -39,6 +39,7 @@ export interface MultiplayerBackend {
   reportScore(matchId: string, kills: number): Promise<DuelMatch>
   settle(matchId: string): Promise<DuelMatch>
   getMatch(matchId: string): Promise<DuelMatch | null>
+  getActiveMatch(): Promise<DuelMatch | null>
   subscribeMatch(matchId: string, onUpdate: (match: DuelMatch) => void): () => void
   getLeaderboard(limit?: number): Promise<LeaderboardEntry[]>
   syncLifetimeKills(kills: number): Promise<void>

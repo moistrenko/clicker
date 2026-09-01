@@ -154,6 +154,9 @@ begin
   order by started_at desc
   limit 1;
   if found then
+    if now() >= match_row.ends_at then
+      return public.settle_duel(match_row.id);
+    end if;
     return match_row;
   end if;
 
@@ -322,6 +325,7 @@ grant select on public.profiles to anon, authenticated;
 grant execute on function public.ensure_profile() to authenticated;
 grant execute on function public.sync_lifetime_kills(double precision) to authenticated;
 grant execute on function public.join_duel_queue() to authenticated;
+grant execute on function public.get_active_duel() to authenticated;
 grant execute on function public.leave_duel_queue() to authenticated;
 grant execute on function public.report_duel_score(uuid, double precision) to authenticated;
 grant execute on function public.settle_duel(uuid) to authenticated;

@@ -12,6 +12,7 @@ const { t } = useI18n()
 onMounted(() => {
   void duel.refreshLeaderboard()
   void duel.syncProfileKills()
+  void duel.resumePendingDuel()
 })
 
 function format(value: number): string {

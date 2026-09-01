@@ -37,6 +37,7 @@ export const useDuelStore = defineStore('duel', () => {
   let searchPollTimer: number | undefined
   let localBotTimer: number | undefined
   let usingLocalBot = false
+  let endingMatch = false
 
   const isDueling = computed(() => phase.value === 'active' || phase.value === 'searching')
   const canUseMetaActions = computed(() => phase.value === 'idle' || phase.value === 'result')
@@ -92,6 +93,68 @@ export const useDuelStore = defineStore('duel', () => {
     }
   }
 
+  function startCountdownTimer() {
+    if (countdownTimer !== undefined) {
+      window.clearInterval(countdownTimer)
+    }
+    countdownTimer = window.setInterval(() => {
+      updateCountdown()
+      if (
+        Number.isFinite(remainingSeconds.value) &&
+        remainingSeconds.value <= 0 &&
+        match.value &&
+        !endingMatch
+      ) {
+        void endActiveMatch()
+      }
+    }, 250)
+  }
+
+  function isMatchExpired(nextMatch: DuelMatch, at = Date.now()): boolean {
+    return Number.isFinite(nextMatch.endsAt) && at >= nextMatch.endsAt
+  }
+
+  async function settleActiveMatch(): Promise<DuelMatch> {
+    if (!match.value) {
+      throw new Error('No active duel match')
+    }
+    if (usingLocalBot) {
+      const game = useGameStore()
+      const current = { ...match.value }
+      if (current.playerA === profile.value?.id) {
+        current.scoreA = game.state.cookiesBakedAllTime
+      } else if (current.playerB === profile.value?.id) {
+        current.scoreB = game.state.cookiesBakedAllTime
+      }
+      const { winnerId, rewardA, rewardB } = computeSettleRewards(current.scoreA, current.scoreB)
+      return {
+        ...current,
+        status: 'settled',
+        winnerId:
+          winnerId === 'a' ? current.playerA : winnerId === 'b' ? current.playerB : null,
+        rewardA,
+        rewardB,
+      }
+    }
+
+    const backend = getMultiplayerBackend()
+    const matchId = match.value.id
+    const kills = useGameStore().state.cookiesBakedAllTime
+    try {
+      const reported = await backend.reportScore(matchId, kills)
+      if (reported.status === 'settled') {
+        return reported
+      }
+      return await backend.settle(matchId)
+    } catch {
+      const current = await backend.getMatch(matchId)
+      if (current?.status === 'settled') {
+        return current
+      }
+      throw new Error('Could not settle duel')
+    }
+  }
+
   async function beginDuelSession(nextMatch: DuelMatch, localBot = false) {
     if (!nextMatch.id || !Number.isFinite(nextMatch.endsAt) || !Number.isFinite(nextMatch.startedAt)) {
       throw new Error('Invalid duel match payload')
@@ -137,47 +200,48 @@ export const useDuelStore = defineStore('duel', () => {
       void reportCurrentScore()
     }, DUEL_SCORE_REPORT_INTERVAL_MS)
 
-    countdownTimer = window.setInterval(() => {
-      updateCountdown()
-      if (
-        Number.isFinite(remainingSeconds.value) &&
-        remainingSeconds.value <= 0 &&
-        match.value
-      ) {
-        void endActiveMatch()
-      }
-    }, 250)
+    startCountdownTimer()
+
+    if (nextMatch.status === 'settled') {
+      await finishDuel(nextMatch)
+      return
+    }
+    if (isMatchExpired(nextMatch)) {
+      await endActiveMatch()
+    }
   }
 
   async function endActiveMatch() {
-    if (!match.value || phase.value !== 'active') {
+    if (!match.value || phase.value !== 'active' || endingMatch) {
       return
     }
-    if (usingLocalBot) {
-      const current = {
-        ...match.value,
-        scoreA: useGameStore().state.cookiesBakedAllTime,
-      }
-      const { winnerId, rewardA, rewardB } = computeSettleRewards(current.scoreA, current.scoreB)
-      const settled: DuelMatch = {
-        ...current,
-        status: 'settled',
-        winnerId:
-          winnerId === 'a' ? current.playerA : winnerId === 'b' ? current.playerB : null,
-        rewardA,
-        rewardB,
-      }
+    endingMatch = true
+    if (countdownTimer !== undefined) {
+      window.clearInterval(countdownTimer)
+      countdownTimer = undefined
+    }
+    try {
+      const settled = await settleActiveMatch()
+      match.value = settled
       await finishDuel(settled)
-      return
+    } catch (error) {
+      endingMatch = false
+      if (phase.value === 'active' && match.value) {
+        startCountdownTimer()
+      }
+      errorMessage.value = error instanceof Error ? error.message : 'Could not finish duel'
+      phase.value = 'error'
+      clearTimers()
+      usingLocalBot = false
+      if (mainSnapshot) {
+        useGameStore().exitDuelMode(mainSnapshot)
+        mainSnapshot = null
+      }
     }
-    const backend = getMultiplayerBackend()
-    const settled = await backend.settle(match.value.id)
-    match.value = settled
-    await finishDuel(settled)
   }
 
   async function reportCurrentScore() {
-    if (!match.value || phase.value !== 'active') {
+    if (!match.value || phase.value !== 'active' || endingMatch) {
       return
     }
     const game = useGameStore()
@@ -193,25 +257,39 @@ export const useDuelStore = defineStore('duel', () => {
             ? game.state.cookiesBakedAllTime
             : match.value.scoreB,
       }
+      if (isMatchExpired(match.value)) {
+        await endActiveMatch()
+      }
       return
     }
     const backend = getMultiplayerBackend()
     try {
       const updated = await backend.reportScore(match.value.id, game.state.cookiesBakedAllTime)
       match.value = updated
+      updateCountdown()
       if (updated.status === 'settled') {
         await finishDuel(updated)
+      } else if (isMatchExpired(updated)) {
+        await endActiveMatch()
       }
     } catch {
-      // transient network errors are ok
+      if (isMatchExpired(match.value)) {
+        await endActiveMatch()
+      }
     }
   }
 
   async function finishDuel(settled: DuelMatch) {
-    if (phase.value === 'result' || phase.value === 'idle') {
+    if (phase.value === 'result') {
+      endingMatch = false
+      return
+    }
+    if (phase.value === 'idle') {
+      endingMatch = false
       return
     }
     clearTimers()
+    endingMatch = false
     usingLocalBot = false
     const game = useGameStore()
     const userId = profile.value?.id
@@ -231,6 +309,54 @@ export const useDuelStore = defineStore('duel', () => {
       mainSnapshot = null
     }
 
+    match.value = settled
+    phase.value = 'result'
+    await syncProfileKills()
+  }
+
+  async function resumePendingDuel() {
+    if (phase.value !== 'idle') {
+      return
+    }
+    const backend = getMultiplayerBackend()
+    if (backend.kind !== 'supabase') {
+      return
+    }
+    try {
+      profile.value = await backend.ensureAuth()
+      const active = await backend.getActiveMatch()
+      if (!active) {
+        return
+      }
+      if (active.status === 'settled') {
+        match.value = active
+        await applySettledResult(active)
+        return
+      }
+      await beginDuelSession(active)
+    } catch {
+      // ignore resume errors on boot
+    }
+  }
+
+  async function applySettledResult(settled: DuelMatch) {
+    if (phase.value === 'result') {
+      return
+    }
+    const game = useGameStore()
+    const userId = profile.value?.id
+    const reward = userId ? ownReward(settled, userId) : 0
+    resultReward.value = reward
+    if (!userId || !settled.winnerId) {
+      resultKind.value = settled.winnerId ? 'loss' : 'draw'
+    } else if (settled.winnerId === userId) {
+      resultKind.value = 'win'
+    } else {
+      resultKind.value = 'loss'
+    }
+    if (reward > 0) {
+      game.applyPersistedReward(reward)
+    }
     match.value = settled
     phase.value = 'result'
     await syncProfileKills()
@@ -371,6 +497,7 @@ export const useDuelStore = defineStore('duel', () => {
     dismissResult,
     refreshLeaderboard,
     syncProfileKills,
+    resumePendingDuel,
     ensureProfile,
     saveDisplayName,
     myScore,

@@ -247,6 +247,15 @@ export function createMockBackend(): MultiplayerBackend {
       return match ? maybeSettle({ ...match }) : null
     },
 
+    async getActiveMatch() {
+      const me = await this.ensureAuth()
+      const active = [...matches.values()].find(
+        (match) =>
+          match.status === 'active' && (match.playerA === me.id || match.playerB === me.id),
+      )
+      return active ? maybeSettle({ ...active }) : null
+    },
+
     subscribeMatch(matchId, onUpdate) {
       let set = listeners.get(matchId)
       if (!set) {
