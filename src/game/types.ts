@@ -46,7 +46,7 @@ export interface UpgradeDef {
   alsoBoostClick?: boolean
 }
 
-export type BuffType = 'frenzy' | 'lucky' | 'clickFrenzy' | 'buildingSpecial'
+export type BuffType = 'frenzy' | 'lucky' | 'clickFrenzy' | 'buildingSpecial' | 'duelSpoils'
 
 export type WorldEventType = 'hordeNight' | 'adrenalineRush' | 'supplyDrop' | 'eliteHunt'
 

@@ -24,7 +24,8 @@ import {
 import { formatCookies, formatCookiesParts } from '@/game/format/numbers'
 import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 import { createDebouncedSave, loadGame, parseSave, saveGame } from '@/game/persist/storage'
-import { applyDuelReward } from '@/multiplayer'
+import { applyDuelSpoilsBuff } from '@/multiplayer'
+import type { DuelResultKind } from '@/multiplayer/rewards'
 import type { AchievementDef, BuildingId, GameState } from '@/game/types'
 
 const TICK_MS = 50
@@ -243,11 +244,11 @@ export const useGameStore = defineStore('game', () => {
     saver.flush(state.value)
   }
 
-  function applyPersistedReward(rewardKills: number) {
-    if (duelMode.value || !(rewardKills > 0)) {
+  function applyPersistedDuelBuff(result: DuelResultKind) {
+    if (duelMode.value) {
       return
     }
-    const restored = applyDuelReward(state.value, rewardKills)
+    const restored = applyDuelSpoilsBuff(state.value, result)
     state.value = { ...restored, lastSavedAt: Date.now() }
     saver.flush(state.value)
   }
@@ -335,6 +336,6 @@ export const useGameStore = defineStore('game', () => {
     clearOfflineBanner,
     enterDuelMode,
     exitDuelMode,
-    applyPersistedReward,
+    applyPersistedDuelBuff,
   }
 })

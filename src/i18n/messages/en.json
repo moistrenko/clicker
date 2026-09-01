@@ -98,6 +98,10 @@
       "name": "Weapon overdrive",
       "description": "One weapon type ×7 kill rate"
     },
+    "duelSpoils": {
+      "name": "Duel spoils",
+      "description": "Passive weapon kill rate ×3"
+    },
     "buildingProduction": "{building} production ×{multiplier}"
   },
   "buildings": {
@@ -451,16 +455,16 @@
   },
   "multiplayer": {
     "duelTitle": "Duel",
-    "duelHint": "5 minutes from zero. Winner takes both duel scores into the main save. Loser’s main save is safe.",
+    "duelHint": "5 minutes from zero. Winner gets ×3 passive weapon damage for 5 min, loser for 1 min, draw 2 min each.",
     "findDuel": "Find opponent",
     "searching": "Searching for a survivor… (solo: bot joins in ~10s)",
     "cancelSearch": "Cancel",
     "timeLeft": "Time left {time}",
     "you": "You",
     "opponent": "Opponent",
-    "youWon": "Victory! +{reward} kills added to your main run.",
-    "youLost": "Defeat. Your duel kills went to the winner. Main save unchanged.",
-    "youDrew": "Draw. You keep your duel kills (+{reward}).",
+    "youWon": "Victory! ×3 passive weapon damage for 5 minutes.",
+    "youLost": "Defeat. Consolation buff: ×3 passive weapon damage for 1 minute.",
+    "youDrew": "Draw. ×3 passive weapon damage for 2 minutes.",
     "finalScores": "Final: you {you} · them {them}",
     "continue": "Back to main run",
     "errorGeneric": "Could not start a duel.",

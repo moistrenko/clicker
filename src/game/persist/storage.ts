@@ -78,7 +78,8 @@ function parseActiveBuffs(value: unknown): ActiveBuff[] {
       type !== 'frenzy' &&
       type !== 'lucky' &&
       type !== 'clickFrenzy' &&
-      type !== 'buildingSpecial'
+      type !== 'buildingSpecial' &&
+      type !== 'duelSpoils'
     ) {
       continue
     }

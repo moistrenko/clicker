@@ -3,15 +3,15 @@ import { defineStore } from 'pinia'
 import { createInitialState, totalLifetimeKills } from '@/game/engine'
 import type { GameState } from '@/game/types'
 import {
+  applyDuelSpoilsBuff,
   BOT_USER_ID,
+  computeSettleRewards,
   DUEL_DURATION_SECONDS,
   DUEL_SCORE_REPORT_INTERVAL_MS,
   getMultiplayerBackend,
-  applyDuelReward,
-  computeSettleRewards,
   opponentScore,
-  ownReward,
   ownScore,
+  resolveDuelResultKind,
   type DuelMatch,
   type LeaderboardEntry,
   type MultiplayerProfile,
@@ -26,7 +26,6 @@ export const useDuelStore = defineStore('duel', () => {
   const profile = ref<MultiplayerProfile | null>(null)
   const match = ref<DuelMatch | null>(null)
   const leaderboard = ref<LeaderboardEntry[]>([])
-  const resultReward = ref(0)
   const resultKind = ref<'win' | 'loss' | 'draw'>('loss')
   const remainingSeconds = ref(0)
 
@@ -293,18 +292,10 @@ export const useDuelStore = defineStore('duel', () => {
     usingLocalBot = false
     const game = useGameStore()
     const userId = profile.value?.id
-    const reward = userId ? ownReward(settled, userId) : 0
-    resultReward.value = reward
-    if (!userId || !settled.winnerId) {
-      resultKind.value = settled.winnerId ? 'loss' : 'draw'
-    } else if (settled.winnerId === userId) {
-      resultKind.value = 'win'
-    } else {
-      resultKind.value = 'loss'
-    }
+    resultKind.value = resolveDuelResultKind(settled, userId)
 
     if (mainSnapshot) {
-      const restored = applyDuelReward(mainSnapshot, reward)
+      const restored = applyDuelSpoilsBuff(mainSnapshot, resultKind.value)
       game.exitDuelMode(restored)
       mainSnapshot = null
     }
@@ -345,18 +336,8 @@ export const useDuelStore = defineStore('duel', () => {
     }
     const game = useGameStore()
     const userId = profile.value?.id
-    const reward = userId ? ownReward(settled, userId) : 0
-    resultReward.value = reward
-    if (!userId || !settled.winnerId) {
-      resultKind.value = settled.winnerId ? 'loss' : 'draw'
-    } else if (settled.winnerId === userId) {
-      resultKind.value = 'win'
-    } else {
-      resultKind.value = 'loss'
-    }
-    if (reward > 0) {
-      game.applyPersistedReward(reward)
-    }
+    resultKind.value = resolveDuelResultKind(settled, userId)
+    game.applyPersistedDuelBuff(resultKind.value)
     match.value = settled
     phase.value = 'result'
     await syncProfileKills()
@@ -448,7 +429,6 @@ export const useDuelStore = defineStore('duel', () => {
 
   function dismissResult() {
     match.value = null
-    resultReward.value = 0
     resultKind.value = 'loss'
     errorMessage.value = ''
     phase.value = 'idle'
@@ -487,7 +467,6 @@ export const useDuelStore = defineStore('duel', () => {
     profile,
     match,
     leaderboard,
-    resultReward,
     resultKind,
     remainingSeconds,
     isDueling,

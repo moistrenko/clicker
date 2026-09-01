@@ -71,10 +71,10 @@ const modeLabel = computed(() =>
 
     <div v-else-if="duel.phase === 'result'" class="duel-panel__result">
       <p v-if="duel.resultKind === 'win'">
-        {{ t('multiplayer.youWon', { reward: format(duel.resultReward) }) }}
+        {{ t('multiplayer.youWon') }}
       </p>
       <p v-else-if="duel.resultKind === 'draw'">
-        {{ t('multiplayer.youDrew', { reward: format(duel.resultReward) }) }}
+        {{ t('multiplayer.youDrew') }}
       </p>
       <p v-else>{{ t('multiplayer.youLost') }}</p>
       <p class="duel-panel__result-scores">

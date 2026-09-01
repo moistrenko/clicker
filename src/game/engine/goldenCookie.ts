@@ -1,4 +1,5 @@
 import { BUILDINGS, getBuilding } from '@/game/catalog/buildings'
+import { DUEL_SPOILS_MULTIPLIER } from '@/game/catalog/duelSpoils'
 import {
   BUFF_META,
   BUILDING_SPECIAL_DURATION_SECONDS,
@@ -237,8 +238,10 @@ export function cpsBuffMultipliers(
   const building = new Map<BuildingId, number>()
 
   for (const buff of getActiveBuffs(state, atTime)) {
-    if (buff.type === 'frenzy') {
-      frenzy.value *= buff.multiplier ?? FRENZY_MULTIPLIER
+    if (buff.type === 'frenzy' || buff.type === 'duelSpoils') {
+      const fallback =
+        buff.type === 'duelSpoils' ? DUEL_SPOILS_MULTIPLIER : FRENZY_MULTIPLIER
+      frenzy.value *= buff.multiplier ?? fallback
     }
     if (buff.type === 'buildingSpecial' && buff.buildingId) {
       const current = building.get(buff.buildingId) ?? 1

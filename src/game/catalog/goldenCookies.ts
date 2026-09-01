@@ -42,6 +42,11 @@ export const BUFF_META: Record<BuffType, BuffMeta> = {
     name: 'Weapon overdrive',
     description: 'One weapon type ×7 kill rate',
   },
+  duelSpoils: {
+    type: 'duelSpoils',
+    name: 'Duel spoils',
+    description: 'Weapon kill rate ×3',
+  },
 }
 
 export interface EffectWeight {

@@ -18,8 +18,11 @@ export function setMultiplayerBackendForTests(next: MultiplayerBackend | null) {
 }
 
 export {
-  applyDuelReward,
+  applyDuelSpoilsBuff,
+  resolveDuelResultKind,
+  duelSpoilsDurationSeconds,
 } from '@/multiplayer/rewards'
+export type { DuelResultKind } from '@/multiplayer/rewards'
 export {
   BOT_USER_ID,
   DUEL_DURATION_SECONDS,
