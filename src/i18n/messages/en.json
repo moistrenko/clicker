@@ -30,12 +30,12 @@
     "ascendTagline": "Leave the horde behind and start stronger.",
     "survivorRank": "Survivor Rank",
     "permanentBonus": "Permanent bonus",
-    "permanentBonusValue": "+{percent}% kills/sec & click power",
+    "permanentBonusValue": "+{percent}% kills/sec & click power (capped)",
     "nextAscend": "Next ascend",
     "rank": "rank",
     "ranks": "ranks",
     "ascendButton": "Ascend",
-    "ascendHint": "Earn enough lifetime kills to gain your next Survivor Rank.",
+    "ascendHint": "Earn enough kills this run to gain your next Survivor Rank. Each rank costs more than the last.",
     "ascendConfirm": "Leave the horde behind and start stronger? This resets your run but keeps achievements and Survivor Rank.",
     "owned": "{count} owned",
     "unknown": "Unknown",
@@ -126,7 +126,12 @@
     "cortexBaker": "Psionic Jammer",
     "you": "Clone Legion",
     "warRig": "War Rig",
-    "orbitalLaser": "Orbital Laser"
+    "orbitalLaser": "Orbital Laser",
+    "quantumBunker": "Quantum Bunker",
+    "naniteSwarm": "Nanite Swarm",
+    "dreadnought": "Dreadnought",
+    "worldReactor": "World Reactor",
+    "singularityCore": "Singularity Core"
   },
   "upgrades": {
     "cursor-1": {
@@ -328,6 +333,51 @@
     },
     "orbitalLaser-3": {
       "name": "City eraser protocol"
+    },
+    "quantumBunker-1": {
+      "name": "Phase shields"
+    },
+    "quantumBunker-2": {
+      "name": "Entangled turrets"
+    },
+    "quantumBunker-3": {
+      "name": "Probability collapse"
+    },
+    "naniteSwarm-1": {
+      "name": "Grey goo protocol"
+    },
+    "naniteSwarm-2": {
+      "name": "Self-replicating hunters"
+    },
+    "naniteSwarm-3": {
+      "name": "Molecular disassembly"
+    },
+    "dreadnought-1": {
+      "name": "Broadside barrage"
+    },
+    "dreadnought-2": {
+      "name": "Siege cannons"
+    },
+    "dreadnought-3": {
+      "name": "Orbital bombardment"
+    },
+    "worldReactor-1": {
+      "name": "Overclocked cores"
+    },
+    "worldReactor-2": {
+      "name": "Meltdown warheads"
+    },
+    "worldReactor-3": {
+      "name": "Planet scorch"
+    },
+    "singularityCore-1": {
+      "name": "Gravity wells"
+    },
+    "singularityCore-2": {
+      "name": "Spaghettification field"
+    },
+    "singularityCore-3": {
+      "name": "Event horizon purge"
     }
   },
   "achievements": {

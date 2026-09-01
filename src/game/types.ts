@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 8
+export const SAVE_VERSION = 9
 
 export type BuildingId =
   | 'cursor'
@@ -23,6 +23,11 @@ export type BuildingId =
   | 'you'
   | 'warRig'
   | 'orbitalLaser'
+  | 'quantumBunker'
+  | 'naniteSwarm'
+  | 'dreadnought'
+  | 'worldReactor'
+  | 'singularityCore'
 
 export interface BuildingDef {
   id: BuildingId

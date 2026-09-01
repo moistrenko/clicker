@@ -3,6 +3,7 @@ import {
   ensureGoldenSpawnScheduled,
   expireBuffs,
   getCookiesPerClick,
+  migratePrestigeLevel,
   parseAchievements,
 } from '@/game/engine'
 import { applyOfflineProgress } from '@/game/engine/offline'
@@ -20,7 +21,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7, 8])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -147,7 +148,7 @@ function finalizeLoadedState(state: GameState): GameState {
     activeBuffs: state.activeBuffs ?? [],
     goldenCookie: null,
     nextGoldenSpawnAt: state.nextGoldenSpawnAt ?? null,
-    prestigeLevel: state.prestigeLevel ?? 0,
+    prestigeLevel: migratePrestigeLevel(state.prestigeLevel ?? 0),
     lifetimeKills: state.lifetimeKills ?? 0,
     duelWins: state.duelWins ?? 0,
     duelLosses: state.duelLosses ?? 0,
@@ -190,7 +191,7 @@ export function parseSave(raw: string): GameState | null {
         data.nextGoldenSpawnAt === null || data.nextGoldenSpawnAt === undefined
           ? null
           : Math.max(0, readNumber(data.nextGoldenSpawnAt, 0)),
-      prestigeLevel: Math.max(0, readNumber(data.prestigeLevel, 0)),
+      prestigeLevel: migratePrestigeLevel(Math.max(0, readNumber(data.prestigeLevel, 0))),
       lifetimeKills: Math.max(0, readNumber(data.lifetimeKills, 0)),
       duelWins: Math.max(0, readNumber(data.duelWins, 0)),
       duelLosses: Math.max(0, readNumber(data.duelLosses, 0)),

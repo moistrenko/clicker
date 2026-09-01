@@ -30,12 +30,12 @@
     "ascendTagline": "Оставьте орду позади и начните сильнее.",
     "survivorRank": "Ранг выжившего",
     "permanentBonus": "Постоянный бонус",
-    "permanentBonusValue": "+{percent}% к уб/с и клику",
+    "permanentBonusValue": "+{percent}% к уб/с и клику (лимит)",
     "nextAscend": "Следующее возвышение",
     "rank": "ранг",
     "ranks": "ранга",
     "ascendButton": "Возвыситься",
-    "ascendHint": "Наберите достаточно убийств за всё время, чтобы получить новый ранг.",
+    "ascendHint": "Наберите достаточно убийств за этот забег, чтобы получить новый ранг. Каждый следующий ранг стоит дороже.",
     "ascendConfirm": "Оставить орду позади и начать сильнее? Прогресс сбросится, но достижения и ранг сохранятся.",
     "owned": "есть: {count}",
     "unknown": "Неизвестно",
@@ -126,7 +126,12 @@
     "cortexBaker": "Пси-глушитель",
     "you": "Легион клонов",
     "warRig": "Боевой грузовик",
-    "orbitalLaser": "Орбитальный лазер"
+    "orbitalLaser": "Орбитальный лазер",
+    "quantumBunker": "Квантовый бункер",
+    "naniteSwarm": "Рой нанитов",
+    "dreadnought": "Дредноут",
+    "worldReactor": "Мировой реактор",
+    "singularityCore": "Сингулярное ядро"
   },
   "upgrades": {
     "cursor-1": {
@@ -328,6 +333,51 @@
     },
     "orbitalLaser-3": {
       "name": "Протокол стирания города"
+    },
+    "quantumBunker-1": {
+      "name": "Фазовые щиты"
+    },
+    "quantumBunker-2": {
+      "name": "Запутанные турели"
+    },
+    "quantumBunker-3": {
+      "name": "Коллапс вероятности"
+    },
+    "naniteSwarm-1": {
+      "name": "Протокол серой слизи"
+    },
+    "naniteSwarm-2": {
+      "name": "Самовоспроизводящиеся охотники"
+    },
+    "naniteSwarm-3": {
+      "name": "Молекулярный разбор"
+    },
+    "dreadnought-1": {
+      "name": "Залповый обстрел"
+    },
+    "dreadnought-2": {
+      "name": "Осадные пушки"
+    },
+    "dreadnought-3": {
+      "name": "Орбитальная бомбардировка"
+    },
+    "worldReactor-1": {
+      "name": "Разогнанные реакторы"
+    },
+    "worldReactor-2": {
+      "name": "Боеголовки перегрева"
+    },
+    "worldReactor-3": {
+      "name": "Выжигание планеты"
+    },
+    "singularityCore-1": {
+      "name": "Гравитационные колодцы"
+    },
+    "singularityCore-2": {
+      "name": "Поле спагеттификации"
+    },
+    "singularityCore-3": {
+      "name": "Зачистка горизонта событий"
     }
   },
   "achievements": {

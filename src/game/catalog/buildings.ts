@@ -43,6 +43,11 @@ export const BUILDINGS: readonly BuildingDef[] = [
   { id: 'you', name: 'Clone Legion', baseCost: 4.7e26, baseCps: 5.1e14 },
   { id: 'warRig', name: 'War Rig', baseCost: 1.1e29, baseCps: 3.8e15 },
   { id: 'orbitalLaser', name: 'Orbital Laser', baseCost: 2.6e31, baseCps: 2.9e16 },
+  { id: 'quantumBunker', name: 'Quantum Bunker', baseCost: 6e33, baseCps: 3.5e17 },
+  { id: 'naniteSwarm', name: 'Nanite Swarm', baseCost: 1.4e36, baseCps: 4.2e18 },
+  { id: 'dreadnought', name: 'Dreadnought', baseCost: 3.3e38, baseCps: 5e19 },
+  { id: 'worldReactor', name: 'World Reactor', baseCost: 7.8e40, baseCps: 6e20 },
+  { id: 'singularityCore', name: 'Singularity Core', baseCost: 1.8e43, baseCps: 7.2e21 },
 ]
 
 export const BUILDING_BY_ID: Readonly<Record<BuildingId, BuildingDef>> = Object.fromEntries(

@@ -65,6 +65,11 @@ const BUILDING_UPGRADE_NAMES: Record<
   you: ['Combat clones', 'Elite duplicates', 'Apocalypse you'],
   warRig: ['Spiked bumpers', 'Ram plating', 'Highway purge'],
   orbitalLaser: ['Target uplink', 'Sustained beam', 'City eraser protocol'],
+  quantumBunker: ['Phase shields', 'Entangled turrets', 'Probability collapse'],
+  naniteSwarm: ['Grey goo protocol', 'Self-replicating hunters', 'Molecular disassembly'],
+  dreadnought: ['Broadside barrage', 'Siege cannons', 'Orbital bombardment'],
+  worldReactor: ['Overclocked cores', 'Meltdown warheads', 'Planet scorch'],
+  singularityCore: ['Gravity wells', 'Spaghettification field', 'Event horizon purge'],
 }
 
 function upgradesForBuilding(id: Exclude<BuildingId, 'cursor'>): UpgradeDef[] {

@@ -27,10 +27,14 @@ export {
   ascend,
   ASCEND_THRESHOLD,
   canAscend,
+  killsRequiredForRank,
+  migratePrestigeLevel,
+  PRESTIGE_BONUS_CAP,
   PRESTIGE_BONUS_PER_RANK,
   prestigeMultiplier,
   projectAscendGain,
   rankFromKills,
+  RANK_COST_GROWTH,
   totalLifetimeKills,
 } from '@/game/engine/prestige'
 export {

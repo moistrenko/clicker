@@ -5,6 +5,8 @@ import {
   canAscend,
   createInitialState,
   getCookiesPerClick,
+  killsRequiredForRank,
+  migratePrestigeLevel,
   prestigeMultiplier,
   projectAscendGain,
   rankFromKills,
@@ -13,24 +15,24 @@ import {
 } from '@/game/engine'
 
 describe('prestige engine', () => {
-  it('rankFromKills returns 0 below threshold and 1 at 1M kills', () => {
+  it('rankFromKills uses escalating lifetime kill tiers', () => {
     expect(rankFromKills(ASCEND_THRESHOLD - 1)).toBe(0)
     expect(rankFromKills(ASCEND_THRESHOLD)).toBe(1)
-    expect(rankFromKills(4_000_000)).toBe(2)
+    expect(rankFromKills(ASCEND_THRESHOLD + killsRequiredForRank(1) - 1)).toBe(1)
+    expect(rankFromKills(ASCEND_THRESHOLD + killsRequiredForRank(1))).toBe(2)
   })
 
-  it('prestigeMultiplier scales +1% per rank', () => {
+  it('prestigeMultiplier grows linearly but is capped', () => {
     expect(prestigeMultiplier({ ...createInitialState(), prestigeLevel: 0 })).toBe(1)
-    expect(prestigeMultiplier({ ...createInitialState(), prestigeLevel: 5 })).toBeCloseTo(1.05)
-    expect(prestigeMultiplier({ ...createInitialState(), prestigeLevel: 10 })).toBeCloseTo(1.1)
+    expect(prestigeMultiplier({ ...createInitialState(), prestigeLevel: 10 })).toBeCloseTo(1.3)
+    expect(prestigeMultiplier({ ...createInitialState(), prestigeLevel: 100 })).toBe(3)
   })
 
-  it('projectAscendGain reflects ranks earned from lifetime kills', () => {
+  it('projectAscendGain only counts kills from the current run', () => {
     const ready = {
       ...createInitialState(),
       cookiesBakedAllTime: ASCEND_THRESHOLD,
     }
-    expect(totalLifetimeKills(ready)).toBe(ASCEND_THRESHOLD)
     expect(projectAscendGain(ready)).toBe(1)
     expect(canAscend(ready)).toBe(true)
 
@@ -42,17 +44,25 @@ describe('prestige engine', () => {
     expect(canAscend(partial)).toBe(false)
   })
 
-  it('projectAscendGain counts stacked lifetime and current-run kills', () => {
+  it('projectAscendGain ignores banked lifetime kills', () => {
     const state = {
       ...createInitialState(),
       prestigeLevel: 1,
-      lifetimeKills: ASCEND_THRESHOLD,
+      lifetimeKills: ASCEND_THRESHOLD * 100,
       cookiesBakedAllTime: 3_000_000,
     }
-    expect(projectAscendGain(state)).toBe(1)
+    expect(projectAscendGain(state)).toBe(0)
   })
 
-  it('ascend resets run progress but keeps achievements and prestige', () => {
+  it('projectAscendGain can award multiple ranks from one strong run', () => {
+    const state = {
+      ...createInitialState(),
+      cookiesBakedAllTime: ASCEND_THRESHOLD + killsRequiredForRank(1),
+    }
+    expect(projectAscendGain(state)).toBe(2)
+  })
+
+  it('ascend resets run progress but adds earned ranks', () => {
     const before = {
       ...createInitialState(),
       cookies: 500_000,
@@ -72,6 +82,7 @@ describe('prestige engine', () => {
       ],
       goldenCookie: { x: 0.5, y: 0.5 },
       nextGoldenSpawnAt: 150,
+      duelWins: 2,
     }
 
     const after = ascend(before)
@@ -88,6 +99,7 @@ describe('prestige engine', () => {
     expect(after.achievements).toEqual(['first-blood'])
     expect(after.prestigeLevel).toBe(1)
     expect(after.lifetimeKills).toBe(ASCEND_THRESHOLD)
+    expect(after.duelWins).toBe(2)
   })
 
   it('ascend is a no-op when no rank would be gained', () => {
@@ -107,7 +119,13 @@ describe('prestige engine', () => {
       ...base,
       prestigeLevel: 10,
     }
-    expect(totalCps(boosted)).toBeCloseTo(totalCps(base) * 1.1)
-    expect(getCookiesPerClick(boosted)).toBeCloseTo(getCookiesPerClick(base) * 1.1)
+    expect(totalCps(boosted)).toBeCloseTo(totalCps(base) * 1.3)
+    expect(getCookiesPerClick(boosted)).toBeCloseTo(getCookiesPerClick(base) * 1.3)
+  })
+
+  it('migratePrestigeLevel remaps broken legacy ranks', () => {
+    expect(migratePrestigeLevel(12)).toBe(12)
+    expect(migratePrestigeLevel(1_474_594_320_468_750)).toBeLessThanOrEqual(200)
+    expect(migratePrestigeLevel(1_474_594_320_468_750)).toBeGreaterThan(50)
   })
 })
