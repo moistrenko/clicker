@@ -29,6 +29,7 @@ export {
   canAscend,
   killsRequiredForRank,
   migratePrestigeLevel,
+  normalizePrestigeLevel,
   PRESTIGE_BONUS_CAP,
   PRESTIGE_BONUS_PER_RANK,
   prestigeMultiplier,
@@ -52,14 +53,24 @@ export {
 export type { Rng } from '@/game/engine/goldenCookie'
 
 export const PRICE_GROWTH = 1.15
+/** After this many owned, price exponent grows linearly instead of 1.15^n (keeps late game buyable). */
+export const PRICE_EXP_LINEAR_START = 100
+export const PRICE_EXP_LINEAR_RATE = 0.15
 export const ALWAYS_VISIBLE_BUILDINGS = 3
 export const REVEAL_THRESHOLD = 0.5
 export const MAX_TICK_SECONDS = 30
 
 export { createInitialState, emptyBuildings } from '@/game/engine/state'
 
+export function buildingPriceExponent(owned: number): number {
+  if (owned <= PRICE_EXP_LINEAR_START) {
+    return owned
+  }
+  return PRICE_EXP_LINEAR_START + (owned - PRICE_EXP_LINEAR_START) * PRICE_EXP_LINEAR_RATE
+}
+
 export function buildingPrice(baseCost: number, owned: number): number {
-  return Math.ceil(baseCost * Math.pow(PRICE_GROWTH, owned))
+  return Math.ceil(baseCost * Math.pow(PRICE_GROWTH, buildingPriceExponent(owned)))
 }
 
 export function bulkBuildingPrice(baseCost: number, owned: number, count: number): number {

@@ -172,6 +172,13 @@ describe('game engine', () => {
     expect(buildingPrice(15, 10)).toBe(61)
   })
 
+  it('softens price growth for very high owned counts', () => {
+    const steep = Math.ceil(15 * Math.pow(1.15, 511))
+    const softened = buildingPrice(15, 511)
+    expect(softened).toBeLessThan(steep)
+    expect(softened).toBeLessThan(1e15)
+  })
+
   it('exposes per-weapon and total cps for store listings', () => {
     const state = {
       ...createInitialState(),

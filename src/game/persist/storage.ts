@@ -4,6 +4,7 @@ import {
   expireBuffs,
   getCookiesPerClick,
   migratePrestigeLevel,
+  normalizePrestigeLevel,
   parseAchievements,
 } from '@/game/engine'
 import { applyOfflineProgress } from '@/game/engine/offline'
@@ -21,7 +22,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -139,6 +140,7 @@ function parseGoldenCookie(value: unknown): GoldenCookieSpawn | null {
 }
 
 function finalizeLoadedState(state: GameState): GameState {
+  const lifetimeKills = (state.lifetimeKills ?? 0) + state.cookiesBakedAllTime
   let next: GameState = {
     ...state,
     version: SAVE_VERSION,
@@ -148,7 +150,7 @@ function finalizeLoadedState(state: GameState): GameState {
     activeBuffs: state.activeBuffs ?? [],
     goldenCookie: null,
     nextGoldenSpawnAt: state.nextGoldenSpawnAt ?? null,
-    prestigeLevel: migratePrestigeLevel(state.prestigeLevel ?? 0),
+    prestigeLevel: normalizePrestigeLevel(state.prestigeLevel ?? 0, lifetimeKills),
     lifetimeKills: state.lifetimeKills ?? 0,
     duelWins: state.duelWins ?? 0,
     duelLosses: state.duelLosses ?? 0,
@@ -191,7 +193,10 @@ export function parseSave(raw: string): GameState | null {
         data.nextGoldenSpawnAt === null || data.nextGoldenSpawnAt === undefined
           ? null
           : Math.max(0, readNumber(data.nextGoldenSpawnAt, 0)),
-      prestigeLevel: migratePrestigeLevel(Math.max(0, readNumber(data.prestigeLevel, 0))),
+      prestigeLevel: normalizePrestigeLevel(
+        Math.max(0, readNumber(data.prestigeLevel, 0)),
+        Math.max(0, readNumber(data.lifetimeKills, 0)) + Math.max(0, readNumber(data.cookiesBakedAllTime, 0)),
+      ),
       lifetimeKills: Math.max(0, readNumber(data.lifetimeKills, 0)),
       duelWins: Math.max(0, readNumber(data.duelWins, 0)),
       duelLosses: Math.max(0, readNumber(data.duelLosses, 0)),

@@ -257,8 +257,8 @@ as $$
 declare
   match_row public.duel_matches;
   winner uuid;
-  reward_a double precision;
-  reward_b double precision;
+  v_reward_a double precision;
+  v_reward_b double precision;
 begin
   select * into match_row from public.duel_matches where id = p_match_id for update;
   if not found then
@@ -270,23 +270,23 @@ begin
 
   if match_row.score_a > match_row.score_b then
     winner := match_row.player_a;
-    reward_a := match_row.score_a + match_row.score_b;
-    reward_b := 0;
+    v_reward_a := match_row.score_a + match_row.score_b;
+    v_reward_b := 0;
   elsif match_row.score_b > match_row.score_a then
     winner := match_row.player_b;
-    reward_a := 0;
-    reward_b := match_row.score_a + match_row.score_b;
+    v_reward_a := 0;
+    v_reward_b := match_row.score_a + match_row.score_b;
   else
     winner := null;
-    reward_a := match_row.score_a;
-    reward_b := match_row.score_b;
+    v_reward_a := match_row.score_a;
+    v_reward_b := match_row.score_b;
   end if;
 
   update public.duel_matches
   set status = 'settled',
       winner_id = winner,
-      reward_a = reward_a,
-      reward_b = reward_b
+      reward_a = v_reward_a,
+      reward_b = v_reward_b
   where id = p_match_id
   returning * into match_row;
 

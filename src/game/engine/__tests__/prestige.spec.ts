@@ -6,7 +6,7 @@ import {
   createInitialState,
   getCookiesPerClick,
   killsRequiredForRank,
-  migratePrestigeLevel,
+  normalizePrestigeLevel,
   prestigeMultiplier,
   projectAscendGain,
   rankFromKills,
@@ -15,6 +15,12 @@ import {
 } from '@/game/engine'
 
 describe('prestige engine', () => {
+  it('killsRequiredForRank soft-caps tier growth for high ranks', () => {
+    expect(killsRequiredForRank(0)).toBe(ASCEND_THRESHOLD)
+    expect(killsRequiredForRank(1)).toBe(ASCEND_THRESHOLD * 5)
+    expect(killsRequiredForRank(22)).toBe(killsRequiredForRank(100))
+  })
+
   it('rankFromKills uses escalating lifetime kill tiers', () => {
     expect(rankFromKills(ASCEND_THRESHOLD - 1)).toBe(0)
     expect(rankFromKills(ASCEND_THRESHOLD)).toBe(1)
@@ -57,9 +63,18 @@ describe('prestige engine', () => {
   it('projectAscendGain can award multiple ranks from one strong run', () => {
     const state = {
       ...createInitialState(),
-      cookiesBakedAllTime: ASCEND_THRESHOLD + killsRequiredForRank(1),
+      cookiesBakedAllTime: ASCEND_THRESHOLD + killsRequiredForRank(1) + killsRequiredForRank(2),
     }
-    expect(projectAscendGain(state)).toBe(2)
+    expect(projectAscendGain(state)).toBe(3)
+  })
+
+  it('projectAscendGain is capped per run', () => {
+    const state = {
+      ...createInitialState(),
+      prestigeLevel: 30,
+      cookiesBakedAllTime: 1e40,
+    }
+    expect(projectAscendGain(state)).toBe(5)
   })
 
   it('ascend resets run progress but adds earned ranks', () => {
@@ -123,9 +138,9 @@ describe('prestige engine', () => {
     expect(getCookiesPerClick(boosted)).toBeCloseTo(getCookiesPerClick(base) * 1.3)
   })
 
-  it('migratePrestigeLevel remaps broken legacy ranks', () => {
-    expect(migratePrestigeLevel(12)).toBe(12)
-    expect(migratePrestigeLevel(1_474_594_320_468_750)).toBeLessThanOrEqual(200)
-    expect(migratePrestigeLevel(1_474_594_320_468_750)).toBeGreaterThan(50)
+  it('normalizePrestigeLevel clamps inflated legacy prestige', () => {
+    const lifetimeKills = 2.335e36
+    expect(normalizePrestigeLevel(136, lifetimeKills)).toBe(rankFromKills(lifetimeKills))
+    expect(normalizePrestigeLevel(12, lifetimeKills)).toBe(12)
   })
 })

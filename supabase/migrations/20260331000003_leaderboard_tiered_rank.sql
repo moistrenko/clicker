@@ -1,5 +1,4 @@
 -- Survivor Rank from tiered kill costs (matches client rankFromKills).
--- Uses SQL + recursive CTE so Supabase SQL editor can run it without splitting on inner semicolons.
 
 drop function if exists public.survivor_rank_from_kills(bigint);
 drop function if exists public.survivor_rank_from_kills(double precision);
@@ -9,16 +8,12 @@ returns bigint
 language sql
 immutable
 as $function$
-  with recursive ranks as (
-    select 0::bigint as rank, 0::numeric as spent
-    union all
-    select
-      r.rank + 1,
-      r.spent + (1000000::numeric * power(8::numeric, r.rank))
-    from ranks r
-    where r.spent + (1000000::numeric * power(8::numeric, r.rank)) <= greatest(0, kills)::numeric
-  )
-  select coalesce(max(rank), 0)::bigint from ranks
+  select case
+    when greatest(0, kills) < 1000000 then 0::bigint
+    else floor(
+      log((greatest(0, kills) * 4.0 / 1000000.0) + 1.0) / log(5.0)
+    )::bigint
+  end
 $function$;
 
 create or replace function public.get_leaderboard(p_limit integer default 20)

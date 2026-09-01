@@ -153,9 +153,30 @@ describe('save persistence', () => {
     expect(parsed?.lastSavedAt).toBe(1_700_000_000_000)
   })
 
+  it('clamps inflated prestige level on load', () => {
+    const raw = JSON.stringify({
+      version: 9,
+      cookies: 1e30,
+      cookiesBakedAllTime: 1e30,
+      totalClicks: 10,
+      buildings: { cursor: 1 },
+      upgrades: [],
+      achievements: [],
+      gameTime: 0,
+      activeBuffs: [],
+      goldenCookie: null,
+      nextGoldenSpawnAt: null,
+      prestigeLevel: 136,
+      lifetimeKills: 2.335e36,
+    })
+    const parsed = parseSave(raw)
+    expect(parsed?.prestigeLevel).toBeLessThan(50)
+    expect(parsed?.prestigeLevel).toBeGreaterThan(35)
+  })
+
   it('rejects unsupported save versions', () => {
     expect(parseSave(JSON.stringify({ version: 0, cookies: 1 }))).toBeNull()
-    expect(parseSave(JSON.stringify({ version: 10, cookies: 1 }))).toBeNull()
+    expect(parseSave(JSON.stringify({ version: 11, cookies: 1 }))).toBeNull()
   })
 
   it('saveGame stamps lastSavedAt onto the stored payload', () => {

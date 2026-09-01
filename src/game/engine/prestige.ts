@@ -3,32 +3,35 @@ import type { GameState } from '@/game/types'
 
 export const ASCEND_THRESHOLD = 1_000_000
 /** Each Survivor Rank tier costs this many times more run kills than the previous one. */
-export const RANK_COST_GROWTH = 8
+export const RANK_COST_GROWTH = 5
+/** Ascend kill cost stops growing after this rank tier. */
+export const RANK_COST_SOFT_CAP = 22
+/** Maximum ranks earnable from a single run (prevents one huge run from jumping hundreds of ranks). */
+export const MAX_ASCEND_GAIN_PER_RUN = 5
 /** +3% damage per rank, capped so late ascensions stay meaningful but not broken. */
 export const PRESTIGE_BONUS_PER_RANK = 0.03
 export const PRESTIGE_BONUS_CAP = 3
 
-/** Run kills required to earn rank `currentRank` → `currentRank + 1`. */
+/** Run kills required to ascend from `currentRank` → `currentRank + 1`. */
 export function killsRequiredForRank(currentRank: number): number {
-  if (currentRank < 0) {
-    return ASCEND_THRESHOLD
-  }
-  return ASCEND_THRESHOLD * RANK_COST_GROWTH ** currentRank
+  const tier = Math.min(Math.max(0, currentRank), RANK_COST_SOFT_CAP)
+  return ASCEND_THRESHOLD * RANK_COST_GROWTH ** tier
 }
 
 export function totalLifetimeKills(state: GameState): number {
   return (state.lifetimeKills ?? 0) + state.cookiesBakedAllTime
 }
 
-/** Survivor Rank earned if all lifetime kills were spent on rank tiers. */
+/** Survivor Rank implied by lifetime kills (escalating tier curve). */
 export function rankFromKills(kills: number): number {
-  let rank = 0
-  let spent = 0
-  while (spent + killsRequiredForRank(rank) <= kills) {
-    spent += killsRequiredForRank(rank)
-    rank += 1
+  if (!Number.isFinite(kills) || kills < ASCEND_THRESHOLD) {
+    return 0
   }
-  return rank
+  const ratio = (kills * (RANK_COST_GROWTH - 1)) / ASCEND_THRESHOLD + 1
+  if (ratio <= 1) {
+    return 0
+  }
+  return Math.floor(Math.log(ratio) / Math.log(RANK_COST_GROWTH))
 }
 
 export function prestigeMultiplier(state: GameState): number {
@@ -44,12 +47,17 @@ export function projectAscendGain(state: GameState): number {
   let remaining = state.cookiesBakedAllTime
 
   while (remaining >= killsRequiredForRank(rank)) {
-    remaining -= killsRequiredForRank(rank)
+    const cost = killsRequiredForRank(rank)
+    if (rank >= RANK_COST_SOFT_CAP) {
+      gain += Math.floor(remaining / cost)
+      break
+    }
+    remaining -= cost
     rank += 1
     gain += 1
   }
 
-  return gain
+  return Math.min(gain, MAX_ASCEND_GAIN_PER_RUN)
 }
 
 export function canAscend(state: GameState): boolean {
@@ -88,4 +96,17 @@ export function migratePrestigeLevel(level: number): number {
   }
   const migrated = Math.floor(15 + Math.log10(level + 1) * 8)
   return Math.min(migrated, 200)
+}
+
+/**
+ * Clamp prestige that is far above what lifetime kills could ever earn
+ * (e.g. broken v8 sqrt migration giving rank 136 while SR from kills is ~44).
+ */
+export function normalizePrestigeLevel(prestigeLevel: number, lifetimeKills: number): number {
+  const level = migratePrestigeLevel(prestigeLevel)
+  const earned = rankFromKills(lifetimeKills)
+  if (level > 500 || level > earned + 10) {
+    return earned
+  }
+  return level
 }
