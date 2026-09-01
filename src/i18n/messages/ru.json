@@ -418,6 +418,90 @@
     "veteran-clicker": {
       "name": "Ветеран кликер",
       "description": "Ударьте зомби 50 000 раз."
+    },
+    "million-strong": {
+      "name": "Миллион сильных",
+      "description": "Наберите 1 000 000 убийств всего."
+    },
+    "extinction-event": {
+      "name": "Событие вымирания",
+      "description": "Наберите 10 000 000 убийств всего."
+    },
+    "armory-commander": {
+      "name": "Командир арсенала",
+      "description": "Владейте 50 единицами оружия."
+    },
+    "war-chest": {
+      "name": "Военный склад",
+      "description": "Владейте 100 единицами оружия."
+    },
+    "arsenal-master": {
+      "name": "Мастер арсенала",
+      "description": "Купите 20 улучшений."
+    },
+    "killstorm": {
+      "name": "Убийственный шторм",
+      "description": "Достигните 10 000 убийств в секунду."
+    },
+    "iron-fingers": {
+      "name": "Железные пальцы",
+      "description": "Ударьте зомби 100 000 раз."
+    },
+    "first-ascension": {
+      "name": "Первый асценд",
+      "description": "Достигните ранга выжившего 1."
+    },
+    "seasoned-survivor": {
+      "name": "Закалённый выживший",
+      "description": "Достигните ранга выжившего 5."
+    },
+    "landmine-king": {
+      "name": "Король мин",
+      "description": "Поставьте 10 минных полей."
+    },
+    "flame-wall": {
+      "name": "Стена пламени",
+      "description": "Постройте 5 башен с огнемётами."
+    },
+    "war-rig-rollout": {
+      "name": "Боевой караван",
+      "description": "Выведите War Rig в бой."
+    },
+    "sky-fire": {
+      "name": "Огонь с неба",
+      "description": "Запустите орбитальный лазер."
+    },
+    "first-duel": {
+      "name": "Первая дуэль",
+      "description": "Завершите первую дуэль."
+    },
+    "duel-victor": {
+      "name": "Победитель дуэлей",
+      "description": "Выиграйте первую дуэль."
+    },
+    "duel-contender": {
+      "name": "Дуэлянт",
+      "description": "Сыграйте 5 дуэлей."
+    },
+    "duel-champion": {
+      "name": "Чемпион дуэлей",
+      "description": "Выиграйте 5 дуэлей."
+    },
+    "duel-gladiator": {
+      "name": "Гладиатор",
+      "description": "Сыграйте 25 дуэлей."
+    },
+    "duel-legend": {
+      "name": "Легенда дуэлей",
+      "description": "Выиграйте 25 дуэлей."
+    },
+    "stalemate": {
+      "name": "Пат",
+      "description": "Сыграйте вничью в дуэли."
+    },
+    "grit-and-glory": {
+      "name": "Упорство и слава",
+      "description": "Проиграйте 5 дуэлей и не сдавайтесь."
     }
   },
   "news": [

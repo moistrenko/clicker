@@ -61,6 +61,28 @@ describe('achievements engine', () => {
     expect(newlyUnlocked.map((a) => a.id)).toContain('killing-machine')
   })
 
+  it('unlocks duel achievements from recorded stats', () => {
+    const state = {
+      ...createInitialState(),
+      duelWins: 1,
+      duelLosses: 0,
+      duelDraws: 0,
+    }
+    const { newlyUnlocked } = checkAchievements(state)
+    const ids = newlyUnlocked.map((a) => a.id)
+    expect(ids).toContain('first-duel')
+    expect(ids).toContain('duel-victor')
+  })
+
+  it('unlocks prestige achievements from survivor rank', () => {
+    const state = {
+      ...createInitialState(),
+      prestigeLevel: 1,
+    }
+    const { newlyUnlocked } = checkAchievements(state)
+    expect(newlyUnlocked.map((a) => a.id)).toContain('first-ascension')
+  })
+
   it('listAchievements marks unlocked entries', () => {
     const state = {
       ...createInitialState(),
@@ -71,7 +93,7 @@ describe('achievements engine', () => {
     const freshMeat = listings.find((entry) => entry.achievement.id === 'fresh-meat')
     expect(firstBlood?.unlocked).toBe(true)
     expect(freshMeat?.unlocked).toBe(false)
-    expect(listings.length).toBeGreaterThanOrEqual(20)
+    expect(listings.length).toBeGreaterThanOrEqual(40)
   })
 
   it('unlocks click-based achievements from totalClicks', () => {

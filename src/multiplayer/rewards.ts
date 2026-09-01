@@ -38,3 +38,14 @@ export function applyDuelSpoilsBuff(main: GameState, result: DuelResultKind): Ga
 
   return { ...main, activeBuffs: [...activeBuffs, buff] }
 }
+
+/** Apply duel spoils buff and record duel stats on the main save. */
+export function applyDuelOutcome(main: GameState, result: DuelResultKind): GameState {
+  const withBuff = applyDuelSpoilsBuff(main, result)
+  return {
+    ...withBuff,
+    duelWins: (withBuff.duelWins ?? 0) + (result === 'win' ? 1 : 0),
+    duelLosses: (withBuff.duelLosses ?? 0) + (result === 'loss' ? 1 : 0),
+    duelDraws: (withBuff.duelDraws ?? 0) + (result === 'draw' ? 1 : 0),
+  }
+}

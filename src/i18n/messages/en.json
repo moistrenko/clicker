@@ -418,6 +418,90 @@
     "veteran-clicker": {
       "name": "Veteran Clicker",
       "description": "Smash the zombie 50,000 times."
+    },
+    "million-strong": {
+      "name": "Million Strong",
+      "description": "Amass 1,000,000 total kills."
+    },
+    "extinction-event": {
+      "name": "Extinction Event",
+      "description": "Amass 10,000,000 total kills."
+    },
+    "armory-commander": {
+      "name": "Armory Commander",
+      "description": "Own 50 weapons total."
+    },
+    "war-chest": {
+      "name": "War Chest",
+      "description": "Own 100 weapons total."
+    },
+    "arsenal-master": {
+      "name": "Arsenal Master",
+      "description": "Own 20 upgrades."
+    },
+    "killstorm": {
+      "name": "Killstorm",
+      "description": "Reach 10,000 kills per second."
+    },
+    "iron-fingers": {
+      "name": "Iron Fingers",
+      "description": "Smash the zombie 100,000 times."
+    },
+    "first-ascension": {
+      "name": "First Ascension",
+      "description": "Reach Survivor Rank 1."
+    },
+    "seasoned-survivor": {
+      "name": "Seasoned Survivor",
+      "description": "Reach Survivor Rank 5."
+    },
+    "landmine-king": {
+      "name": "Landmine King",
+      "description": "Deploy 10 Landmine Fields."
+    },
+    "flame-wall": {
+      "name": "Flame Wall",
+      "description": "Build 5 Flamethrower Towers."
+    },
+    "war-rig-rollout": {
+      "name": "War Rig Rollout",
+      "description": "Deploy a War Rig."
+    },
+    "sky-fire": {
+      "name": "Sky Fire",
+      "description": "Bring an Orbital Laser online."
+    },
+    "first-duel": {
+      "name": "First Duel",
+      "description": "Complete your first duel."
+    },
+    "duel-victor": {
+      "name": "Duel Victor",
+      "description": "Win your first duel."
+    },
+    "duel-contender": {
+      "name": "Duel Contender",
+      "description": "Fight in 5 duels."
+    },
+    "duel-champion": {
+      "name": "Duel Champion",
+      "description": "Win 5 duels."
+    },
+    "duel-gladiator": {
+      "name": "Duel Gladiator",
+      "description": "Fight in 25 duels."
+    },
+    "duel-legend": {
+      "name": "Duel Legend",
+      "description": "Win 25 duels."
+    },
+    "stalemate": {
+      "name": "Stalemate",
+      "description": "Draw a duel."
+    },
+    "grit-and-glory": {
+      "name": "Grit and Glory",
+      "description": "Lose 5 duels and keep coming back."
     }
   },
   "news": [

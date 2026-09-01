@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { createInitialState, totalLifetimeKills } from '@/game/engine'
 import type { GameState } from '@/game/types'
 import {
-  applyDuelSpoilsBuff,
+  applyDuelOutcome,
   BOT_USER_ID,
   computeSettleRewards,
   DUEL_DURATION_SECONDS,
@@ -295,7 +295,7 @@ export const useDuelStore = defineStore('duel', () => {
     resultKind.value = resolveDuelResultKind(settled, userId)
 
     if (mainSnapshot) {
-      const restored = applyDuelSpoilsBuff(mainSnapshot, resultKind.value)
+      const restored = applyDuelOutcome(mainSnapshot, resultKind.value)
       game.exitDuelMode(restored)
       mainSnapshot = null
     }

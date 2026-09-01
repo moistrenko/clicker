@@ -24,7 +24,7 @@ import {
 import { formatCookies, formatCookiesParts } from '@/game/format/numbers'
 import { i18n, numberLocaleForApp, type AppLocale } from '@/i18n'
 import { createDebouncedSave, loadGame, parseSave, saveGame } from '@/game/persist/storage'
-import { applyDuelSpoilsBuff } from '@/multiplayer'
+import { applyDuelOutcome } from '@/multiplayer'
 import type { DuelResultKind } from '@/multiplayer/rewards'
 import type { AchievementDef, BuildingId, GameState } from '@/game/types'
 
@@ -238,9 +238,9 @@ export const useGameStore = defineStore('game', () => {
   function exitDuelMode(mainState: GameState) {
     duelMode.value = false
     achievementTickAccumulator = 0
-    pendingAchievementToasts.length = 0
-    recentAchievement.value = null
-    state.value = { ...mainState, lastSavedAt: Date.now() }
+    const result = checkAchievements(mainState)
+    state.value = { ...result.state, lastSavedAt: Date.now() }
+    notifyAchievements(result.newlyUnlocked)
     saver.flush(state.value)
   }
 
@@ -248,8 +248,10 @@ export const useGameStore = defineStore('game', () => {
     if (duelMode.value) {
       return
     }
-    const restored = applyDuelSpoilsBuff(state.value, result)
-    state.value = { ...restored, lastSavedAt: Date.now() }
+    const next = applyDuelOutcome(state.value, result)
+    const checked = checkAchievements(next)
+    state.value = { ...checked.state, lastSavedAt: Date.now() }
+    notifyAchievements(checked.newlyUnlocked)
     saver.flush(state.value)
   }
 

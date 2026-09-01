@@ -7,6 +7,7 @@ import {
 } from '@/game/catalog/duelSpoils'
 import { createInitialState, totalCps } from '@/game/engine'
 import {
+  applyDuelOutcome,
   applyDuelSpoilsBuff,
   duelSpoilsDurationSeconds,
   resolveDuelResultKind,
@@ -39,6 +40,15 @@ describe('duel rewards', () => {
     const next = applyDuelSpoilsBuff(withBuff, 'win')
     expect(next.activeBuffs.filter((item) => item.type === 'duelSpoils')).toHaveLength(1)
     expect(next.activeBuffs[0]?.expiresAt).toBe(DUEL_SPOILS_WIN_SECONDS)
+  })
+
+  it('records duel stats with spoils buff', () => {
+    const main = createInitialState()
+    const next = applyDuelOutcome(main, 'win')
+    expect(next.duelWins).toBe(1)
+    expect(next.duelLosses).toBe(0)
+    expect(next.duelDraws).toBe(0)
+    expect(next.activeBuffs.some((item) => item.type === 'duelSpoils')).toBe(true)
   })
 
   it('resolves result kind from settled match', () => {

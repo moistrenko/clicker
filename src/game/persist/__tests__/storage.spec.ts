@@ -155,7 +155,7 @@ describe('save persistence', () => {
 
   it('rejects unsupported save versions', () => {
     expect(parseSave(JSON.stringify({ version: 0, cookies: 1 }))).toBeNull()
-    expect(parseSave(JSON.stringify({ version: 8, cookies: 1 }))).toBeNull()
+    expect(parseSave(JSON.stringify({ version: 9, cookies: 1 }))).toBeNull()
   })
 
   it('saveGame stamps lastSavedAt onto the stored payload', () => {

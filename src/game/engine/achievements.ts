@@ -34,6 +34,10 @@ function stateCps(state: GameState): number {
   return cps * frenzy
 }
 
+function duelsPlayed(state: GameState): number {
+  return (state.duelWins ?? 0) + (state.duelLosses ?? 0) + (state.duelDraws ?? 0)
+}
+
 function isConditionMet(state: GameState, condition: AchievementDef['condition']): boolean {
   switch (condition.type) {
     case 'totalKills':
@@ -48,6 +52,16 @@ function isConditionMet(state: GameState, condition: AchievementDef['condition']
       return stateCps(state) >= condition.threshold
     case 'upgradesOwned':
       return (state.upgrades ?? []).length >= condition.threshold
+    case 'prestigeLevel':
+      return (state.prestigeLevel ?? 0) >= condition.threshold
+    case 'duelWins':
+      return (state.duelWins ?? 0) >= condition.threshold
+    case 'duelLosses':
+      return (state.duelLosses ?? 0) >= condition.threshold
+    case 'duelDraws':
+      return (state.duelDraws ?? 0) >= condition.threshold
+    case 'duelsPlayed':
+      return duelsPlayed(state) >= condition.threshold
     default:
       return false
   }

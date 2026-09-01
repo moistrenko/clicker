@@ -18,6 +18,7 @@ export function setMultiplayerBackendForTests(next: MultiplayerBackend | null) {
 }
 
 export {
+  applyDuelOutcome,
   applyDuelSpoilsBuff,
   resolveDuelResultKind,
   duelSpoilsDurationSeconds,

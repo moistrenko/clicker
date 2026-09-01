@@ -1,4 +1,4 @@
-export const SAVE_VERSION = 7
+export const SAVE_VERSION = 8
 
 export type BuildingId =
   | 'cursor'
@@ -76,6 +76,11 @@ export type AchievementCondition =
   | { type: 'totalBuildings'; threshold: number }
   | { type: 'cps'; threshold: number }
   | { type: 'upgradesOwned'; threshold: number }
+  | { type: 'prestigeLevel'; threshold: number }
+  | { type: 'duelWins'; threshold: number }
+  | { type: 'duelLosses'; threshold: number }
+  | { type: 'duelDraws'; threshold: number }
+  | { type: 'duelsPlayed'; threshold: number }
 
 export interface AchievementDef {
   id: string
@@ -105,6 +110,9 @@ export interface GameState {
   nextGoldenSpawnAt: number | null
   prestigeLevel: number
   lifetimeKills: number
+  duelWins: number
+  duelLosses: number
+  duelDraws: number
   lastSavedAt: number
   activeEvents: ActiveWorldEvent[]
   nextWorldEventAt: number | null

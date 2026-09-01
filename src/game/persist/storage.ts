@@ -20,7 +20,7 @@ import {
 export const STORAGE_KEY = 'clicker.save'
 export const SAVE_DEBOUNCE_MS = 400
 
-const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7])
+const SUPPORTED_SAVE_VERSIONS = new Set([1, 2, 3, 4, 5, 6, 7, 8])
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -149,6 +149,9 @@ function finalizeLoadedState(state: GameState): GameState {
     nextGoldenSpawnAt: state.nextGoldenSpawnAt ?? null,
     prestigeLevel: state.prestigeLevel ?? 0,
     lifetimeKills: state.lifetimeKills ?? 0,
+    duelWins: state.duelWins ?? 0,
+    duelLosses: state.duelLosses ?? 0,
+    duelDraws: state.duelDraws ?? 0,
     lastSavedAt: state.lastSavedAt ?? 0,
     activeEvents: state.activeEvents ?? [],
     nextWorldEventAt: state.nextWorldEventAt ?? null,
@@ -189,6 +192,9 @@ export function parseSave(raw: string): GameState | null {
           : Math.max(0, readNumber(data.nextGoldenSpawnAt, 0)),
       prestigeLevel: Math.max(0, readNumber(data.prestigeLevel, 0)),
       lifetimeKills: Math.max(0, readNumber(data.lifetimeKills, 0)),
+      duelWins: Math.max(0, readNumber(data.duelWins, 0)),
+      duelLosses: Math.max(0, readNumber(data.duelLosses, 0)),
+      duelDraws: Math.max(0, readNumber(data.duelDraws, 0)),
       lastSavedAt: Math.max(0, readNumber(data.lastSavedAt, 0)),
       activeEvents: parseActiveEvents(data.activeEvents),
       nextWorldEventAt:
